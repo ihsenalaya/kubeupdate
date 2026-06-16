@@ -8,6 +8,11 @@ output "cluster_name" {
   value       = azurerm_kubernetes_cluster.platform.name
 }
 
+output "lab_database_location" {
+  description = "Azure region used by the lab database PaaS services."
+  value       = var.lab_database_location
+}
+
 output "node_resource_group_name" {
   description = "AKS managed node resource group."
   value       = local.node_resource_group_name
@@ -60,12 +65,12 @@ output "velero_storage_account_name" {
 
 output "acr_name" {
   description = "Azure Container Registry name used for lab and operator images."
-  value       = azurerm_container_registry.platform.name
+  value       = azapi_resource.container_registry.name
 }
 
 output "acr_login_server" {
   description = "Azure Container Registry login server."
-  value       = azurerm_container_registry.platform.login_server
+  value       = azapi_resource.container_registry.output.properties.loginServer
 }
 
 output "artifact_tag" {

@@ -21,14 +21,19 @@ public class OrdersApplication {
   @Bean
   CommandLineRunner initialize(JdbcTemplate jdbcTemplate) {
     return args -> {
-      jdbcTemplate.execute("""
-          create table if not exists orders (
-            id bigint auto_increment primary key,
-            customer varchar(120) not null,
-            sku varchar(64) not null,
-            amount decimal(10, 2) not null
-          )
-          """);
+      Integer tableCount = jdbcTemplate.queryForObject(
+          "select count(*) from information_schema.tables where table_name = 'orders'",
+          Integer.class);
+      if (tableCount != null && tableCount == 0) {
+        jdbcTemplate.execute("""
+            create table orders (
+              id bigint identity(1,1) primary key,
+              customer varchar(120) not null,
+              sku varchar(64) not null,
+              amount decimal(10, 2) not null
+            )
+            """);
+      }
       Integer count = jdbcTemplate.queryForObject("select count(*) from orders", Integer.class);
       if (count != null && count == 0) {
         jdbcTemplate.update("insert into orders (customer, sku, amount) values (?, ?, ?)", "platform-team", "AKS-OPS-001", new BigDecimal("1200.00"));

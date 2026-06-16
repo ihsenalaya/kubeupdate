@@ -9,9 +9,9 @@ externalSecrets:
   targetSecretName: upgrade-lab-secrets
   keys:
     postgresDsn: lab-postgres-dsn
-    mysqlJdbcUrl: lab-mysql-jdbc-url
-    mysqlUsername: lab-mysql-username
-    mysqlPassword: lab-mysql-password
+    sqlServerJdbcUrl: lab-sqlserver-jdbc-url
+    sqlServerUsername: lab-sqlserver-username
+    sqlServerPassword: lab-sqlserver-password
     redisUrl: lab-redis-url
     cosmosMongoUri: lab-cosmos-mongo-uri
     clientCertificate: lab-client-certificate

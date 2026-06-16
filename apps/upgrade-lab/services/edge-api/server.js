@@ -59,7 +59,7 @@ app.get("/readyz", async (_request, reply) => {
 app.get("/", async () => ({
   name: "Upgrade Lab",
   services: ["edge-api", "catalog-service", "orders-service", "signals-service"],
-  dataStores: ["Azure PostgreSQL", "Azure MySQL", "Azure Cosmos DB Mongo API", "Azure Cache for Redis", "Azure Key Vault"]
+  dataStores: ["Azure PostgreSQL", "Azure SQL Database", "Azure Cosmos DB Mongo API", "Azure Cache for Redis", "Azure Key Vault"]
 }));
 
 app.get("/api/products", async () => cached("catalog:products", 30, () => getJson(`${catalogUrl}/products`)));

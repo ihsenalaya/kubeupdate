@@ -601,7 +601,7 @@ locals {
 
   kubeupgrade_guardian_values = {
     image = {
-      repository = "${azurerm_container_registry.platform.login_server}/kubeupgrade-guardian-operator"
+      repository = "${azapi_resource.container_registry.output.properties.loginServer}/kubeupgrade-guardian-operator"
       tag        = var.artifact_tag
       pullPolicy = "IfNotPresent"
     }
@@ -620,7 +620,7 @@ locals {
 
   upgrade_lab_values = {
     global = {
-      imageRegistry   = azurerm_container_registry.platform.login_server
+      imageRegistry   = azapi_resource.container_registry.output.properties.loginServer
       imageTag        = var.artifact_tag
       imagePullPolicy = "IfNotPresent"
     }
@@ -629,9 +629,9 @@ locals {
       targetSecretName = local.lab_secret_name
       keys = {
         postgresDsn       = azurerm_key_vault_secret.lab_postgres_dsn.name
-        mysqlJdbcUrl      = azurerm_key_vault_secret.lab_mysql_jdbc_url.name
-        mysqlUsername     = azurerm_key_vault_secret.lab_mysql_username.name
-        mysqlPassword     = azurerm_key_vault_secret.lab_mysql_password.name
+        sqlServerJdbcUrl  = azurerm_key_vault_secret.lab_sqlserver_jdbc_url.name
+        sqlServerUsername = azurerm_key_vault_secret.lab_sqlserver_username.name
+        sqlServerPassword = azurerm_key_vault_secret.lab_sqlserver_password.name
         redisUrl          = azurerm_key_vault_secret.lab_redis_url.name
         cosmosMongoUri    = azurerm_key_vault_secret.lab_cosmos_mongo_uri.name
         clientCertificate = azurerm_key_vault_certificate.lab_client.name

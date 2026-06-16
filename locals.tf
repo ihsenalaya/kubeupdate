@@ -2,8 +2,9 @@ locals {
   subscription_id = data.azurerm_client_config.current.subscription_id
   tenant_id       = data.azurerm_client_config.current.tenant_id
 
-  name_slug      = lower(replace(var.name_prefix, "/[^a-zA-Z0-9-]/", "-"))
-  compact_suffix = substr(md5("${var.name_prefix}-${local.subscription_id}-${var.location}"), 0, 6)
+  name_slug                   = lower(replace(var.name_prefix, "/[^a-zA-Z0-9-]/", "-"))
+  compact_suffix              = substr(md5("${var.name_prefix}-${local.subscription_id}-${var.location}"), 0, 6)
+  lab_database_compact_suffix = substr(md5("${var.name_prefix}-${local.subscription_id}-${var.lab_database_location}"), 0, 6)
 
   base_domain = "${var.platform_subdomain}.${var.dns_zone_name}"
 

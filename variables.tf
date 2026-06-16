@@ -16,6 +16,12 @@ variable "location" {
   default     = "westeurope"
 }
 
+variable "lab_database_location" {
+  description = "Azure region for lab PostgreSQL, MySQL, and Cosmos DB when database offers are restricted in the AKS region."
+  type        = string
+  default     = "francecentral"
+}
+
 variable "resource_group_name" {
   description = "Resource group created for the AKS platform."
   type        = string

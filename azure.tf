@@ -160,14 +160,23 @@ resource "azurerm_user_assigned_identity" "velero" {
   tags                = local.common_tags
 }
 
-resource "azurerm_container_registry" "platform" {
-  name                          = "acr${replace(local.name_slug, "-", "")}${local.compact_suffix}"
-  location                      = azurerm_resource_group.platform.location
-  resource_group_name           = azurerm_resource_group.platform.name
-  sku                           = "Basic"
-  admin_enabled                 = false
-  public_network_access_enabled = true
-  tags                          = local.common_tags
+resource "azapi_resource" "container_registry" {
+  type      = "Microsoft.ContainerRegistry/registries@2023-07-01"
+  name      = "acr${replace(local.name_slug, "-", "")}${local.compact_suffix}"
+  parent_id = azurerm_resource_group.platform.id
+  location  = azurerm_resource_group.platform.location
+  tags      = local.common_tags
+
+  body = {
+    sku = {
+      name = "Basic"
+    }
+    properties = {
+      adminUserEnabled = false
+    }
+  }
+
+  response_export_values = ["properties.loginServer"]
 }
 
 resource "azurerm_role_assignment" "aks_network_contributor_vnet" {
@@ -362,7 +371,7 @@ resource "azurerm_role_assignment" "current_aks_rbac_cluster_admin" {
 }
 
 resource "azurerm_role_assignment" "aks_acr_pull" {
-  scope                            = azurerm_container_registry.platform.id
+  scope                            = azapi_resource.container_registry.id
   role_definition_name             = "AcrPull"
   principal_id                     = azurerm_kubernetes_cluster.platform.kubelet_identity[0].object_id
   skip_service_principal_aad_check = true
@@ -444,15 +453,15 @@ resource "random_password" "lab_postgres_admin" {
   special = false
 }
 
-resource "random_password" "lab_mysql_admin" {
+resource "random_password" "lab_sql_admin" {
   length  = 28
   special = false
 }
 
 resource "azurerm_postgresql_flexible_server" "lab" {
-  name                          = "psql-${local.name_slug}-${local.compact_suffix}"
+  name                          = "psql-${local.name_slug}-${local.lab_database_compact_suffix}"
   resource_group_name           = azurerm_resource_group.platform.name
-  location                      = azurerm_resource_group.platform.location
+  location                      = var.lab_database_location
   version                       = "16"
   administrator_login           = "labadmin"
   administrator_password        = random_password.lab_postgres_admin.result
@@ -477,32 +486,32 @@ resource "azurerm_postgresql_flexible_server_firewall_rule" "allow_aks_nat" {
   end_ip_address   = azurerm_public_ip.nat.ip_address
 }
 
-resource "azurerm_mysql_flexible_server" "lab" {
-  name                   = "mysql-${local.name_slug}-${local.compact_suffix}"
-  resource_group_name    = azurerm_resource_group.platform.name
-  location               = azurerm_resource_group.platform.location
-  administrator_login    = "labadmin"
-  administrator_password = random_password.lab_mysql_admin.result
-  backup_retention_days  = 7
-  sku_name               = "B_Standard_B1ms"
-  version                = "8.0.21"
-  tags                   = local.common_tags
+resource "azurerm_mssql_server" "lab" {
+  name                          = "sql-${local.name_slug}-${local.lab_database_compact_suffix}"
+  resource_group_name           = azurerm_resource_group.platform.name
+  location                      = var.lab_database_location
+  version                       = "12.0"
+  administrator_login           = "labadmin"
+  administrator_login_password  = random_password.lab_sql_admin.result
+  minimum_tls_version           = "1.2"
+  public_network_access_enabled = true
+  tags                          = local.common_tags
 }
 
-resource "azurerm_mysql_flexible_database" "orders" {
-  name                = "orders"
-  resource_group_name = azurerm_resource_group.platform.name
-  server_name         = azurerm_mysql_flexible_server.lab.name
-  charset             = "utf8mb4"
-  collation           = "utf8mb4_0900_ai_ci"
+resource "azurerm_mssql_database" "orders" {
+  name           = "orders"
+  server_id      = azurerm_mssql_server.lab.id
+  sku_name       = "Basic"
+  max_size_gb    = 2
+  zone_redundant = false
+  tags           = local.common_tags
 }
 
-resource "azurerm_mysql_flexible_server_firewall_rule" "allow_aks_nat" {
-  name                = "allow-aks-nat"
-  resource_group_name = azurerm_resource_group.platform.name
-  server_name         = azurerm_mysql_flexible_server.lab.name
-  start_ip_address    = azurerm_public_ip.nat.ip_address
-  end_ip_address      = azurerm_public_ip.nat.ip_address
+resource "azurerm_mssql_firewall_rule" "allow_aks_nat" {
+  name             = "allow-aks-nat"
+  server_id        = azurerm_mssql_server.lab.id
+  start_ip_address = azurerm_public_ip.nat.ip_address
+  end_ip_address   = azurerm_public_ip.nat.ip_address
 }
 
 resource "azurerm_redis_cache" "lab" {
@@ -528,7 +537,7 @@ resource "azurerm_redis_firewall_rule" "allow_aks_nat" {
 
 resource "azurerm_cosmosdb_account" "lab" {
   name                          = "cosmos-${local.name_slug}-${local.compact_suffix}"
-  location                      = azurerm_resource_group.platform.location
+  location                      = var.lab_database_location
   resource_group_name           = azurerm_resource_group.platform.name
   offer_type                    = "Standard"
   kind                          = "MongoDB"
@@ -546,8 +555,9 @@ resource "azurerm_cosmosdb_account" "lab" {
   }
 
   geo_location {
-    location          = azurerm_resource_group.platform.location
+    location          = var.lab_database_location
     failover_priority = 0
+    zone_redundant    = false
   }
 }
 
@@ -621,17 +631,17 @@ resource "azurerm_key_vault_secret" "lab_postgres_dsn" {
   depends_on = [time_sleep.wait_for_key_vault_rbac]
 }
 
-resource "azurerm_key_vault_secret" "lab_mysql_jdbc_url" {
-  name         = "lab-mysql-jdbc-url"
-  value        = "jdbc:mysql://${azurerm_mysql_flexible_server.lab.fqdn}:3306/${azurerm_mysql_flexible_database.orders.name}?useSSL=true&requireSSL=true&serverTimezone=UTC"
+resource "azurerm_key_vault_secret" "lab_sqlserver_jdbc_url" {
+  name         = "lab-sqlserver-jdbc-url"
+  value        = "jdbc:sqlserver://${azurerm_mssql_server.lab.fully_qualified_domain_name}:1433;databaseName=${azurerm_mssql_database.orders.name};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"
   key_vault_id = azurerm_key_vault.platform.id
   tags         = local.common_tags
 
   depends_on = [time_sleep.wait_for_key_vault_rbac]
 }
 
-resource "azurerm_key_vault_secret" "lab_mysql_username" {
-  name         = "lab-mysql-username"
+resource "azurerm_key_vault_secret" "lab_sqlserver_username" {
+  name         = "lab-sqlserver-username"
   value        = "labadmin"
   key_vault_id = azurerm_key_vault.platform.id
   tags         = local.common_tags
@@ -639,9 +649,9 @@ resource "azurerm_key_vault_secret" "lab_mysql_username" {
   depends_on = [time_sleep.wait_for_key_vault_rbac]
 }
 
-resource "azurerm_key_vault_secret" "lab_mysql_password" {
-  name         = "lab-mysql-password"
-  value        = random_password.lab_mysql_admin.result
+resource "azurerm_key_vault_secret" "lab_sqlserver_password" {
+  name         = "lab-sqlserver-password"
+  value        = random_password.lab_sql_admin.result
   key_vault_id = azurerm_key_vault.platform.id
   tags         = local.common_tags
 
