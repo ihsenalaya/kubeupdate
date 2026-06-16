@@ -34,6 +34,21 @@ apps=(
 kubectl wait --for=condition=Ready nodes --all --timeout=10m
 kubectl -n argocd wait --for=condition=Available deployment/argocd-server --timeout=10m
 
+kubectl -n argocd annotate applications.argoproj.io --all argocd.argoproj.io/refresh=hard --overwrite >/dev/null || true
+
+for app in "\${apps[@]}"; do
+  for i in {1..120}; do
+    if kubectl -n argocd get "application/\${app}" >/dev/null 2>&1; then
+      break
+    fi
+    sleep 10
+  done
+
+  kubectl -n argocd get "application/\${app}" >/dev/null
+  kubectl -n argocd wait --for=jsonpath='{.status.sync.status}'=Synced "application/\${app}" --timeout=25m
+  kubectl -n argocd wait --for=jsonpath='{.status.health.status}'=Healthy "application/\${app}" --timeout=25m
+done
+
 for ns in cert-manager external-dns external-secrets istio-system istio-ingress monitoring loki tracing keda kyverno kubecost velero neuvector; do
   kubectl get namespace "\${ns}" >/dev/null
 done
@@ -47,13 +62,6 @@ fi
 kubectl -n istio-ingress rollout status deployment/istio-ingress --timeout=10m
 kubectl -n neuvector rollout status deployment/neuvector-controller-pod --timeout=10m
 kubectl -n neuvector rollout status deployment/neuvector-manager-pod --timeout=10m
-
-kubectl -n argocd annotate applications.argoproj.io --all argocd.argoproj.io/refresh=hard --overwrite >/dev/null
-
-for app in "\${apps[@]}"; do
-  kubectl -n argocd wait --for=jsonpath='{.status.sync.status}'=Synced "application/\${app}" --timeout=20m
-  kubectl -n argocd wait --for=jsonpath='{.status.health.status}'=Healthy "application/\${app}" --timeout=20m
-done
 
 actual_ingress_ip="\$(kubectl -n istio-ingress get service istio-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
 if [[ "\${actual_ingress_ip}" != "\${expected_ingress_private_ip}" ]]; then

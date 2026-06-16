@@ -32,7 +32,7 @@ Add-ons installes par Argo CD :
 ./scripts/apply.sh
 ```
 
-`./scripts/apply.sh` applique Terraform, pousse `gitops/argocd/platform.yaml` vers `kubeupdate`, bootstrappe Argo CD via `az aks command invoke`, puis lance les controles de sante.
+`./scripts/apply.sh` applique Terraform, pousse `gitops/argocd/platform.yaml` vers `kubeupdate` depuis un checkout local ignore dans `.local/gitops-repo`, bootstrappe Argo CD via `az aks command invoke`, puis lance les controles de sante.
 
 La VM jump host est accessible en SSH direct. Les credentials generes sont dans un fichier local ignore par Git :
 
