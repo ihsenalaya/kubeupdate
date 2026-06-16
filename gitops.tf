@@ -58,6 +58,10 @@ locals {
 
   cert_manager_values = {
     installCRDs = true
+    extraArgs = [
+      "--dns01-recursive-nameservers-only",
+      "--dns01-recursive-nameservers=1.1.1.1:53,8.8.8.8:53",
+    ]
     podLabels = {
       "azure.workload.identity/use" = "true"
     }

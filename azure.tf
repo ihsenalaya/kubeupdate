@@ -345,6 +345,12 @@ resource "azurerm_role_assignment" "jump_host_aks_admin" {
   skip_service_principal_aad_check = true
 }
 
+resource "azurerm_role_assignment" "current_aks_rbac_cluster_admin" {
+  scope                = azurerm_kubernetes_cluster.platform.id
+  role_definition_name = "Azure Kubernetes Service RBAC Cluster Admin"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
 resource "azurerm_virtual_machine_extension" "jump_host_configure_aks" {
   name                 = "configure-aks-access"
   virtual_machine_id   = azurerm_linux_virtual_machine.jump_host.id

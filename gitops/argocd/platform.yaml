@@ -69,7 +69,7 @@
           "azure.workload.identity/use": "true"
         "serviceAccount":
           "annotations":
-            "azure.workload.identity/client-id": "0474f66d-35a4-4298-a9d3-3bed8ef4c1f9"
+            "azure.workload.identity/client-id": "a1102690-3226-436b-9ec4-195695d76345"
           "name": "cert-manager"
     "repoURL": "https://charts.jetstack.io"
     "targetRevision": "v1.20.2"
@@ -127,7 +127,7 @@
         "registry": "txt"
         "serviceAccount":
           "annotations":
-            "azure.workload.identity/client-id": "8f2d326f-30a4-400d-b298-a6c6f3bdfd85"
+            "azure.workload.identity/client-id": "93db2207-a147-49ae-a3f4-4f699e38fce8"
           "labels":
             "azure.workload.identity/use": "true"
           "name": "external-dns"
@@ -191,7 +191,7 @@
         "replicaCount": 1
         "serviceAccount":
           "annotations":
-            "azure.workload.identity/client-id": "4ab939c9-478e-4013-8617-eb050ef075c9"
+            "azure.workload.identity/client-id": "c503d0de-0551-4807-b99d-d32b0f7ffbd5"
           "extraLabels":
             "azure.workload.identity/use": "true"
           "name": "external-secrets"
@@ -942,7 +942,7 @@
                     "environment": "AzurePublicCloud"
                     "hostedZoneName": "ihsenalaya.xyz"
                     "managedIdentity":
-                      "clientID": "0474f66d-35a4-4298-a9d3-3bed8ef4c1f9"
+                      "clientID": "a1102690-3226-436b-9ec4-195695d76345"
                     "resourceGroupName": "ihsen"
                     "subscriptionID": "ec0e829d-64e1-43fd-b721-ecf5b5112773"
         - "apiVersion": "cert-manager.io/v1"
@@ -1531,7 +1531,7 @@
         "serviceAccount":
           "server":
             "annotations":
-              "azure.workload.identity/client-id": "48396558-7017-4de0-b685-0dd4955dc3d5"
+              "azure.workload.identity/client-id": "c81fe924-9611-40cd-ad20-7fe4f4eb7fc2"
             "name": "velero"
     "repoURL": "https://vmware-tanzu.github.io/helm-charts"
     "targetRevision": "12.0.3"

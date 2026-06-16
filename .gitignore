@@ -10,6 +10,7 @@ override.tf.json
 *_override.tf.json
 .terraform.tfstate.lock.info
 tfplan
+tfplan.*
 *.tfplan
 kubeconfig*
 build/

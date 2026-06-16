@@ -5,13 +5,15 @@ locals {
     "external-dns"     = {}
     "external-secrets" = {}
     "istio-system"     = {}
-    "istio-ingress"    = {}
-    monitoring         = {}
-    loki               = {}
-    tracing            = {}
-    keda               = {}
-    kyverno            = {}
-    kubecost           = {}
+    "istio-ingress" = {
+      "istio-injection" = "enabled"
+    }
+    monitoring = {}
+    loki       = {}
+    tracing    = {}
+    keda       = {}
+    kyverno    = {}
+    kubecost   = {}
     velero = {
       "pod-security.kubernetes.io/enforce" = "privileged"
       "pod-security.kubernetes.io/audit"   = "privileged"
