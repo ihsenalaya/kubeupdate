@@ -1,0 +1,65 @@
+#cloud-config
+ssh_pwauth: true
+package_update: true
+package_upgrade: false
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg
+  - jq
+  - lsb-release
+  - git
+  - unzip
+
+write_files:
+  - path: /usr/local/bin/configure-aks-access
+    owner: root:root
+    permissions: '0755'
+    content: |
+      #!/usr/bin/env bash
+      set -euo pipefail
+
+      export HOME=/root
+
+      for _ in $(seq 1 30); do
+        if az login --identity --allow-no-subscriptions >/dev/null 2>&1; then
+          break
+        fi
+        sleep 20
+      done
+
+      install -d -m 0755 -o ${admin_username} -g ${admin_username} /home/${admin_username}/.kube
+
+      az aks get-credentials \
+        --resource-group '${resource_group_name}' \
+        --name '${cluster_name}' \
+        --admin \
+        --overwrite-existing \
+        --file /home/${admin_username}/.kube/config
+
+      chown -R ${admin_username}:${admin_username} /home/${admin_username}/.kube
+      chmod 0600 /home/${admin_username}/.kube/config
+
+      if [ ! -d /home/${admin_username}/kubeupdate/.git ]; then
+        rm -rf /home/${admin_username}/kubeupdate
+        sudo -u ${admin_username} git clone --branch '${gitops_revision}' '${gitops_repo_url}' /home/${admin_username}/kubeupdate || true
+      else
+        sudo -u ${admin_username} git -C /home/${admin_username}/kubeupdate fetch origin '${gitops_revision}' || true
+        sudo -u ${admin_username} git -C /home/${admin_username}/kubeupdate checkout '${gitops_revision}' || true
+        sudo -u ${admin_username} git -C /home/${admin_username}/kubeupdate pull --ff-only origin '${gitops_revision}' || true
+      fi
+
+      sudo -u ${admin_username} KUBECONFIG=/home/${admin_username}/.kube/config kubectl get nodes -o wide
+
+runcmd:
+  - sed -i 's/^#\?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+  - sed -i 's/^#\?KbdInteractiveAuthentication .*/KbdInteractiveAuthentication yes/' /etc/ssh/sshd_config
+  - systemctl restart ssh || systemctl restart sshd || true
+  - curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+  - az aks install-cli
+  - curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+  - wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+  - echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" > /etc/apt/sources.list.d/hashicorp.list
+  - apt-get update
+  - apt-get install -y terraform
