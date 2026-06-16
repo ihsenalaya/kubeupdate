@@ -58,6 +58,36 @@ output "velero_storage_account_name" {
   value       = azurerm_storage_account.velero.name
 }
 
+output "acr_name" {
+  description = "Azure Container Registry name used for lab and operator images."
+  value       = azurerm_container_registry.platform.name
+}
+
+output "acr_login_server" {
+  description = "Azure Container Registry login server."
+  value       = azurerm_container_registry.platform.login_server
+}
+
+output "artifact_tag" {
+  description = "Image and chart version tag expected by GitOps."
+  value       = var.artifact_tag
+}
+
+output "lab_host" {
+  description = "Private hostname for the upgrade lab edge API."
+  value       = local.platform_hosts.lab
+}
+
+output "lab_namespace" {
+  description = "Namespace used by the upgrade lab application."
+  value       = var.lab_namespace
+}
+
+output "operator_namespace" {
+  description = "Namespace used by KubeUpgrade Guardian Operator."
+  value       = var.operator_namespace
+}
+
 output "grafana_admin_user_secret" {
   description = "Key Vault secret name for Grafana admin username."
   value       = azurerm_key_vault_secret.grafana_admin_user.name

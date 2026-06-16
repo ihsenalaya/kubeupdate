@@ -598,6 +598,53 @@ locals {
       }
     }
   }
+
+  kubeupgrade_guardian_values = {
+    image = {
+      repository = "${azurerm_container_registry.platform.login_server}/kubeupgrade-guardian-operator"
+      tag        = var.artifact_tag
+      pullPolicy = "IfNotPresent"
+    }
+    replicaCount = 1
+    resources = {
+      requests = {
+        cpu    = "50m"
+        memory = "96Mi"
+      }
+      limits = {
+        cpu    = "500m"
+        memory = "256Mi"
+      }
+    }
+  }
+
+  upgrade_lab_values = {
+    global = {
+      imageRegistry   = azurerm_container_registry.platform.login_server
+      imageTag        = var.artifact_tag
+      imagePullPolicy = "IfNotPresent"
+    }
+    externalSecrets = {
+      secretStoreName  = "azure-keyvault"
+      targetSecretName = local.lab_secret_name
+      keys = {
+        postgresDsn       = azurerm_key_vault_secret.lab_postgres_dsn.name
+        mysqlJdbcUrl      = azurerm_key_vault_secret.lab_mysql_jdbc_url.name
+        mysqlUsername     = azurerm_key_vault_secret.lab_mysql_username.name
+        mysqlPassword     = azurerm_key_vault_secret.lab_mysql_password.name
+        redisUrl          = azurerm_key_vault_secret.lab_redis_url.name
+        cosmosMongoUri    = azurerm_key_vault_secret.lab_cosmos_mongo_uri.name
+        clientCertificate = azurerm_key_vault_certificate.lab_client.name
+      }
+    }
+    ingress = {
+      host = local.platform_hosts.lab
+      gateway = {
+        name      = "platform-gateway"
+        namespace = "istio-ingress"
+      }
+    }
+  }
 }
 
 locals {
@@ -1596,6 +1643,44 @@ locals {
       destination = {
         server    = "https://kubernetes.default.svc"
         namespace = "istio-ingress"
+      }
+      syncPolicy = local.app_sync_policy_skip_missing
+    }
+    "kubeupgrade-guardian-operator" = {
+      namespace  = "argocd"
+      finalizers = ["resources-finalizer.argocd.argoproj.io"]
+      project    = "platform"
+      source = {
+        repoURL        = var.gitops_repo_url
+        targetRevision = var.gitops_target_revision
+        path           = "gitops/charts/kubeupgrade-guardian-operator"
+        helm = {
+          releaseName = "kubeupgrade-guardian"
+          values      = yamlencode(local.kubeupgrade_guardian_values)
+        }
+      }
+      destination = {
+        server    = "https://kubernetes.default.svc"
+        namespace = var.operator_namespace
+      }
+      syncPolicy = local.app_sync_policy_skip_missing
+    }
+    "upgrade-lab" = {
+      namespace  = "argocd"
+      finalizers = ["resources-finalizer.argocd.argoproj.io"]
+      project    = "platform"
+      source = {
+        repoURL        = var.gitops_repo_url
+        targetRevision = var.gitops_target_revision
+        path           = "gitops/charts/upgrade-lab"
+        helm = {
+          releaseName = "upgrade-lab"
+          values      = yamlencode(local.upgrade_lab_values)
+        }
+      }
+      destination = {
+        server    = "https://kubernetes.default.svc"
+        namespace = var.lab_namespace
       }
       syncPolicy = local.app_sync_policy_skip_missing
     }

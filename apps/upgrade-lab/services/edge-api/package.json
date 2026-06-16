@@ -1,0 +1,14 @@
+{
+  "name": "upgrade-lab-edge-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "fastify": "5.8.5",
+    "ioredis": "5.4.1",
+    "undici": "6.27.0"
+  }
+}

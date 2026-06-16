@@ -13,6 +13,7 @@ locals {
     jaeger    = "jaeger.${local.base_domain}"
     kubecost  = "kubecost.${local.base_domain}"
     neuvector = "neuvector.${local.base_domain}"
+    lab       = "lab.${local.base_domain}"
   }
 
   platform_host_list = [
@@ -21,10 +22,13 @@ locals {
     local.platform_hosts.jaeger,
     local.platform_hosts.kubecost,
     local.platform_hosts.neuvector,
+    local.platform_hosts.lab,
   ]
 
   external_dns_azure_secret_name  = "external-dns-azure"
   neuvector_bootstrap_secret_name = "neuvector-bootstrap-secret"
+  lab_secret_name                 = "upgrade-lab-secrets"
+  lab_client_certificate_name     = "lab-client-certificate"
 
   chart_versions = {
     argocd                  = "9.5.21"
@@ -45,6 +49,25 @@ locals {
     velero                  = "12.0.3"
     neuvector               = "2.10.2"
     raw                     = "2.0.2"
+  }
+
+  lab_services = {
+    edge = {
+      image = "upgrade-lab/edge-api"
+      port  = 3000
+    }
+    catalog = {
+      image = "upgrade-lab/catalog-service"
+      port  = 8000
+    }
+    orders = {
+      image = "upgrade-lab/orders-service"
+      port  = 8080
+    }
+    signals = {
+      image = "upgrade-lab/signals-service"
+      port  = 8090
+    }
   }
 
   common_tags = merge(

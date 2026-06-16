@@ -160,6 +160,16 @@ resource "azurerm_user_assigned_identity" "velero" {
   tags                = local.common_tags
 }
 
+resource "azurerm_container_registry" "platform" {
+  name                          = "acr${replace(local.name_slug, "-", "")}${local.compact_suffix}"
+  location                      = azurerm_resource_group.platform.location
+  resource_group_name           = azurerm_resource_group.platform.name
+  sku                           = "Basic"
+  admin_enabled                 = false
+  public_network_access_enabled = true
+  tags                          = local.common_tags
+}
+
 resource "azurerm_role_assignment" "aks_network_contributor_vnet" {
   scope                            = azurerm_virtual_network.platform.id
   role_definition_name             = "Network Contributor"
@@ -351,6 +361,13 @@ resource "azurerm_role_assignment" "current_aks_rbac_cluster_admin" {
   principal_id         = data.azurerm_client_config.current.object_id
 }
 
+resource "azurerm_role_assignment" "aks_acr_pull" {
+  scope                            = azurerm_container_registry.platform.id
+  role_definition_name             = "AcrPull"
+  principal_id                     = azurerm_kubernetes_cluster.platform.kubelet_identity[0].object_id
+  skip_service_principal_aad_check = true
+}
+
 resource "azurerm_virtual_machine_extension" "jump_host_configure_aks" {
   name                 = "configure-aks-access"
   virtual_machine_id   = azurerm_linux_virtual_machine.jump_host.id
@@ -420,4 +437,231 @@ resource "azurerm_role_definition" "velero_aks_snapshots" {
   assignable_scopes = [
     data.azurerm_subscription.current.id,
   ]
+}
+
+resource "random_password" "lab_postgres_admin" {
+  length  = 28
+  special = false
+}
+
+resource "random_password" "lab_mysql_admin" {
+  length  = 28
+  special = false
+}
+
+resource "azurerm_postgresql_flexible_server" "lab" {
+  name                          = "psql-${local.name_slug}-${local.compact_suffix}"
+  resource_group_name           = azurerm_resource_group.platform.name
+  location                      = azurerm_resource_group.platform.location
+  version                       = "16"
+  administrator_login           = "labadmin"
+  administrator_password        = random_password.lab_postgres_admin.result
+  sku_name                      = "B_Standard_B1ms"
+  storage_mb                    = 32768
+  public_network_access_enabled = true
+  backup_retention_days         = 7
+  tags                          = local.common_tags
+}
+
+resource "azurerm_postgresql_flexible_server_database" "catalog" {
+  name      = "catalog"
+  server_id = azurerm_postgresql_flexible_server.lab.id
+  charset   = "UTF8"
+  collation = "en_US.utf8"
+}
+
+resource "azurerm_postgresql_flexible_server_firewall_rule" "allow_aks_nat" {
+  name             = "allow-aks-nat"
+  server_id        = azurerm_postgresql_flexible_server.lab.id
+  start_ip_address = azurerm_public_ip.nat.ip_address
+  end_ip_address   = azurerm_public_ip.nat.ip_address
+}
+
+resource "azurerm_mysql_flexible_server" "lab" {
+  name                   = "mysql-${local.name_slug}-${local.compact_suffix}"
+  resource_group_name    = azurerm_resource_group.platform.name
+  location               = azurerm_resource_group.platform.location
+  administrator_login    = "labadmin"
+  administrator_password = random_password.lab_mysql_admin.result
+  backup_retention_days  = 7
+  sku_name               = "B_Standard_B1ms"
+  version                = "8.0.21"
+  tags                   = local.common_tags
+}
+
+resource "azurerm_mysql_flexible_database" "orders" {
+  name                = "orders"
+  resource_group_name = azurerm_resource_group.platform.name
+  server_name         = azurerm_mysql_flexible_server.lab.name
+  charset             = "utf8mb4"
+  collation           = "utf8mb4_0900_ai_ci"
+}
+
+resource "azurerm_mysql_flexible_server_firewall_rule" "allow_aks_nat" {
+  name                = "allow-aks-nat"
+  resource_group_name = azurerm_resource_group.platform.name
+  server_name         = azurerm_mysql_flexible_server.lab.name
+  start_ip_address    = azurerm_public_ip.nat.ip_address
+  end_ip_address      = azurerm_public_ip.nat.ip_address
+}
+
+resource "azurerm_redis_cache" "lab" {
+  name                          = "redis-${local.name_slug}-${local.compact_suffix}"
+  location                      = azurerm_resource_group.platform.location
+  resource_group_name           = azurerm_resource_group.platform.name
+  capacity                      = 0
+  family                        = "C"
+  sku_name                      = "Basic"
+  minimum_tls_version           = "1.2"
+  public_network_access_enabled = true
+  redis_version                 = "6"
+  tags                          = local.common_tags
+}
+
+resource "azurerm_redis_firewall_rule" "allow_aks_nat" {
+  name                = "allow_aks_nat"
+  redis_cache_name    = azurerm_redis_cache.lab.name
+  resource_group_name = azurerm_resource_group.platform.name
+  start_ip            = azurerm_public_ip.nat.ip_address
+  end_ip              = azurerm_public_ip.nat.ip_address
+}
+
+resource "azurerm_cosmosdb_account" "lab" {
+  name                          = "cosmos-${local.name_slug}-${local.compact_suffix}"
+  location                      = azurerm_resource_group.platform.location
+  resource_group_name           = azurerm_resource_group.platform.name
+  offer_type                    = "Standard"
+  kind                          = "MongoDB"
+  mongo_server_version          = "7.0"
+  public_network_access_enabled = true
+  ip_range_filter               = [azurerm_public_ip.nat.ip_address]
+  tags                          = local.common_tags
+
+  capabilities {
+    name = "EnableMongo"
+  }
+
+  consistency_policy {
+    consistency_level = "Session"
+  }
+
+  geo_location {
+    location          = azurerm_resource_group.platform.location
+    failover_priority = 0
+  }
+}
+
+resource "azurerm_cosmosdb_mongo_database" "signals" {
+  name                = "signals"
+  resource_group_name = azurerm_resource_group.platform.name
+  account_name        = azurerm_cosmosdb_account.lab.name
+  throughput          = 400
+}
+
+resource "azurerm_cosmosdb_mongo_collection" "events" {
+  name                = "events"
+  resource_group_name = azurerm_resource_group.platform.name
+  account_name        = azurerm_cosmosdb_account.lab.name
+  database_name       = azurerm_cosmosdb_mongo_database.signals.name
+  shard_key           = "service"
+
+  index {
+    keys   = ["_id"]
+    unique = true
+  }
+}
+
+resource "azurerm_key_vault_certificate" "lab_client" {
+  name         = local.lab_client_certificate_name
+  key_vault_id = azurerm_key_vault.platform.id
+  tags         = local.common_tags
+
+  certificate_policy {
+    issuer_parameters {
+      name = "Self"
+    }
+
+    key_properties {
+      exportable = true
+      key_size   = 2048
+      key_type   = "RSA"
+      reuse_key  = false
+    }
+
+    lifetime_action {
+      action {
+        action_type = "AutoRenew"
+      }
+      trigger {
+        days_before_expiry = 30
+      }
+    }
+
+    secret_properties {
+      content_type = "application/x-pkcs12"
+    }
+
+    x509_certificate_properties {
+      subject            = "CN=upgrade-lab.internal"
+      validity_in_months = 12
+      key_usage          = ["digitalSignature", "keyEncipherment"]
+      extended_key_usage = ["1.3.6.1.5.5.7.3.2"]
+    }
+  }
+
+  depends_on = [time_sleep.wait_for_key_vault_rbac]
+}
+
+resource "azurerm_key_vault_secret" "lab_postgres_dsn" {
+  name         = "lab-postgres-dsn"
+  value        = "postgresql://labadmin:${urlencode(random_password.lab_postgres_admin.result)}@${azurerm_postgresql_flexible_server.lab.fqdn}:5432/${azurerm_postgresql_flexible_server_database.catalog.name}?sslmode=require"
+  key_vault_id = azurerm_key_vault.platform.id
+  tags         = local.common_tags
+
+  depends_on = [time_sleep.wait_for_key_vault_rbac]
+}
+
+resource "azurerm_key_vault_secret" "lab_mysql_jdbc_url" {
+  name         = "lab-mysql-jdbc-url"
+  value        = "jdbc:mysql://${azurerm_mysql_flexible_server.lab.fqdn}:3306/${azurerm_mysql_flexible_database.orders.name}?useSSL=true&requireSSL=true&serverTimezone=UTC"
+  key_vault_id = azurerm_key_vault.platform.id
+  tags         = local.common_tags
+
+  depends_on = [time_sleep.wait_for_key_vault_rbac]
+}
+
+resource "azurerm_key_vault_secret" "lab_mysql_username" {
+  name         = "lab-mysql-username"
+  value        = "labadmin"
+  key_vault_id = azurerm_key_vault.platform.id
+  tags         = local.common_tags
+
+  depends_on = [time_sleep.wait_for_key_vault_rbac]
+}
+
+resource "azurerm_key_vault_secret" "lab_mysql_password" {
+  name         = "lab-mysql-password"
+  value        = random_password.lab_mysql_admin.result
+  key_vault_id = azurerm_key_vault.platform.id
+  tags         = local.common_tags
+
+  depends_on = [time_sleep.wait_for_key_vault_rbac]
+}
+
+resource "azurerm_key_vault_secret" "lab_redis_url" {
+  name         = "lab-redis-url"
+  value        = "rediss://:${urlencode(azurerm_redis_cache.lab.primary_access_key)}@${azurerm_redis_cache.lab.hostname}:${azurerm_redis_cache.lab.ssl_port}"
+  key_vault_id = azurerm_key_vault.platform.id
+  tags         = local.common_tags
+
+  depends_on = [time_sleep.wait_for_key_vault_rbac]
+}
+
+resource "azurerm_key_vault_secret" "lab_cosmos_mongo_uri" {
+  name         = "lab-cosmos-mongo-uri"
+  value        = azurerm_cosmosdb_account.lab.primary_mongodb_connection_string
+  key_vault_id = azurerm_key_vault.platform.id
+  tags         = local.common_tags
+
+  depends_on = [time_sleep.wait_for_key_vault_rbac]
 }

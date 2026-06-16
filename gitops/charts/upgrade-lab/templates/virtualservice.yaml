@@ -1,0 +1,19 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: {{ include "upgrade-lab.fullname" . }}
+  labels:
+    {{- include "upgrade-lab.labels" . | nindent 4 }}
+spec:
+  hosts:
+    - {{ .Values.ingress.host }}
+  gateways:
+    - {{ .Values.ingress.gateway.namespace }}/{{ .Values.ingress.gateway.name }}
+  http:
+    - route:
+        - destination:
+            host: {{ include "upgrade-lab.fullname" . }}-edge.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: {{ .Values.services.edge.port }}
+{{- end }}

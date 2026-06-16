@@ -166,6 +166,24 @@ variable "velero_backup_container_name" {
   default     = "velero"
 }
 
+variable "artifact_tag" {
+  description = "Immutable tag used for locally built lab and operator images."
+  type        = string
+  default     = "0.1.0"
+}
+
+variable "lab_namespace" {
+  description = "Namespace used for the upgrade lab microservices."
+  type        = string
+  default     = "upgrade-lab"
+}
+
+variable "operator_namespace" {
+  description = "Namespace used for KubeUpgrade Guardian Operator."
+  type        = string
+  default     = "kubeupgrade-guardian-system"
+}
+
 variable "tags" {
   description = "Additional Azure tags."
   type        = map(string)

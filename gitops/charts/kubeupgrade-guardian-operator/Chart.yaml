@@ -1,0 +1,16 @@
+apiVersion: v2
+name: kubeupgrade-guardian-operator
+description: Assessment-only Kubernetes upgrade readiness operator.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+home: https://github.com/ihsenalaya/kubeupgrade-guardian-operator
+sources:
+  - https://github.com/ihsenalaya/kubeupgrade-guardian-operator
+keywords:
+  - kubernetes
+  - operator
+  - upgrade
+  - readiness
+maintainers:
+  - name: ihsenalaya

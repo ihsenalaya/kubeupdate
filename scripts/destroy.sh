@@ -3,9 +3,11 @@ set -euo pipefail
 
 cluster_name="$(terraform output -raw cluster_name 2>/dev/null || true)"
 resource_group_name="$(terraform output -raw resource_group_name 2>/dev/null || true)"
+az_extension_dir="$(mktemp -d)"
+trap 'rm -rf "${az_extension_dir}"' EXIT
 
-if [[ -n "${cluster_name}" && -n "${resource_group_name}" ]] && az aks show --resource-group "${resource_group_name}" --name "${cluster_name}" >/dev/null 2>&1; then
-  az aks command invoke \
+if [[ -n "${cluster_name}" && -n "${resource_group_name}" ]] && AZURE_EXTENSION_DIR="${az_extension_dir}" az aks show --resource-group "${resource_group_name}" --name "${cluster_name}" >/dev/null 2>&1; then
+  AZURE_EXTENSION_DIR="${az_extension_dir}" az aks command invoke \
     --resource-group "${resource_group_name}" \
     --name "${cluster_name}" \
     --command 'set -euo pipefail

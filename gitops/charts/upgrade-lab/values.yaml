@@ -1,0 +1,81 @@
+global:
+  imageRegistry: ""
+  imageTag: "0.1.0"
+  imagePullPolicy: IfNotPresent
+
+externalSecrets:
+  enabled: true
+  secretStoreName: azure-keyvault
+  targetSecretName: upgrade-lab-secrets
+  keys:
+    postgresDsn: lab-postgres-dsn
+    mysqlJdbcUrl: lab-mysql-jdbc-url
+    mysqlUsername: lab-mysql-username
+    mysqlPassword: lab-mysql-password
+    redisUrl: lab-redis-url
+    cosmosMongoUri: lab-cosmos-mongo-uri
+    clientCertificate: lab-client-certificate
+
+ingress:
+  enabled: true
+  host: lab.aks.ihsenalaya.xyz
+  gateway:
+    name: platform-gateway
+    namespace: istio-ingress
+
+services:
+  edge:
+    image: upgrade-lab/edge-api
+    replicas: 2
+    port: 3000
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        memory: 256Mi
+  catalog:
+    image: upgrade-lab/catalog-service
+    replicas: 2
+    port: 8000
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        memory: 256Mi
+  orders:
+    image: upgrade-lab/orders-service
+    replicas: 2
+    port: 8080
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        memory: 1Gi
+  signals:
+    image: upgrade-lab/signals-service
+    replicas: 2
+    port: 8090
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        memory: 256Mi
+
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 1

@@ -3,6 +3,7 @@ set -euo pipefail
 
 repo_url="$(terraform output -raw gitops_repo_url)"
 target_revision="$(terraform output -raw gitops_target_revision)"
+gitops_dir="gitops"
 gitops_file="gitops/argocd/platform.yaml"
 gitops_checkout_dir="${GITOPS_CHECKOUT_DIR:-.local/gitops-repo}"
 
@@ -48,15 +49,15 @@ if git -C "${gitops_checkout_dir}" show-ref --verify --quiet "refs/remotes/origi
   git -C "${gitops_checkout_dir}" pull --ff-only origin "${target_revision}"
 fi
 
-mkdir -p "${gitops_checkout_dir}/$(dirname "${gitops_file}")"
-cp "${gitops_file}" "${gitops_checkout_dir}/${gitops_file}"
+mkdir -p "${gitops_checkout_dir}/${gitops_dir}"
+rsync -a --delete "${gitops_dir}/" "${gitops_checkout_dir}/${gitops_dir}/"
 
-git -C "${gitops_checkout_dir}" add -f "${gitops_file}"
+git -C "${gitops_checkout_dir}" add -f "${gitops_dir}"
 
-if git -C "${gitops_checkout_dir}" diff --cached --quiet -- "${gitops_file}"; then
-  echo "GitOps manifest unchanged."
+if git -C "${gitops_checkout_dir}" diff --cached --quiet -- "${gitops_dir}"; then
+  echo "GitOps content unchanged."
 else
-  git -C "${gitops_checkout_dir}" commit -m "Update rendered Argo CD platform apps" -- "${gitops_file}"
+  git -C "${gitops_checkout_dir}" commit -m "Update rendered Argo CD platform apps" -- "${gitops_dir}"
 fi
 
 git -C "${gitops_checkout_dir}" push -u origin "${target_revision}"

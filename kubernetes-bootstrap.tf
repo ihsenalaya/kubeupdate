@@ -24,6 +24,12 @@ locals {
       "pod-security.kubernetes.io/audit"   = "privileged"
       "pod-security.kubernetes.io/warn"    = "privileged"
     }
+    (var.operator_namespace) = {}
+    (var.lab_namespace) = {
+      "pod-security.kubernetes.io/enforce" = "restricted"
+      "pod-security.kubernetes.io/audit"   = "restricted"
+      "pod-security.kubernetes.io/warn"    = "restricted"
+    }
   }
 
   rendered_namespace_documents = [

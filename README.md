@@ -17,6 +17,17 @@ Add-ons installes par Argo CD :
 - Kubecost.
 - Velero avec Azure Blob et snapshots Azure.
 - NeuVector.
+- KubeUpgrade Guardian Operator.
+- Upgrade Lab, une application microservices polyglotte pour tester les assessments de l'operateur.
+
+Upgrade Lab utilise des services PaaS Azure provisionnes par Terraform :
+
+- Azure Container Registry pour les images et packages Helm.
+- Azure Database for PostgreSQL Flexible Server pour `catalog-service`.
+- Azure Database for MySQL Flexible Server pour `orders-service`.
+- Azure Cosmos DB for MongoDB API pour `signals-service`.
+- Azure Cache for Redis pour `edge-api`.
+- Azure Key Vault pour les connection strings et un certificat applicatif monte dans `edge-api`.
 
 ## Prerequis
 
@@ -33,6 +44,8 @@ Add-ons installes par Argo CD :
 ```
 
 `./scripts/apply.sh` applique Terraform, pousse `gitops/argocd/platform.yaml` vers `kubeupdate` depuis un checkout local ignore dans `.local/gitops-repo`, bootstrappe Argo CD via `az aks command invoke`, puis lance les controles de sante.
+
+Le meme script construit et pousse les images operator/lab dans l'ACR Terraform, package les charts Helm en OCI dans ACR, puis synchronise tout le dossier `gitops/` vers le repository GitOps.
 
 La VM jump host est accessible en SSH direct. Les credentials generes sont dans un fichier local ignore par Git :
 
@@ -52,6 +65,7 @@ Les dashboards sont exposes uniquement via l'Istio internal load balancer `10.42
 - `jaeger.aks.ihsenalaya.xyz`
 - `kubecost.aks.ihsenalaya.xyz`
 - `neuvector.aks.ihsenalaya.xyz`
+- `lab.aks.ihsenalaya.xyz`
 
 ## Verification
 
