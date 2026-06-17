@@ -9,6 +9,7 @@ import subprocess
 import sys
 import time
 from datetime import datetime, timezone
+from math import ceil, floor
 from pathlib import Path
 
 
@@ -451,8 +452,33 @@ def aggregate(rows):
             item[f"{key}Min"] = round(min(values), 3)
             item[f"{key}Max"] = round(max(values), 3)
             item[f"{key}Mean"] = round(sum(values) / len(values), 3)
+            item[f"{key}StdDev"] = round(stddev(values), 3)
+            item[f"{key}P95"] = round(percentile(values, 95), 3)
         out.append(item)
     return out
+
+
+def stddev(values):
+    if len(values) < 2:
+        return 0.0
+    mean = sum(values) / len(values)
+    variance = sum((value - mean) ** 2 for value in values) / (len(values) - 1)
+    return variance ** 0.5
+
+
+def percentile(values, percent):
+    if not values:
+        return 0.0
+    ordered = sorted(values)
+    if len(ordered) == 1:
+        return ordered[0]
+    rank = (len(ordered) - 1) * percent / 100
+    lower = floor(rank)
+    upper = ceil(rank)
+    if lower == upper:
+        return ordered[int(rank)]
+    weight = rank - lower
+    return ordered[lower] * (1 - weight) + ordered[upper] * weight
 
 
 def write_summary(result_dir, metadata, rows, aggregates):
@@ -472,22 +498,27 @@ def write_summary(result_dir, metadata, rows, aggregates):
         "",
         "## Aggregate Metrics",
         "",
-        "| Objects | Runs | Duration mean (s) | Duration min/max (s) | Peak RSS mean (MiB) | CPU delta mean (s) | Findings mean | API request delta mean |",
-        "| ---: | ---: | ---: | --- | ---: | ---: | ---: | ---: |",
+        "| Objects | Runs | Duration mean/std/p95 (s) | Duration min/max (s) | Peak RSS mean/p95 (MiB) | CPU delta mean (s) | Findings mean | API request delta mean/p95 |",
+        "| ---: | ---: | --- | --- | --- | ---: | ---: | --- |",
     ]
     for row in aggregates:
         lines.append(
-            "| {objectCount} | {runs} | {durationSecondsMean} | {durationSecondsMin}/{durationSecondsMax} | "
-            "{peakRssMiBMean} | {cpuSecondsDeltaMean} | {findingCountMean} | {apiRequestTotalDeltaMean} |".format(
+            "| {objectCount} | {runs} | {durationSecondsMean}/{durationSecondsStdDev}/{durationSecondsP95} | "
+            "{durationSecondsMin}/{durationSecondsMax} | {peakRssMiBMean}/{peakRssMiBP95} | "
+            "{cpuSecondsDeltaMean} | {findingCountMean} | {apiRequestTotalDeltaMean}/{apiRequestTotalDeltaP95} |".format(
                 objectCount=row.get("objectCount", ""),
                 runs=row.get("runs", ""),
                 durationSecondsMean=row.get("durationSecondsMean", "n/a"),
+                durationSecondsStdDev=row.get("durationSecondsStdDev", "n/a"),
+                durationSecondsP95=row.get("durationSecondsP95", "n/a"),
                 durationSecondsMin=row.get("durationSecondsMin", "n/a"),
                 durationSecondsMax=row.get("durationSecondsMax", "n/a"),
                 peakRssMiBMean=row.get("peakRssMiBMean", "n/a"),
+                peakRssMiBP95=row.get("peakRssMiBP95", "n/a"),
                 cpuSecondsDeltaMean=row.get("cpuSecondsDeltaMean", "n/a"),
                 findingCountMean=row.get("findingCountMean", "n/a"),
                 apiRequestTotalDeltaMean=row.get("apiRequestTotalDeltaMean", "n/a"),
+                apiRequestTotalDeltaP95=row.get("apiRequestTotalDeltaP95", "n/a"),
             )
         )
     lines.extend(

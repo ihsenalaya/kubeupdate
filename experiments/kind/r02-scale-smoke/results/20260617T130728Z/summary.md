@@ -13,11 +13,11 @@
 
 ## Aggregate Metrics
 
-| Objects | Runs | Duration mean (s) | Duration min/max (s) | Peak RSS mean (MiB) | CPU delta mean (s) | Findings mean | API request delta mean |
-| ---: | ---: | ---: | --- | ---: | ---: | ---: | ---: |
-| 100 | 5 | 4.556 | 2.765/7.184 | 43.414 | 0.0 | 50.0 | 209.8 |
-| 500 | 5 | 1.642 | 1.503/1.894 | 41.833 | 0.0 | 250.0 | 44.0 |
-| 1000 | 5 | 5.081 | 3.133/9.512 | 31.007 | 0.0 | 500.0 | 141.4 |
+| Objects | Runs | Duration mean/std/p95 (s) | Duration min/max (s) | Peak RSS mean/p95 (MiB) | CPU delta mean (s) | Findings mean | API request delta mean/p95 |
+| ---: | ---: | --- | --- | --- | ---: | ---: | --- |
+| 100 | 5 | 4.556/2.276/7.128 | 2.765/7.184 | 43.414/43.414 | 0.0 | 50.0 | 209.8/333.4 |
+| 500 | 5 | 1.642/0.148/1.84 | 1.503/1.894 | 41.833/43.414 | 0.0 | 250.0 | 44.0/48.0 |
+| 1000 | 5 | 5.081/2.687/8.755 | 3.133/9.512 | 31.007/36.507 | 0.0 | 500.0 | 141.4/249.6 |
 
 ## Raw Runs
 
