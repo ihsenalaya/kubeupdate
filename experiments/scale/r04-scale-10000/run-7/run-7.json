@@ -1,0 +1,11 @@
+{
+  "size": 10000,
+  "run": 7,
+  "timestamp_start": "2026-06-17T22:24:04Z",
+  "timestamp_end": "2026-06-17T22:24:23Z",
+  "duration_s": 19,
+  "rss_mib": 768.297,
+  "api_requests_delta": 5,
+  "completed": true,
+  "errors": []
+}

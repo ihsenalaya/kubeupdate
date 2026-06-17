@@ -1,127 +1,176 @@
 {
-  "anomalies": [
+  "anomalies": [],
+  "duration_trend_observations": [
     {
-      "count": 1,
-      "size": 5000,
-      "type": "incomplete_runs"
-    },
-    {
-      "count": 1,
-      "size": 10000,
-      "type": "incomplete_runs"
-    },
-    {
-      "size": 5000,
-      "type": "missing_median"
-    },
-    {
-      "size": 10000,
-      "type": "missing_median"
+      "median_s": 7.5,
+      "previous_median_s": 8.0,
+      "previous_size": 100,
+      "size": 1000,
+      "type": "duration_median_decreased"
     }
+  ],
+  "limitations": [
+    "This summary aggregates the archived runs only; it does not synthesize missing repetitions.",
+    "p95/p99 values are computed from ten-run samples and should be interpreted as controlled benchmark statistics, not production SLOs.",
+    "Failure reasons are extracted from archived run errors and UpgradeAssessment conditions.",
+    "When SKIP_EXISTING_LOAD=true, repeated runs reuse already-created workloads and primarily measure assessment reconciliation rather than workload creation."
   ],
   "metrics": {
     "100": {
+      "all_run_duration_s": {
+        "mean": 9.7,
+        "median": 8.0,
+        "p95": 13.0,
+        "p99": 13.0,
+        "std": 2.7221
+      },
       "api_requests_delta": {
-        "mean": 18.0,
-        "median": 18.0,
-        "p95": 18.0,
-        "p99": 18.0,
-        "std": 0.0
+        "mean": 5.8,
+        "median": 4.5,
+        "p95": 12.6,
+        "p99": 16.92,
+        "std": 4.1905
       },
-      "completed_runs": 1,
+      "completed_runs": 10,
       "duration_s": {
-        "mean": 7.0,
-        "median": 7.0,
-        "p95": 7.0,
-        "p99": 7.0,
-        "std": 0.0
+        "mean": 9.7,
+        "median": 8.0,
+        "p95": 13.0,
+        "p99": 13.0,
+        "std": 2.7221
       },
+      "failed_runs": 0,
+      "failure_reason": null,
+      "measurement_notes": [
+        "rss_mib is computed from in-cluster controller pod metrics when available, or from LOCAL_CONTROLLER_PID when a local controller is used.",
+        "Local process RSS may retain Go heap and informer-cache memory across repeated reconciliations; interpret it as a run-level resource proxy, not isolated steady-state memory."
+      ],
       "rss_mib": {
-        "mean": 0.0,
-        "median": 0.0,
-        "p95": 0.0,
-        "p99": 0.0,
-        "std": 0.0
+        "mean": 49.1044,
+        "median": 49.041,
+        "p95": 50.5302,
+        "p99": 50.6468,
+        "std": 0.8937
       },
-      "runs": 1
+      "runs": 10
     },
     "1000": {
+      "all_run_duration_s": {
+        "mean": 9.4,
+        "median": 7.5,
+        "p95": 13.0,
+        "p99": 13.0,
+        "std": 2.7641
+      },
       "api_requests_delta": {
-        "mean": 3.0,
-        "median": 3.0,
-        "p95": 3.0,
-        "p99": 3.0,
-        "std": 0.0
+        "mean": 5.5,
+        "median": 4.0,
+        "p95": 12.6,
+        "p99": 16.92,
+        "std": 4.2485
       },
-      "completed_runs": 1,
+      "completed_runs": 10,
       "duration_s": {
-        "mean": 41.0,
-        "median": 41.0,
-        "p95": 41.0,
-        "p99": 41.0,
-        "std": 0.0
+        "mean": 9.4,
+        "median": 7.5,
+        "p95": 13.0,
+        "p99": 13.0,
+        "std": 2.7641
       },
+      "failed_runs": 0,
+      "failure_reason": null,
+      "measurement_notes": [
+        "rss_mib is computed from in-cluster controller pod metrics when available, or from LOCAL_CONTROLLER_PID when a local controller is used.",
+        "Local process RSS may retain Go heap and informer-cache memory across repeated reconciliations; interpret it as a run-level resource proxy, not isolated steady-state memory."
+      ],
       "rss_mib": {
-        "mean": 0.0,
-        "median": 0.0,
-        "p95": 0.0,
-        "p99": 0.0,
-        "std": 0.0
+        "mean": 98.8742,
+        "median": 99.2265,
+        "p95": 102.612,
+        "p99": 102.688,
+        "std": 4.1242
       },
-      "runs": 1
+      "runs": 10
     },
     "10000": {
+      "all_run_duration_s": {
+        "mean": 21.2,
+        "median": 19.5,
+        "p95": 37.0,
+        "p99": 37.0,
+        "std": 9.1192
+      },
       "api_requests_delta": {
-        "mean": null,
-        "median": null,
-        "p95": null,
-        "p99": null,
-        "std": null
+        "mean": 3.8,
+        "median": 3.0,
+        "p95": 6.65,
+        "p99": 7.73,
+        "std": 1.5362
       },
-      "completed_runs": 0,
+      "completed_runs": 10,
       "duration_s": {
-        "mean": null,
-        "median": null,
-        "p95": null,
-        "p99": null,
-        "std": null
+        "mean": 21.2,
+        "median": 19.5,
+        "p95": 37.0,
+        "p99": 37.0,
+        "std": 9.1192
       },
+      "failed_runs": 0,
+      "failure_reason": null,
+      "measurement_notes": [
+        "rss_mib is computed from in-cluster controller pod metrics when available, or from LOCAL_CONTROLLER_PID when a local controller is used.",
+        "Local process RSS may retain Go heap and informer-cache memory across repeated reconciliations; interpret it as a run-level resource proxy, not isolated steady-state memory."
+      ],
       "rss_mib": {
-        "mean": null,
-        "median": null,
-        "p95": null,
-        "p99": null,
-        "std": null
+        "mean": 717.7174,
+        "median": 726.0725,
+        "p95": 770.7055,
+        "p99": 772.2819,
+        "std": 45.6334
       },
-      "runs": 1
+      "runs": 10
     },
     "5000": {
+      "all_run_duration_s": {
+        "mean": 14.1,
+        "median": 13.5,
+        "p95": 17.3,
+        "p99": 19.46,
+        "std": 2.0224
+      },
       "api_requests_delta": {
-        "mean": null,
-        "median": null,
-        "p95": null,
-        "p99": null,
-        "std": null
+        "mean": 4.2,
+        "median": 4.0,
+        "p95": 5.0,
+        "p99": 5.0,
+        "std": 0.4
       },
-      "completed_runs": 0,
+      "completed_runs": 10,
       "duration_s": {
-        "mean": null,
-        "median": null,
-        "p95": null,
-        "p99": null,
-        "std": null
+        "mean": 14.1,
+        "median": 13.5,
+        "p95": 17.3,
+        "p99": 19.46,
+        "std": 2.0224
       },
+      "failed_runs": 0,
+      "failure_reason": null,
+      "measurement_notes": [
+        "rss_mib is computed from in-cluster controller pod metrics when available, or from LOCAL_CONTROLLER_PID when a local controller is used.",
+        "Local process RSS may retain Go heap and informer-cache memory across repeated reconciliations; interpret it as a run-level resource proxy, not isolated steady-state memory."
+      ],
       "rss_mib": {
-        "mean": null,
-        "median": null,
-        "p95": null,
-        "p99": null,
-        "std": null
+        "mean": 325.4336,
+        "median": 327.535,
+        "p95": 341.1739,
+        "p99": 342.7068,
+        "std": 13.745
       },
-      "runs": 1
+      "runs": 10
     }
   },
-  "monotonicity_ok": false,
+  "monotonicity_ok": true,
+  "rss_monotonicity_ok": true,
   "sizes": [
     100,
     1000,

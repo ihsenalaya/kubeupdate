@@ -1,5 +1,29 @@
 # Changes Log
 
+## 2026-06-18
+
+- Completed the post-fix AKS scalability regression for Step 3:
+  - Patched the operator to bound published `UpgradeAssessment.status.findings` and generated `UpgradePlan` actions to 200 entries while preserving complete `status.summary` counts.
+  - Recreated `aks-medium` with AKS Cluster Autoscaler enabled (`min=3`, `max=8`) to rerun contaminated 100/1,000 measurements on a clean cluster.
+  - Reran 100 Deployment/PDB pairs with clean namespace setup/teardown for each of 10 runs: 10/10 completed, median 8.0s, p95 13.0s, median local RSS 49.041 MiB.
+  - Reran 1,000 Deployment/PDB pairs with run-1 on a clean cluster and runs 2-10 reusing the generated load: 10/10 completed, median 7.5s, p95 13.0s, median local RSS 99.227 MiB.
+  - Preserved post-fix archived 5,000 and 10,000 pair runs: both 10/10 completed; 5,000 reports 10,000 aggregate findings and 10,000 reports 20,000 aggregate findings with bounded detailed status.
+  - Regenerated `experiments/scale/r04-scalability-summary.json`; it now reports 40/40 completed runs, zero anomalies, and monotone RSS medians across 100/1,000/5,000/10,000.
+  - Destroyed the recreated AKS cluster and verified `rg-aks-medium` is absent, Terraform state is empty, and `/home/ihsen/.kube/config-aks-b` is absent.
+- Completed the Step 2 consistency check:
+  - Verified 20 R10 fixtures, 20 expected-finding files, 20 `derivation_method: k8s-spec-analysis` fields, and 20 `k8s_spec_ref` entries.
+  - Regenerated `experiments/kind/r10-independent-labels/results-summary.json`: 36 expected positives, 32 TP, 0 FP, 4 FN, precision 1.0000, recall 0.8889, F1 0.9412.
+- Updated the article and generated PDF:
+  - Replaced stale 5,000/10,000 failure claims with the bounded-write 40-run AKS scale regression.
+  - Added the validated monotone RSS medians and clarified that R10 labels are specification-grounded and team-authored, not externally human-labeled.
+  - Recompiled `article/kubeupgrade-guardian-readiness.pdf` successfully with Tectonic.
+- Validation commands passed:
+  - `go test ./...` in `kubeupgrade-guardian-operator`.
+  - `bash -n experiments/scale/run-scale-study.sh experiments/scale/generate-load.sh`.
+  - `python3 -m py_compile experiments/scale/aggregate-results.py experiments/kind/r10-independent-labels/compare-labels.py`.
+  - `terraform -chdir=terraform/aks-evaluation validate`.
+  - `tectonic --keep-logs article/kubeupgrade-guardian-readiness.tex`.
+
 ## 2026-06-17
 
 - Added CODEX-prepared Q1 action-plan scaffolding from `propmt.txt`:

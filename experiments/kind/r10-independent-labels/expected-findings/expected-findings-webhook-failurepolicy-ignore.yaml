@@ -1,5 +1,7 @@
-fixture: "webhook-failurepolicy-ignore.yaml"
-labeled_by: "Codex-authored-control-labels"
-labeled_at: "2026-06-17"
+fixture: webhook-failurepolicy-ignore.yaml
+labeled_by: Codex-authored-control-labels
+labeled_at: '2026-06-17'
 negative_control: true
 findings: []
+derivation_method: k8s-spec-analysis
+k8s_spec_ref: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#failure-policy

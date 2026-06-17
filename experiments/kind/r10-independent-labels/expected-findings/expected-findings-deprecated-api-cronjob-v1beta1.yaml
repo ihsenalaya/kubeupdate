@@ -1,15 +1,19 @@
-fixture: "deprecated-api-cronjob-v1beta1.yaml"
-labeled_by: "Codex-authored-control-labels"
-labeled_at: "2026-06-17"
+fixture: deprecated-api-cronjob-v1beta1.yaml
+labeled_by: Codex-authored-control-labels
+derivation_method: k8s-spec-analysis
+labeled_at: '2026-06-17'
 negative_control: false
 findings:
-  - family: "DeprecatedAPI"
-    type: "DEPRECATED_OR_REMOVED_API"
-    severity: "Critical"
-    confidence: "certain"
-    resource:
-      apiVersion: "batch/v1beta1"
-      kind: "CronJob"
-      namespace: "default"
-      name: "legacy-cronjob"
-    message_contains: "batch/v1beta1"
+- family: DeprecatedAPI
+  type: DEPRECATED_OR_REMOVED_API
+  severity: Critical
+  confidence: certain
+  k8s_spec_ref: https://kubernetes.io/docs/reference/using-api/deprecation-guide/#cronjob-v125
+  rationale: batch/v1beta1 CronJob removed in Kubernetes v1.25; any upgrade to v1.25+
+    will reject this resource
+  resource:
+    apiVersion: batch/v1beta1
+    kind: CronJob
+    namespace: default
+    name: legacy-cronjob
+  message_contains: batch/v1beta1

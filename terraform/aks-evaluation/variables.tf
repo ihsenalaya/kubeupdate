@@ -28,6 +28,24 @@ variable "aks_small_node_count" {
   default     = 1
 }
 
+variable "aks_small_auto_scaling_enabled" {
+  description = "Enable cluster autoscaler for Cluster A."
+  type        = bool
+  default     = false
+}
+
+variable "aks_small_min_count" {
+  description = "Minimum node count for Cluster A when autoscaling is enabled."
+  type        = number
+  default     = 1
+}
+
+variable "aks_small_max_count" {
+  description = "Maximum node count for Cluster A when autoscaling is enabled."
+  type        = number
+  default     = 2
+}
+
 variable "aks_small_vm_size" {
   description = "VM size for Cluster A."
   type        = string
@@ -46,6 +64,24 @@ variable "aks_medium_node_count" {
   default     = 3
 }
 
+variable "aks_medium_auto_scaling_enabled" {
+  description = "Enable cluster autoscaler for Cluster B."
+  type        = bool
+  default     = false
+}
+
+variable "aks_medium_min_count" {
+  description = "Minimum node count for Cluster B when autoscaling is enabled."
+  type        = number
+  default     = 3
+}
+
+variable "aks_medium_max_count" {
+  description = "Maximum node count for Cluster B when autoscaling is enabled."
+  type        = number
+  default     = 8
+}
+
 variable "aks_medium_vm_size" {
   description = "VM size for Cluster B."
   type        = string
@@ -62,6 +98,24 @@ variable "aks_policy_node_count" {
   description = "Node count for Cluster C."
   type        = number
   default     = 3
+}
+
+variable "aks_policy_auto_scaling_enabled" {
+  description = "Enable cluster autoscaler for Cluster C."
+  type        = bool
+  default     = false
+}
+
+variable "aks_policy_min_count" {
+  description = "Minimum node count for Cluster C when autoscaling is enabled."
+  type        = number
+  default     = 3
+}
+
+variable "aks_policy_max_count" {
+  description = "Maximum node count for Cluster C when autoscaling is enabled."
+  type        = number
+  default     = 8
 }
 
 variable "aks_policy_vm_size" {

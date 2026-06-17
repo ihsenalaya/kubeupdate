@@ -1,32 +1,43 @@
-fixture: "admission-webhook-restrictive.yaml"
-labeled_by: "Codex-authored-control-labels"
-labeled_at: "2026-06-17"
+fixture: admission-webhook-restrictive.yaml
+labeled_by: Codex-authored-control-labels
+labeled_at: '2026-06-17'
 negative_control: false
 findings:
-  - family: "AdmissionWebhook"
-    type: "ADMISSION_WEBHOOK_RISK"
-    severity: "High"
-    confidence: "certain"
-    resource:
-      apiVersion: "admissionregistration.k8s.io/v1"
-      kind: "ValidatingWebhookConfiguration"
-      name: "r10-restrictive-webhook"
-    message_contains: "failurePolicy=Fail"
-  - family: "AdmissionWebhook"
-    type: "ADMISSION_WEBHOOK_RISK"
-    severity: "High"
-    confidence: "certain"
-    resource:
-      apiVersion: "admissionregistration.k8s.io/v1"
-      kind: "ValidatingWebhookConfiguration"
-      name: "r10-restrictive-webhook"
-    message_contains: "namespaceSelector is absent"
-  - family: "AdmissionWebhook"
-    type: "ADMISSION_WEBHOOK_RISK"
-    severity: "Critical"
-    confidence: "certain"
-    resource:
-      apiVersion: "admissionregistration.k8s.io/v1"
-      kind: "ValidatingWebhookConfiguration"
-      name: "r10-restrictive-webhook"
-    message_contains: "referenced service is absent"
+- family: AdmissionWebhook
+  type: ADMISSION_WEBHOOK_RISK
+  severity: High
+  confidence: certain
+  resource:
+    apiVersion: admissionregistration.k8s.io/v1
+    kind: ValidatingWebhookConfiguration
+    name: r10-restrictive-webhook
+  message_contains: failurePolicy=Fail
+  k8s_spec_ref: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#failure-policy
+  rationale: 'failurePolicy: Fail means webhook unavailability blocks API requests
+    during upgrade; K8s docs require careful review before upgrading clusters with
+    blocking webhooks'
+- family: AdmissionWebhook
+  type: ADMISSION_WEBHOOK_RISK
+  severity: High
+  confidence: certain
+  resource:
+    apiVersion: admissionregistration.k8s.io/v1
+    kind: ValidatingWebhookConfiguration
+    name: r10-restrictive-webhook
+  message_contains: namespaceSelector is absent
+  k8s_spec_ref: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector
+  rationale: Absent namespaceSelector means webhook intercepts ALL namespaces including
+    kube-system; risks blocking control-plane operations during upgrade
+- family: AdmissionWebhook
+  type: ADMISSION_WEBHOOK_RISK
+  severity: Critical
+  confidence: certain
+  resource:
+    apiVersion: admissionregistration.k8s.io/v1
+    kind: ValidatingWebhookConfiguration
+    name: r10-restrictive-webhook
+  message_contains: referenced service is absent
+  k8s_spec_ref: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#webhook-configuration
+  rationale: clientConfig.service must reference an existing Service; missing service
+    with failurePolicy=Fail causes immediate API request rejection
+derivation_method: k8s-spec-analysis

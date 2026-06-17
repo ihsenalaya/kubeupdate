@@ -28,7 +28,10 @@ resource "azurerm_kubernetes_cluster" "this" {
 
   default_node_pool {
     name                        = "system"
-    node_count                  = var.node_count
+    enable_auto_scaling         = var.auto_scaling_enabled
+    node_count                  = var.auto_scaling_enabled ? null : var.node_count
+    min_count                   = var.auto_scaling_enabled ? var.min_count : null
+    max_count                   = var.auto_scaling_enabled ? var.max_count : null
     vm_size                     = var.vm_size
     temporary_name_for_rotation = "tempsystem"
   }

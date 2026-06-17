@@ -1,15 +1,19 @@
-fixture: "deployment-with-readiness-probe.yaml"
-labeled_by: "Codex-authored-control-labels"
-labeled_at: "2026-06-17"
+fixture: deployment-with-readiness-probe.yaml
+labeled_by: Codex-authored-control-labels
+labeled_at: '2026-06-17'
 negative_control: false
 findings:
-  - family: "PDB"
-    type: "PDB_BLOCKING_RISK"
-    severity: "Low"
-    confidence: "certain"
-    resource:
-      apiVersion: "apps/v1"
-      kind: "Deployment"
-      namespace: "r10-with-readiness"
-      name: "with-readiness"
-    message_contains: "has no matching PodDisruptionBudget"
+- family: PDB
+  type: PDB_BLOCKING_RISK
+  severity: Low
+  confidence: certain
+  resource:
+    apiVersion: apps/v1
+    kind: Deployment
+    namespace: r10-with-readiness
+    name: with-readiness
+  message_contains: has no matching PodDisruptionBudget
+  k8s_spec_ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  rationale: Deployment has no PodDisruptionBudget; 2 replicas without PDB are unprotected
+    against simultaneous voluntary eviction
+derivation_method: k8s-spec-analysis

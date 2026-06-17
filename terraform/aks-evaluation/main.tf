@@ -34,6 +34,9 @@ module "aks_small" {
   location             = var.location
   kubernetes_version   = var.kubernetes_version
   node_count           = var.aks_small_node_count
+  auto_scaling_enabled = var.aks_small_auto_scaling_enabled
+  min_count            = var.aks_small_min_count
+  max_count            = var.aks_small_max_count
   vm_size              = var.aks_small_vm_size
   azure_policy_enabled = false
   tags                 = local.tags
@@ -46,6 +49,9 @@ module "aks_medium" {
   location             = var.location
   kubernetes_version   = var.kubernetes_version
   node_count           = var.aks_medium_node_count
+  auto_scaling_enabled = var.aks_medium_auto_scaling_enabled
+  min_count            = var.aks_medium_min_count
+  max_count            = var.aks_medium_max_count
   vm_size              = var.aks_medium_vm_size
   azure_policy_enabled = false
   tags                 = local.tags
@@ -58,6 +64,9 @@ module "aks_policy" {
   location             = var.location
   kubernetes_version   = var.kubernetes_version
   node_count           = var.aks_policy_node_count
+  auto_scaling_enabled = var.aks_policy_auto_scaling_enabled
+  min_count            = var.aks_policy_min_count
+  max_count            = var.aks_policy_max_count
   vm_size              = var.aks_policy_vm_size
   azure_policy_enabled = true
   tags                 = local.tags

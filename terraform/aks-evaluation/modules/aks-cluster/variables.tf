@@ -18,6 +18,24 @@ variable "node_count" {
   type        = number
 }
 
+variable "auto_scaling_enabled" {
+  description = "Enable cluster autoscaler for the default node pool."
+  type        = bool
+  default     = false
+}
+
+variable "min_count" {
+  description = "Minimum node count when autoscaling is enabled."
+  type        = number
+  default     = null
+}
+
+variable "max_count" {
+  description = "Maximum node count when autoscaling is enabled."
+  type        = number
+  default     = null
+}
+
 variable "vm_size" {
   description = "Default node pool VM size."
   type        = string

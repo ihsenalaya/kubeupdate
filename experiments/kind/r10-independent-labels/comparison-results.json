@@ -1,0 +1,221 @@
+{
+  "actual_count": 32,
+  "by_family": {
+    "AdmissionWebhook": {
+      "f1": 0.9412,
+      "false_negatives": [
+        {
+          "confidence": "likely",
+          "family": "AdmissionWebhook",
+          "fixture": "webhook-cabundle-expired.yaml",
+          "message_contains": "caBundle",
+          "negative_control": false,
+          "resource": {
+            "apiVersion": "admissionregistration.k8s.io/v1",
+            "kind": "ValidatingWebhookConfiguration",
+            "name": "r10-webhook-empty-cabundle"
+          },
+          "severity": "Critical",
+          "type": "ADMISSION_WEBHOOK_RISK"
+        }
+      ],
+      "false_positives": [],
+      "fn": 1,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.8889,
+      "tp": 8
+    },
+    "Capacity": {
+      "f1": 0.6667,
+      "false_negatives": [
+        {
+          "confidence": "uncertain",
+          "family": "Capacity",
+          "fixture": "statefulset-pvc-no-storageclass.yaml",
+          "message_contains": "storageClass",
+          "negative_control": false,
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "StatefulSet",
+            "name": "db",
+            "namespace": "r10-pvc-no-storageclass"
+          },
+          "severity": "High",
+          "type": "CAPACITY_DRAIN_RISK"
+        }
+      ],
+      "false_positives": [],
+      "fn": 1,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.5,
+      "tp": 1
+    },
+    "DeprecatedAPI": {
+      "f1": 0.6667,
+      "false_negatives": [
+        {
+          "confidence": "certain",
+          "family": "DeprecatedAPI",
+          "fixture": "deprecated-api-ingress-v1beta1.yaml",
+          "message_contains": "networking.k8s.io/v1beta1",
+          "negative_control": false,
+          "resource": {
+            "apiVersion": "networking.k8s.io/v1beta1",
+            "kind": "Ingress",
+            "name": "legacy-ingress",
+            "namespace": "default"
+          },
+          "severity": "Critical",
+          "type": "DEPRECATED_OR_REMOVED_API"
+        }
+      ],
+      "false_positives": [],
+      "fn": 1,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.5,
+      "tp": 1
+    },
+    "Observability": {
+      "f1": 1.0,
+      "false_negatives": [],
+      "false_positives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 2
+    },
+    "PDB": {
+      "f1": 1.0,
+      "false_negatives": [],
+      "false_positives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 11
+    },
+    "PolicyRisk": {
+      "f1": 1.0,
+      "false_negatives": [],
+      "false_positives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 3
+    },
+    "RBAC": {
+      "f1": 0.0,
+      "false_negatives": [
+        {
+          "confidence": "uncertain",
+          "family": "RBAC",
+          "fixture": "rbac-missing-list-permission.yaml",
+          "message_contains": "RBAC denied",
+          "negative_control": false,
+          "resource": {},
+          "severity": "High",
+          "type": "RBAC_ASSESSMENT_GAP"
+        }
+      ],
+      "false_positives": [],
+      "fn": 1,
+      "fp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "tp": 0
+    },
+    "ReadinessProbes": {
+      "f1": 1.0,
+      "false_negatives": [],
+      "false_positives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 4
+    },
+    "WorkloadAvailability": {
+      "f1": 1.0,
+      "false_negatives": [],
+      "false_positives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 2
+    }
+  },
+  "cohens_kappa_severity": 0.4444,
+  "expected_count": 36,
+  "negative_controls": 3,
+  "overall": {
+    "f1": 0.9412,
+    "false_negatives": [
+      {
+        "confidence": "certain",
+        "family": "DeprecatedAPI",
+        "fixture": "deprecated-api-ingress-v1beta1.yaml",
+        "message_contains": "networking.k8s.io/v1beta1",
+        "negative_control": false,
+        "resource": {
+          "apiVersion": "networking.k8s.io/v1beta1",
+          "kind": "Ingress",
+          "name": "legacy-ingress",
+          "namespace": "default"
+        },
+        "severity": "Critical",
+        "type": "DEPRECATED_OR_REMOVED_API"
+      },
+      {
+        "confidence": "uncertain",
+        "family": "RBAC",
+        "fixture": "rbac-missing-list-permission.yaml",
+        "message_contains": "RBAC denied",
+        "negative_control": false,
+        "resource": {},
+        "severity": "High",
+        "type": "RBAC_ASSESSMENT_GAP"
+      },
+      {
+        "confidence": "uncertain",
+        "family": "Capacity",
+        "fixture": "statefulset-pvc-no-storageclass.yaml",
+        "message_contains": "storageClass",
+        "negative_control": false,
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "StatefulSet",
+          "name": "db",
+          "namespace": "r10-pvc-no-storageclass"
+        },
+        "severity": "High",
+        "type": "CAPACITY_DRAIN_RISK"
+      },
+      {
+        "confidence": "likely",
+        "family": "AdmissionWebhook",
+        "fixture": "webhook-cabundle-expired.yaml",
+        "message_contains": "caBundle",
+        "negative_control": false,
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "r10-webhook-empty-cabundle"
+        },
+        "severity": "Critical",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      }
+    ],
+    "false_positives": [],
+    "fn": 4,
+    "fp": 0,
+    "precision": 1.0,
+    "recall": 0.8889,
+    "tp": 32
+  }
+}

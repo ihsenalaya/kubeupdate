@@ -1,32 +1,42 @@
-fixture: "webhook-service-missing.yaml"
-labeled_by: "Codex-authored-control-labels"
-labeled_at: "2026-06-17"
+fixture: webhook-service-missing.yaml
+labeled_by: Codex-authored-control-labels
+labeled_at: '2026-06-17'
 negative_control: false
 findings:
-  - family: "AdmissionWebhook"
-    type: "ADMISSION_WEBHOOK_RISK"
-    severity: "High"
-    confidence: "certain"
-    resource:
-      apiVersion: "admissionregistration.k8s.io/v1"
-      kind: "ValidatingWebhookConfiguration"
-      name: "r10-webhook-missing-service"
-    message_contains: "failurePolicy=Fail"
-  - family: "AdmissionWebhook"
-    type: "ADMISSION_WEBHOOK_RISK"
-    severity: "High"
-    confidence: "certain"
-    resource:
-      apiVersion: "admissionregistration.k8s.io/v1"
-      kind: "ValidatingWebhookConfiguration"
-      name: "r10-webhook-missing-service"
-    message_contains: "namespaceSelector is absent"
-  - family: "AdmissionWebhook"
-    type: "ADMISSION_WEBHOOK_RISK"
-    severity: "Critical"
-    confidence: "certain"
-    resource:
-      apiVersion: "admissionregistration.k8s.io/v1"
-      kind: "ValidatingWebhookConfiguration"
-      name: "r10-webhook-missing-service"
-    message_contains: "referenced service is absent"
+- family: AdmissionWebhook
+  type: ADMISSION_WEBHOOK_RISK
+  severity: High
+  confidence: certain
+  resource:
+    apiVersion: admissionregistration.k8s.io/v1
+    kind: ValidatingWebhookConfiguration
+    name: r10-webhook-missing-service
+  message_contains: failurePolicy=Fail
+  k8s_spec_ref: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#failure-policy
+  rationale: 'failurePolicy: Fail blocks all intercepted API requests if webhook is
+    unavailable'
+- family: AdmissionWebhook
+  type: ADMISSION_WEBHOOK_RISK
+  severity: High
+  confidence: certain
+  resource:
+    apiVersion: admissionregistration.k8s.io/v1
+    kind: ValidatingWebhookConfiguration
+    name: r10-webhook-missing-service
+  message_contains: namespaceSelector is absent
+  k8s_spec_ref: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector
+  rationale: No namespaceSelector — intercepts all namespaces including kube-system
+- family: AdmissionWebhook
+  type: ADMISSION_WEBHOOK_RISK
+  severity: Critical
+  confidence: certain
+  resource:
+    apiVersion: admissionregistration.k8s.io/v1
+    kind: ValidatingWebhookConfiguration
+    name: r10-webhook-missing-service
+  message_contains: referenced service is absent
+  k8s_spec_ref: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#webhook-configuration
+  rationale: 'Service ''absent-webhook'' in namespace ''r10-webhook-missing'' does
+    not exist — verifiable by YAML: no Service resource defined; failurePolicy=Fail
+    causes immediate rejection of all configmap UPDATE operations'
+derivation_method: k8s-spec-analysis

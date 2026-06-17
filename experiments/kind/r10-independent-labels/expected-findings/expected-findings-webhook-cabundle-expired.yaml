@@ -1,32 +1,41 @@
-fixture: "webhook-cabundle-expired.yaml"
-labeled_by: "Codex-authored-control-labels"
-labeled_at: "2026-06-17"
+fixture: webhook-cabundle-expired.yaml
+labeled_by: Codex-authored-control-labels
+labeled_at: '2026-06-17'
 negative_control: false
 findings:
-  - family: "AdmissionWebhook"
-    type: "ADMISSION_WEBHOOK_RISK"
-    severity: "High"
-    confidence: "certain"
-    resource:
-      apiVersion: "admissionregistration.k8s.io/v1"
-      kind: "ValidatingWebhookConfiguration"
-      name: "r10-webhook-empty-cabundle"
-    message_contains: "failurePolicy=Fail"
-  - family: "AdmissionWebhook"
-    type: "ADMISSION_WEBHOOK_RISK"
-    severity: "High"
-    confidence: "certain"
-    resource:
-      apiVersion: "admissionregistration.k8s.io/v1"
-      kind: "ValidatingWebhookConfiguration"
-      name: "r10-webhook-empty-cabundle"
-    message_contains: "namespaceSelector is absent"
-  - family: "AdmissionWebhook"
-    type: "ADMISSION_WEBHOOK_RISK"
-    severity: "Critical"
-    confidence: "likely"
-    resource:
-      apiVersion: "admissionregistration.k8s.io/v1"
-      kind: "ValidatingWebhookConfiguration"
-      name: "r10-webhook-empty-cabundle"
-    message_contains: "caBundle"
+- family: AdmissionWebhook
+  type: ADMISSION_WEBHOOK_RISK
+  severity: High
+  confidence: certain
+  resource:
+    apiVersion: admissionregistration.k8s.io/v1
+    kind: ValidatingWebhookConfiguration
+    name: r10-webhook-empty-cabundle
+  message_contains: failurePolicy=Fail
+  k8s_spec_ref: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#failure-policy
+  rationale: 'failurePolicy: Fail blocks all intercepted API requests if webhook is
+    unavailable'
+- family: AdmissionWebhook
+  type: ADMISSION_WEBHOOK_RISK
+  severity: High
+  confidence: certain
+  resource:
+    apiVersion: admissionregistration.k8s.io/v1
+    kind: ValidatingWebhookConfiguration
+    name: r10-webhook-empty-cabundle
+  message_contains: namespaceSelector is absent
+  k8s_spec_ref: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector
+  rationale: No namespaceSelector — intercepts all namespaces including kube-system
+- family: AdmissionWebhook
+  type: ADMISSION_WEBHOOK_RISK
+  severity: Critical
+  confidence: likely
+  resource:
+    apiVersion: admissionregistration.k8s.io/v1
+    kind: ValidatingWebhookConfiguration
+    name: r10-webhook-empty-cabundle
+  message_contains: caBundle
+  k8s_spec_ref: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#webhook-configuration
+  rationale: caBundle is empty string — TLS verification will fail; with failurePolicy=Fail
+    this immediately blocks all intercepted requests
+derivation_method: k8s-spec-analysis

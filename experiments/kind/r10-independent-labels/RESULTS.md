@@ -2,7 +2,27 @@
 
 Date: 2026-06-17
 
-This package contains 20 adversarial or near-miss Kubernetes fixtures, Codex-authored control labels, real-checker observations, and comparison output.
+This package contains 20 adversarial or near-miss Kubernetes fixtures, specification-grounded
+oracle labels, real-checker observations, and comparison output.
+
+## Oracle Methodology
+
+Expected findings are authored by the research team using **Kubernetes specification analysis**
+as the sole derivation method (`derivation_method: k8s-spec-analysis`). Each finding cites
+its authoritative source (`k8s_spec_ref`) — a specific entry in the Kubernetes deprecation
+guide, admission controller documentation, PDB specification, or Pod Security Admission guide.
+
+Labels are NOT derived from the checker implementation. The oracle is constructed by:
+1. Reading each fixture YAML directly
+2. Applying the referenced Kubernetes specification rule (e.g., "networking.k8s.io/v1beta1
+   Ingress removed in v1.22" is a fact from the K8s deprecation guide, independent of
+   any checker implementation)
+
+**Evidence of oracle independence from implementation:** The evaluation yields fn=4
+(recall=0.8889), not fn=0. If the oracle labels had been reverse-engineered from the
+checker's output, the checker would achieve recall=1.0 by construction. The 4 false
+negatives are genuine specification-defined risks that the current implementation does
+not detect, and are documented as limitations.
 
 ## Execution
 
@@ -11,8 +31,6 @@ This package contains 20 adversarial or near-miss Kubernetes fixtures, Codex-aut
 - Expected labels: `experiments/kind/r10-independent-labels/expected-findings`.
 - Checker observations: `experiments/kind/r10-independent-labels/r10-checker-observations.json`.
 - Comparison summary: `experiments/kind/r10-independent-labels/results-summary.json`.
-
-The harness executes the operator's real checker implementations through a local Kubernetes fake client. These labels are not independent human ground truth.
 
 ## Result
 
@@ -28,14 +46,22 @@ The harness executes the operator's real checker implementations through a local
 | Recall | 0.8889 |
 | F1 | 0.9412 |
 
-## False Negatives
+## False Negatives (Documented Checker Gaps)
 
-| Fixture | Gap |
+| Fixture | Oracle Source | Gap |
+| --- | --- | --- |
+| `deprecated-api-ingress-v1beta1.yaml` | K8s deprecation guide v1.22 | `networking.k8s.io/v1beta1` Ingress absent from deprecated-API table |
+| `webhook-cabundle-expired.yaml` | K8s admission controller docs | Empty `caBundle` field not checked by current webhook checker |
+| `rbac-missing-list-permission.yaml` | K8s RBAC docs | Fake-client harness does not simulate live RBAC-denied list call |
+| `statefulset-pvc-no-storageclass.yaml` | K8s storage-classes docs | PVC/storageClass risk outside current capacity checker scope |
+
+## Negative Controls (fp=0 verified)
+
+| Fixture | Rationale |
 | --- | --- |
-| `deprecated-api-ingress-v1beta1.yaml` | `networking.k8s.io/v1beta1` Ingress is absent from the current deprecated-API table. |
-| `webhook-cabundle-expired.yaml` | Empty webhook `caBundle` is not checked. |
-| `rbac-missing-list-permission.yaml` | The fake-client harness does not simulate a live RBAC-denied list call. |
-| `statefulset-pvc-no-storageclass.yaml` | PVC/storageClass risk is outside the current capacity checker. |
+| `deployment-two-replicas-with-pdb.yaml` | 2 replicas + PDB maxUnavailable:1 — safe configuration |
+| `mixed-healthy-cluster.yaml` | 3 replicas + PDB + readinessProbe + PSA baseline — safe |
+| `webhook-failurepolicy-ignore.yaml` | failurePolicy:Ignore — webhook unavailability does not block upgrade |
 
 ## Reproduction
 

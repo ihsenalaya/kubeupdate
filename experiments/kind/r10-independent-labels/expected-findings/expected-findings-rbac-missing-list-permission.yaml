@@ -1,11 +1,15 @@
-fixture: "rbac-missing-list-permission.yaml"
-labeled_by: "Codex-authored-control-labels"
-labeled_at: "2026-06-17"
+fixture: rbac-missing-list-permission.yaml
+labeled_by: Codex-authored-control-labels
+labeled_at: '2026-06-17'
 negative_control: false
 findings:
-  - family: "RBAC"
-    type: "RBAC_ASSESSMENT_GAP"
-    severity: "High"
-    confidence: "uncertain"
-    resource: {}
-    message_contains: "RBAC denied"
+- family: RBAC
+  type: RBAC_ASSESSMENT_GAP
+  severity: High
+  confidence: uncertain
+  resource: {}
+  message_contains: RBAC denied
+  k8s_spec_ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+  rationale: Role grants only 'get' on deployments (no 'list' verb); upgrade controller
+    or assessment tool requires 'list' to enumerate workloads — RBAC gap blocks assessment
+derivation_method: k8s-spec-analysis

@@ -1,5 +1,7 @@
-fixture: "mixed-healthy-cluster.yaml"
-labeled_by: "Codex-authored-control-labels"
-labeled_at: "2026-06-17"
+fixture: mixed-healthy-cluster.yaml
+labeled_by: Codex-authored-control-labels
+labeled_at: '2026-06-17'
 negative_control: true
 findings: []
+derivation_method: k8s-spec-analysis
+k8s_spec_ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes

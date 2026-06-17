@@ -1,15 +1,19 @@
-fixture: "deprecated-api-ingress-v1beta1.yaml"
-labeled_by: "Codex-authored-control-labels"
-labeled_at: "2026-06-17"
+fixture: deprecated-api-ingress-v1beta1.yaml
+labeled_by: Codex-authored-control-labels
+derivation_method: k8s-spec-analysis
+labeled_at: '2026-06-17'
 negative_control: false
 findings:
-  - family: "DeprecatedAPI"
-    type: "DEPRECATED_OR_REMOVED_API"
-    severity: "Critical"
-    confidence: "certain"
-    resource:
-      apiVersion: "networking.k8s.io/v1beta1"
-      kind: "Ingress"
-      namespace: "default"
-      name: "legacy-ingress"
-    message_contains: "networking.k8s.io/v1beta1"
+- family: DeprecatedAPI
+  type: DEPRECATED_OR_REMOVED_API
+  severity: Critical
+  confidence: certain
+  k8s_spec_ref: https://kubernetes.io/docs/reference/using-api/deprecation-guide/#ingress-v122
+  rationale: networking.k8s.io/v1beta1 Ingress removed in Kubernetes v1.22; any upgrade
+    to v1.22+ will reject this resource
+  resource:
+    apiVersion: networking.k8s.io/v1beta1
+    kind: Ingress
+    namespace: default
+    name: legacy-ingress
+  message_contains: networking.k8s.io/v1beta1

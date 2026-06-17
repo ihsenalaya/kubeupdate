@@ -16474,10 +16474,15 @@ poddisruptionbudget.policy/load-deploy-8236 created
 deployment.apps/load-deploy-8237 created
 poddisruptionbudget.policy/load-deploy-8237 created
 deployment.apps/load-deploy-8238 created
+poddisruptionbudget.policy/load-deploy-8238 created
 deployment.apps/load-deploy-8239 created
+poddisruptionbudget.policy/load-deploy-8239 created
 deployment.apps/load-deploy-8240 created
+poddisruptionbudget.policy/load-deploy-8240 created
 deployment.apps/load-deploy-8241 created
+poddisruptionbudget.policy/load-deploy-8241 created
 deployment.apps/load-deploy-8242 created
+poddisruptionbudget.policy/load-deploy-8242 created
 deployment.apps/load-deploy-8243 created
 poddisruptionbudget.policy/load-deploy-8243 created
 deployment.apps/load-deploy-8244 created
@@ -19994,23 +19999,3 @@ deployment.apps/load-deploy-9999 created
 poddisruptionbudget.policy/load-deploy-9999 created
 deployment.apps/load-deploy-10000 created
 poddisruptionbudget.policy/load-deploy-10000 created
-Error from server (ServiceUnavailable): error when retrieving current configuration of:
-Resource: "policy/v1, Resource=poddisruptionbudgets", GroupVersionKind: "policy/v1, Kind=PodDisruptionBudget"
-Name: "load-deploy-8238", Namespace: "scale-test-10000"
-from server for: "/tmp/tmp.XxNHPAurCR": the server is currently unable to handle the request (get poddisruptionbudgets.policy load-deploy-8238)
-Error from server (ServiceUnavailable): error when retrieving current configuration of:
-Resource: "policy/v1, Resource=poddisruptionbudgets", GroupVersionKind: "policy/v1, Kind=PodDisruptionBudget"
-Name: "load-deploy-8239", Namespace: "scale-test-10000"
-from server for: "/tmp/tmp.XxNHPAurCR": the server is currently unable to handle the request (get poddisruptionbudgets.policy load-deploy-8239)
-Error from server (ServiceUnavailable): error when retrieving current configuration of:
-Resource: "policy/v1, Resource=poddisruptionbudgets", GroupVersionKind: "policy/v1, Kind=PodDisruptionBudget"
-Name: "load-deploy-8240", Namespace: "scale-test-10000"
-from server for: "/tmp/tmp.XxNHPAurCR": the server is currently unable to handle the request (get poddisruptionbudgets.policy load-deploy-8240)
-Error from server (ServiceUnavailable): error when retrieving current configuration of:
-Resource: "policy/v1, Resource=poddisruptionbudgets", GroupVersionKind: "policy/v1, Kind=PodDisruptionBudget"
-Name: "load-deploy-8241", Namespace: "scale-test-10000"
-from server for: "/tmp/tmp.XxNHPAurCR": the server is currently unable to handle the request (get poddisruptionbudgets.policy load-deploy-8241)
-Error from server (ServiceUnavailable): error when retrieving current configuration of:
-Resource: "policy/v1, Resource=poddisruptionbudgets", GroupVersionKind: "policy/v1, Kind=PodDisruptionBudget"
-Name: "load-deploy-8242", Namespace: "scale-test-10000"
-from server for: "/tmp/tmp.XxNHPAurCR": the server is currently unable to handle the request (get poddisruptionbudgets.policy load-deploy-8242)

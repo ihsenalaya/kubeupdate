@@ -1,37 +1,48 @@
-fixture: "observability-no-probes-no-metrics.yaml"
-labeled_by: "Codex-authored-control-labels"
-labeled_at: "2026-06-17"
+fixture: observability-no-probes-no-metrics.yaml
+labeled_by: Codex-authored-control-labels
+labeled_at: '2026-06-17'
 negative_control: false
 findings:
-  - family: "ReadinessProbes"
-    type: "MISSING_READINESS_PROBE"
-    severity: "Medium"
-    confidence: "certain"
-    resource:
-      apiVersion: "apps/v1"
-      kind: "Deployment"
-      namespace: "r10-observability-gap"
-      name: "opaque-api"
-    message_contains: "has no readinessProbe"
-  - family: "PDB"
-    type: "PDB_BLOCKING_RISK"
-    severity: "Low"
-    confidence: "certain"
-    resource:
-      apiVersion: "apps/v1"
-      kind: "Deployment"
-      namespace: "r10-observability-gap"
-      name: "opaque-api"
-    message_contains: "has no matching PodDisruptionBudget"
-  - family: "Observability"
-    type: "OBSERVABILITY_GAP"
-    severity: "Medium"
-    confidence: "likely"
-    resource: {}
-    message_contains: "No monitoring, prometheus, or observability namespace found"
-  - family: "Observability"
-    type: "OBSERVABILITY_GAP"
-    severity: "Low"
-    confidence: "likely"
-    resource: {}
-    message_contains: "Prometheus CRD not detected"
+- family: ReadinessProbes
+  type: MISSING_READINESS_PROBE
+  severity: Medium
+  confidence: certain
+  resource:
+    apiVersion: apps/v1
+    kind: Deployment
+    namespace: r10-observability-gap
+    name: opaque-api
+  message_contains: has no readinessProbe
+  k8s_spec_ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  rationale: Container has no readinessProbe — observable gap; pods receive traffic
+    before ready after restart
+- family: PDB
+  type: PDB_BLOCKING_RISK
+  severity: Low
+  confidence: certain
+  resource:
+    apiVersion: apps/v1
+    kind: Deployment
+    namespace: r10-observability-gap
+    name: opaque-api
+  message_contains: has no matching PodDisruptionBudget
+  k8s_spec_ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  rationale: Deployment has no PodDisruptionBudget
+- family: Observability
+  type: OBSERVABILITY_GAP
+  severity: Medium
+  confidence: likely
+  resource: {}
+  message_contains: No monitoring, prometheus, or observability namespace found
+  k8s_spec_ref: https://kubernetes.io/docs/concepts/cluster-administration/monitoring/
+  rationale: No monitoring namespace or Prometheus CRDs detected in fixture — observability
+    gap for upgrade validation
+- family: Observability
+  type: OBSERVABILITY_GAP
+  severity: Low
+  confidence: likely
+  resource: {}
+  message_contains: Prometheus CRD not detected
+  k8s_spec_ref: https://kubernetes.io/docs/concepts/cluster-administration/monitoring/
+  rationale: No Prometheus ServiceMonitor CRDs detected — metrics pipeline not verifiable
+derivation_method: k8s-spec-analysis

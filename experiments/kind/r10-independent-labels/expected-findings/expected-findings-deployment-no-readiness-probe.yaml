@@ -1,25 +1,32 @@
-fixture: "deployment-no-readiness-probe.yaml"
-labeled_by: "Codex-authored-control-labels"
-labeled_at: "2026-06-17"
+fixture: deployment-no-readiness-probe.yaml
+labeled_by: Codex-authored-control-labels
+labeled_at: '2026-06-17'
 negative_control: false
 findings:
-  - family: "ReadinessProbes"
-    type: "MISSING_READINESS_PROBE"
-    severity: "Medium"
-    confidence: "certain"
-    resource:
-      apiVersion: "apps/v1"
-      kind: "Deployment"
-      namespace: "r10-no-readiness"
-      name: "no-readiness"
-    message_contains: "has no readinessProbe"
-  - family: "PDB"
-    type: "PDB_BLOCKING_RISK"
-    severity: "Low"
-    confidence: "certain"
-    resource:
-      apiVersion: "apps/v1"
-      kind: "Deployment"
-      namespace: "r10-no-readiness"
-      name: "no-readiness"
-    message_contains: "has no matching PodDisruptionBudget"
+- family: ReadinessProbes
+  type: MISSING_READINESS_PROBE
+  severity: Medium
+  confidence: certain
+  resource:
+    apiVersion: apps/v1
+    kind: Deployment
+    namespace: r10-no-readiness
+    name: no-readiness
+  message_contains: has no readinessProbe
+  k8s_spec_ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  rationale: Container has no readinessProbe; after rolling restart during upgrade,
+    pods receive traffic before ready — defined risk per K8s best practices
+- family: PDB
+  type: PDB_BLOCKING_RISK
+  severity: Low
+  confidence: certain
+  resource:
+    apiVersion: apps/v1
+    kind: Deployment
+    namespace: r10-no-readiness
+    name: no-readiness
+  message_contains: has no matching PodDisruptionBudget
+  k8s_spec_ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  rationale: Deployment has no PodDisruptionBudget; unprotected against voluntary
+    disruptions
+derivation_method: k8s-spec-analysis
