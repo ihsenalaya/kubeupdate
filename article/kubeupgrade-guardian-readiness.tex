@@ -1,0 +1,189 @@
+\IfFileExists{IEEEtran.cls}{%
+  \documentclass[10pt,journal]{IEEEtran}
+}{%
+  \documentclass[10pt]{article}
+}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\tool}{\textsc{KubeUpgrade Guardian}}
+\newcommand{\crd}[1]{\texttt{#1}}
+\newcommand{\placeholder}[1]{\texttt{[#1]}}
+\newcommand{\kagent}{\textsc{kagent}}
+
+\title{Evidence-Guided Upgrade Readiness Assessment for Production Kubernetes Clusters: A Kubernetes-Native Operator and Controlled Multi-Agent Framework}
+
+\author{Ihsen Alaya%
+\thanks{Manuscript draft prepared for review. Experimental values marked as placeholders must be replaced with measured evidence before submission.}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Kubernetes upgrades are recurring software evolution activities in which platform changes interact with application APIs, disruption budgets, admission controls, scheduling constraints, operators, add-ons, and observability assumptions. Existing upgrade-assistance tools primarily detect deprecated Kubernetes APIs or support checklist-driven operational reviews, leaving several production risks weakly connected to observable evidence and remediation planning. This paper proposes an evidence-guided approach for assessing upgrade readiness in production Kubernetes clusters before upgrade execution. The approach models upgrade readiness as a set of evidence-backed risks, each linked to a Kubernetes resource, an observable signal, a severity, an expected impact, and a candidate remediation action. We instantiate the approach in \tool, a Kubernetes-native, read-only-by-default operator that materializes assessments through declarative custom resources, including \crd{UpgradeAssessment}, \crd{UpgradeFinding}, \crd{UpgradeEvidence}, and \crd{UpgradePlan}. The operator combines deterministic checkers with a controlled optional multi-agent layer based on \kagent. The multi-agent layer is designed to assist explanation and prioritization, while deterministic checks and human approval remain authoritative. We design an empirical evaluation across a controlled Kind benchmark, managed AKS clusters, and optional anonymized production or pre-production clusters. The planned evaluation compares \tool{} against Pluto, kubent/kube-no-trouble, manual checklists, and ablated variants without \kagent{} using precision, recall, F1-score, coverage of risk families, assessment time, actionability, and evidence support. Quantitative results are not yet claimed; all empirical outcomes are reported as placeholders pending execution of the study.
+\end{abstract}
+
+\section*{Index Terms}
+Kubernetes, software evolution, cloud-native systems, upgrade readiness, empirical software engineering, DevOps, operators, risk assessment, evidence-guided maintenance, multi-agent systems.
+
+\section{Contributions}
+This manuscript frames Kubernetes upgrade readiness as a software engineering problem in cloud-native evolution and maintenance. The intended contributions are:
+
+\begin{enumerate}[leftmargin=*]
+  \item A taxonomy of production Kubernetes upgrade risks covering API evolution, workload disruption, PodDisruptionBudget and eviction risks, scheduling and capacity constraints, policy and admission failures, add-on compatibility, CRD and operator compatibility, RBAC gaps, and observability gaps.
+  \item An evidence-guided assessment model that links each detected risk to observable evidence, Kubernetes resources, severity, operational impact, and remediation guidance.
+  \item \tool, a Kubernetes-native operator designed for read-only assessment in production clusters and implemented through declarative resources such as \crd{UpgradeAssessment}, \crd{UpgradeFinding}, \crd{UpgradeEvidence}, and \crd{UpgradePlan}.
+  \item A controlled multi-agent layer based on \kagent{} that assists explanation, prioritization, and plan review without replacing deterministic checkers or human approval.
+  \item An empirical evaluation design comparing the approach with Pluto, kubent/kube-no-trouble, a manual platform-engineering checklist, and ablated variants of \tool{} with and without \kagent.
+  \item A reproducible benchmark of Kubernetes upgrade-risk scenarios with explicit ground truth and scenario metadata.
+\end{enumerate}
+
+\section{Research Questions}
+\begin{description}[leftmargin=*,style=nextline]
+  \item[RQ1.] What families of upgrade risks appear in representative Kubernetes clusters and workloads?
+  \item[RQ2.] To what extent does the evidence-guided approach correctly detect upgrade risks compared with existing baselines?
+  \item[RQ3.] Are generated \crd{UpgradePlan} resources correct, actionable, prioritized, and linked to observable evidence?
+  \item[RQ4.] Does the approach reduce the time and effort required to prepare a Kubernetes upgrade compared with a manual checklist?
+  \item[RQ5.] Does the controlled \kagent{} layer improve explanation and prioritization quality without introducing unsupported or unverifiable recommendations?
+\end{description}
+
+\section{Detailed Article Plan}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Abstract.} Summarize the problem, evidence-guided model, operator implementation, controlled multi-agent layer, and empirical design without claiming unmeasured results.
+  \item \textbf{Introduction.} Position Kubernetes upgrades as distributed software evolution and motivate evidence-backed readiness assessment.
+  \item \textbf{Background and Motivation.} Review Kubernetes upgrades, API deprecation, eviction and disruption, policies, operators, managed clusters, and current upgrade-assistance tools.
+  \item \textbf{Kubernetes Upgrades as Software Evolution Risk.} Formalize upgrade preparation as impact analysis over resources, controllers, policies, and operational constraints.
+  \item \textbf{Taxonomy of Production Kubernetes Upgrade Risks.} Present risk families, examples, observable signals, and expected remediation categories.
+  \item \textbf{Evidence-Guided Upgrade Readiness Model.} Define evidence, findings, severities, confidence, resource references, and plan prioritization.
+  \item \textbf{\tool{} Operator.} Describe architecture, CRDs, reconciliation flow, read-only posture, RBAC boundaries, checker execution, and plan generation.
+  \item \textbf{Controlled Multi-Agent Assessment with \kagent.} Define agent inputs, allowed outputs, guardrails, evidence grounding, and human review.
+  \item \textbf{Experimental Design.} Specify benchmark generation, ground truth, baselines, metrics, cluster environments, and expert review protocol.
+  \item \textbf{Results.} Report measured detection accuracy, coverage, actionability, effort, agent support rate, and failure cases. All entries currently use placeholders.
+  \item \textbf{Discussion.} Interpret where evidence-guided assessment helps, where it fails, and how read-only constraints shape adoption.
+  \item \textbf{Threats to Validity.} Discuss benchmark representativeness, ground-truth labeling, expert bias, cluster heterogeneity, tool configuration, and agent evaluation.
+  \item \textbf{Related Work.} Compare with API-deprecation tools, impact analysis, runtime verification, infrastructure-as-code analysis, SRE readiness practices, and AI-assisted maintenance.
+  \item \textbf{Conclusion.} Summarize the approach, measured findings, limitations, and future work.
+  \item \textbf{Data and Reproducibility Package.} Provide scenario manifests, ground-truth labels, scripts, container images, operator version, and anonymized evaluation artifacts.
+\end{enumerate}
+
+\section{Experimental Methodology}
+\subsection{Controlled Kind Benchmark}
+The benchmark should include 30 to 50 scenarios distributed over 6 to 8 risk families. Each scenario must include Kubernetes manifests, expected upgrade target versions, injected risk mechanisms, and an explicit ground-truth label set. The benchmark should include both single-risk and multi-risk scenarios to evaluate interactions among API evolution, PDB constraints, scheduling, admission controls, and observability gaps.
+
+\subsection{Managed AKS Validation}
+The AKS validation should use at least one managed cluster and ideally two clusters: a minimal cluster and a platform cluster with add-ons such as cert-manager, Prometheus, Kyverno or Gatekeeper, ingress, and \kagent. The objective is transferability assessment rather than statistical generalization. The current manuscript should report only measured AKS observations, for example \placeholder{AKS\_CLUSTER\_COUNT}, \placeholder{AKS\_ADDON\_SET}, and \placeholder{AKS\_VALIDATION\_OUTCOME}.
+
+\subsection{Production or Pre-Production Validation}
+If access is available, 3 to 5 anonymized production or pre-production clusters should be assessed in read-only mode. Data collection must avoid secrets, workload payloads, and tenant-identifying metadata. Expert platform engineers should review findings and plans using a structured rubric.
+
+\subsection{Baselines}
+The study should compare against Pluto, kubent/kube-no-trouble, a manual checklist executed by a platform engineer, \tool{} without \kagent, and \tool{} with \kagent. Baseline configuration, Kubernetes versions, manifests, and command invocations must be archived.
+
+\subsection{Metrics}
+Primary detection metrics are precision, recall, F1-score, false positives, and false negatives over labeled risk instances. Coverage metrics count detected risk families and scenario coverage. Operational metrics include assessment time, checklist time, number of findings reviewed by an expert, number of blockers confirmed by an expert, and number of findings rejected. Plan-quality metrics include actionability, prioritization correctness, evidence support rate, and unsupported recommendation rate. Agent-specific metrics include hallucination rate or unverifiable recommendation rate, measured as \placeholder{AGENT\_UNSUPPORTED\_RATE}.
+
+\section{Tables and Figures to Produce}
+\begin{table*}[t]
+  \centering
+  \caption{Planned empirical measurements.}
+  \begin{tabular}{p{0.20\linewidth}p{0.33\linewidth}p{0.20\linewidth}p{0.18\linewidth}}
+    \toprule
+    Study component & Measured variable & Source & Placeholder \\
+    \midrule
+    Kind benchmark & Precision, recall, F1 by risk family & Ground-truth scenarios & \placeholder{TO\_BE\_MEASURED} \\
+    Baseline comparison & Risk coverage and missed categories & Pluto, kubent, checklist & \placeholder{TO\_BE\_MEASURED} \\
+    AKS validation & Successful read-only assessment and add-on findings & Managed clusters & \placeholder{TO\_BE\_MEASURED} \\
+    Plan quality & Actionability and prioritization score & Expert rubric & \placeholder{TO\_BE\_MEASURED} \\
+    Agent evaluation & Unsupported recommendation rate & Evidence audit & \placeholder{TO\_BE\_MEASURED} \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+  \centering
+  \caption{Risk taxonomy outline.}
+  \begin{tabular}{p{0.18\linewidth}p{0.28\linewidth}p{0.25\linewidth}p{0.20\linewidth}}
+    \toprule
+    Family & Example risk & Observable evidence & Example remediation \\
+    \midrule
+    API evolution & Removed API version & Manifest or live resource using deprecated API & Migrate resource version \\
+    Workload disruption & Single replica critical workload & Deployment replica count, readiness, labels & Increase redundancy or define maintenance window \\
+    PDB and eviction & Blocking PDB during drain & PDB status and allowed disruptions & Adjust PDB or scale workload \\
+    Scheduling/capacity & Insufficient surge capacity & Node allocatable, requests, pending pods & Add temporary capacity \\
+    Policy/admission & Webhook or policy blocks recreated pods & Webhook config, policy reports, admission failures & Update policy exception or workload spec \\
+    Add-on compatibility & Add-on version risk & Helm release, image, CRD version & Upgrade add-on first \\
+    CRD/operator & Controller incompatible with target cluster & CRD versions, operator image, owned resources & Validate operator support matrix \\
+    RBAC/observability & Assessment cannot collect evidence & Forbidden API calls or missing metrics & Add read-only RBAC or telemetry \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+\noindent Required figures:
+\begin{enumerate}[leftmargin=*]
+  \item Architecture of \tool{} showing watchers, deterministic checkers, evidence store, findings, and plan generation.
+  \item Evidence-to-finding-to-plan data model.
+  \item Controlled \kagent{} flow showing evidence-bounded explanation and prioritization.
+  \item Benchmark scenario generation and labeling pipeline.
+  \item Evaluation workflow across Kind, AKS, and optional production clusters.
+\end{enumerate}
+
+\section{Threats to Validity}
+\textbf{Internal validity.} Findings may be affected by checker implementation errors, incorrect benchmark labels, or misconfigured baselines. Mitigation requires independent scenario review, baseline command archival, and unit tests for checkers.
+\textbf{Construct validity.} Actionability, prioritization, and hallucination are partly judgment-based. The study should define rubrics before evaluation and report inter-rater agreement as \placeholder{TO\_BE\_MEASURED}.
+\textbf{External validity.} Kind benchmarks cannot fully represent managed or production clusters. The AKS and optional production validation are intended to test transferability, not universal generalization.
+\textbf{Conclusion validity.} Statistical claims should be limited until the benchmark size, number of clusters, and expert sample size are sufficient. All unmeasured quantities must remain placeholders.
+
+\section{Assumed Limitations}
+\tool{} is assessment-only and does not execute upgrades. It cannot guarantee safe upgrades, because upgrade outcomes also depend on runtime load, operator behavior, cloud-provider control planes, and human operational decisions. The read-only posture may produce RBAC gaps that limit evidence collection. The \kagent{} layer is optional and advisory; it may improve explanation but must not be treated as authoritative without evidence and human review. The benchmark may underrepresent organization-specific policies and proprietary add-ons.
+
+\section{Expected Results Placeholders}
+The expected result structure is:
+\begin{itemize}[leftmargin=*]
+  \item Detection precision by risk family: \placeholder{TO\_BE\_MEASURED}.
+  \item Detection recall by risk family: \placeholder{TO\_BE\_MEASURED}.
+  \item F1-score versus Pluto and kubent: \placeholder{TO\_BE\_MEASURED}.
+  \item Families of risks missed by API-deprecation-only baselines: \placeholder{TO\_BE\_MEASURED}.
+  \item Median assessment time for \tool{} versus manual checklist: \placeholder{TO\_BE\_MEASURED}.
+  \item Expert-rated plan actionability: \placeholder{TO\_BE\_MEASURED}.
+  \item Evidence-supported recommendation rate: \placeholder{TO\_BE\_MEASURED}.
+  \item Unsupported \kagent{} recommendation rate: \placeholder{TO\_BE\_MEASURED}.
+\end{itemize}
+
+\section{Introduction}
+Kubernetes has become a common substrate for deploying and operating cloud-native software systems. In production environments, however, a Kubernetes cluster is not merely an execution platform. It is a continuously evolving socio-technical system that includes application workloads, controllers, custom resources, admission policies, observability pipelines, networking add-ons, storage integrations, and cloud-provider services. Upgrading such a system is therefore not a simple version change. It is a distributed software evolution activity in which a change to the platform can interact with multiple layers of application and operational behavior. A successful upgrade requires more than checking whether the target Kubernetes version is available. It requires understanding whether the workloads and control-plane extensions that depend on the cluster can tolerate disruption, satisfy newer API constraints, and continue to be reconciled under changed platform assumptions.
+
+The operational risk of Kubernetes upgrades is well known to platform teams. API versions can be deprecated or removed; workloads may rely on disruption-sensitive replica layouts; PodDisruptionBudgets can block node drains; admission webhooks and policy engines can reject recreated pods; custom resources may depend on controllers whose compatibility with the target version is unclear; and insufficient observability can hide upgrade blockers until execution time. Managed Kubernetes services reduce some control-plane responsibilities, but they do not eliminate the need for cluster-specific readiness analysis. Indeed, managed services may add additional constraints: node pool upgrade strategies, cloud-integrated networking, identity configuration, managed add-ons, and provider-specific timing can all influence whether an upgrade plan is operationally feasible.
+
+Existing tools provide useful but partial support for this task. API-deprecation detectors such as Pluto and kubent/kube-no-trouble help identify resources that may be rejected or unsupported in future Kubernetes versions. These tools address an important class of upgrade risk, but production readiness extends beyond API evolution. A cluster may have no removed APIs and still fail an upgrade because a critical workload cannot be evicted, a policy blocks pod recreation, a webhook is unavailable, an operator does not reconcile its CRDs under the target version, or a platform engineer lacks the RBAC privileges required to collect the relevant evidence. Manual checklists can cover broader risk categories, but they are difficult to standardize, time-consuming to execute, and often weakly connected to machine-readable evidence. As a result, upgrade decisions may depend on tacit expertise and informal reasoning rather than repeatable assessment artifacts.
+
+This paper proposes an evidence-guided approach to Kubernetes upgrade readiness assessment. The central idea is to represent upgrade risk as structured findings grounded in observable cluster evidence. Instead of producing only warnings or checklist items, each finding should identify the affected resource, the evidence that triggered the finding, its severity, its expected upgrade impact, and a candidate remediation action. These findings are then assembled into a declarative \crd{UpgradePlan} that can be reviewed by platform engineers before upgrade execution. The objective is not to automate the upgrade itself or to guarantee that the upgrade is safe. Rather, the objective is to support upgrade readiness assessment by identifying and prioritizing evidence-backed risks before upgrade execution.
+
+We instantiate this approach in \tool, a Kubernetes-native operator designed for read-only assessment in production clusters. The operator uses deterministic checkers to inspect cluster state and produce structured assessment resources such as \crd{UpgradeAssessment}, \crd{UpgradeFinding}, \crd{UpgradeEvidence}, and \crd{UpgradePlan}. The read-only design is intentional. In production environments, an upgrade-readiness tool should minimize operational blast radius and should not mutate workloads, execute disruptive actions, or apply remediations without approval. Read-only operation also makes RBAC gaps explicit: when the operator cannot inspect a resource class, that limitation becomes part of the assessment rather than an implicit blind spot.
+
+The approach also includes an optional controlled multi-agent layer based on \kagent. The role of this layer is not to decide whether a cluster can be upgraded and not to invent assessment results. Instead, the multi-agent layer assists explanation, prioritization, and plan review using deterministic findings and evidence as inputs. Deterministic checks and human approval remain authoritative. This distinction is important for both safety and scientific evaluation. If an agent recommends an action, that recommendation must be traceable to an existing finding, a piece of evidence, or an explicit uncertainty. Unsupported recommendations are measured as part of the evaluation through \placeholder{AGENT\_UNSUPPORTED\_RATE}, rather than hidden as acceptable variation.
+
+We design an empirical evaluation to examine whether evidence-guided assessment improves upgrade preparation compared with existing baselines. The evaluation has three levels. First, a controlled Kind benchmark will contain \placeholder{KIND\_SCENARIO\_COUNT} labeled scenarios across \placeholder{RISK\_FAMILY\_COUNT} risk families. This benchmark will support precision, recall, and F1-score measurements against ground truth. Second, managed AKS validation will assess transferability to cloud-managed clusters with realistic add-ons such as cert-manager, Prometheus, Kyverno or Gatekeeper, ingress, and optional \kagent{} components. Third, if access is available, anonymized production or pre-production clusters will be assessed in read-only mode and reviewed by platform experts. The study will compare \tool{} against Pluto, kubent/kube-no-trouble, a manual checklist, and ablated variants with and without \kagent.
+
+The expected contribution is therefore not another operational dashboard, but a software engineering model and system for evidence-backed impact analysis in cloud-native evolution. The paper aims to answer whether a broader, evidence-guided assessment can detect upgrade risks beyond API deprecations, whether generated plans are actionable and grounded, and whether a controlled agent layer can improve explanation without introducing unsupported advice. At this stage, quantitative results remain placeholders: detection precision is \placeholder{TO\_BE\_MEASURED}, recall is \placeholder{TO\_BE\_MEASURED}, F1-score is \placeholder{TO\_BE\_MEASURED}, assessment-time reduction is \placeholder{TO\_BE\_MEASURED}, and plan actionability is \placeholder{TO\_BE\_MEASURED}. These values must be filled only after executing the experimental protocol and auditing the evidence.
+
+\section{Data and Reproducibility Package}
+The reproducibility package should include benchmark manifests, expected labels, operator version, checker configuration, cluster creation scripts, baseline command scripts, anonymization scripts, raw findings, generated plans, expert-review rubrics, and notebooks or scripts used to compute metrics. Any production or pre-production data must be anonymized and stripped of secrets, tenant identifiers, workload payloads, and organization-specific names.
+
+\begin{thebibliography}{1}
+\bibitem{pluto}
+Fairwinds, ``Pluto: A utility to help users find deprecated Kubernetes API versions in their code repositories and helm releases,'' \placeholder{REFERENCE\_TO\_BE\_COMPLETED}.
+
+\bibitem{kubent}
+Doit International, ``kube-no-trouble (kubent): Easily check your clusters for use of deprecated APIs,'' \placeholder{REFERENCE\_TO\_BE\_COMPLETED}.
+
+\bibitem{kubernetes}
+Kubernetes Documentation, ``Deprecated API migration guide,'' \placeholder{REFERENCE\_TO\_BE\_COMPLETED}.
+\end{thebibliography}
+
+\end{document}
