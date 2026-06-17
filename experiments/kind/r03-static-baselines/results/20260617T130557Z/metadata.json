@@ -1,0 +1,5 @@
+{
+  "inputManifest": "experiments/kind/r01-benchmark/manifests/00-scenarios.yaml",
+  "runId": "20260617T130557Z",
+  "scope": "static baseline feasibility on R01 scenario manifest"
+}

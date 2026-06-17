@@ -1,0 +1,267 @@
+{
+  "runs": [
+    {
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/kind/r01-benchmark/manifests:/manifests:ro",
+        "zegl/kube-score:latest",
+        "score",
+        "--output-format",
+        "json",
+        "--kubernetes-version",
+        "v1.32",
+        "/manifests/00-scenarios.yaml"
+      ],
+      "durationSeconds": 0.817,
+      "image": "zegl/kube-score:latest",
+      "imageDigests": [
+        "zegl/kube-score@sha256:ac4c43ad560af905d66f6bf57b0937c591332e6dbf2167c31193a13b4695ab97"
+      ],
+      "name": "kube-score-files",
+      "returncode": 1,
+      "stderr": "kube-score-files.stderr",
+      "stderrBytes": 0,
+      "stdout": "kube-score-files.stdout",
+      "stdoutBytes": 450123,
+      "summary": {
+        "commentCount": 283,
+        "failingCheckInstances": 185,
+        "objectCount": 41,
+        "parseableJson": true,
+        "topFailingChecks": [
+          {
+            "count": 22,
+            "name": "container-ephemeral-storage-request-and-limit"
+          },
+          {
+            "count": 22,
+            "name": "container-image-pull-policy"
+          },
+          {
+            "count": 22,
+            "name": "container-resources"
+          },
+          {
+            "count": 22,
+            "name": "container-security-context-readonlyrootfilesystem"
+          },
+          {
+            "count": 22,
+            "name": "container-security-context-user-group-id"
+          },
+          {
+            "count": 22,
+            "name": "pod-networkpolicy"
+          },
+          {
+            "count": 22,
+            "name": "pod-topology-spread-constraints"
+          },
+          {
+            "count": 14,
+            "name": "deployment-has-host-podantiaffinity"
+          },
+          {
+            "count": 4,
+            "name": "statefulset-has-servicename"
+          },
+          {
+            "count": 3,
+            "name": "statefulset-has-host-podantiaffinity"
+          }
+        ],
+        "uniqueFailingChecks": 18
+      },
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "zegl/kube-score:latest",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "kube-score version: v1.20.0-docker-linux/amd64, commit: 81371e9f53b633bec69423fc298295bd71bd869a, built: 2025-04-28T18:55:13+02:00"
+      }
+    },
+    {
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/kind/r01-benchmark/manifests:/manifests:ro",
+        "stackrox/kube-linter:latest",
+        "lint",
+        "--format",
+        "json",
+        "/manifests/00-scenarios.yaml"
+      ],
+      "durationSeconds": 0.843,
+      "image": "stackrox/kube-linter:latest",
+      "imageDigests": [
+        "stackrox/kube-linter@sha256:f2bfce7879206d32f69ab6572c376f916643f54ca291ac38cf7d01ef591ff3f9"
+      ],
+      "name": "kube-linter-files",
+      "returncode": 1,
+      "stderr": "kube-linter-files.stderr",
+      "stderrBytes": 29,
+      "stdout": "kube-linter-files.stdout",
+      "stdoutBytes": 72452,
+      "summary": {
+        "checksStatus": "Failed",
+        "parseableJson": true,
+        "reportCount": 113,
+        "topChecks": [
+          {
+            "count": 23,
+            "name": "no-read-only-root-fs"
+          },
+          {
+            "count": 23,
+            "name": "unset-cpu-requirements"
+          },
+          {
+            "count": 23,
+            "name": "unset-memory-requirements"
+          },
+          {
+            "count": 17,
+            "name": "no-anti-affinity"
+          },
+          {
+            "count": 15,
+            "name": "pdb-unhealthy-pod-eviction-policy"
+          },
+          {
+            "count": 4,
+            "name": "run-as-non-root"
+          },
+          {
+            "count": 2,
+            "name": "pdb-max-unavailable"
+          },
+          {
+            "count": 2,
+            "name": "pdb-min-available"
+          },
+          {
+            "count": 2,
+            "name": "privilege-escalation-container"
+          },
+          {
+            "count": 1,
+            "name": "dangling-service"
+          }
+        ],
+        "uniqueChecks": 11
+      },
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "stackrox/kube-linter:latest",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "0.8.3"
+      }
+    },
+    {
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/kind/r01-benchmark/manifests:/manifests:ro",
+        "quay.io/fairwinds/polaris:latest",
+        "polaris",
+        "audit",
+        "--audit-path",
+        "/manifests/00-scenarios.yaml",
+        "--format",
+        "json"
+      ],
+      "durationSeconds": 1.22,
+      "image": "quay.io/fairwinds/polaris:latest",
+      "imageDigests": [
+        "quay.io/fairwinds/polaris@sha256:7af688527df75c3825395ded8aeb3775fad2027228aa06c9959d39ae6c00e999"
+      ],
+      "name": "polaris-files",
+      "returncode": 0,
+      "stderr": "polaris-files.stderr",
+      "stderrBytes": 0,
+      "stdout": "polaris-files.stdout",
+      "stdoutBytes": 257130,
+      "summary": {
+        "failedCheckInstances": 339,
+        "objectCount": 68,
+        "parseableJson": true,
+        "score": 67,
+        "severityCounts": {
+          "danger": 10,
+          "warning": 329
+        },
+        "topFailedChecks": [
+          {
+            "count": 23,
+            "name": "cpuLimitsMissing"
+          },
+          {
+            "count": 23,
+            "name": "cpuRequestsMissing"
+          },
+          {
+            "count": 23,
+            "name": "insecureCapabilities"
+          },
+          {
+            "count": 23,
+            "name": "linuxHardening"
+          },
+          {
+            "count": 23,
+            "name": "memoryLimitsMissing"
+          },
+          {
+            "count": 23,
+            "name": "memoryRequestsMissing"
+          },
+          {
+            "count": 23,
+            "name": "notReadOnlyRootFilesystem"
+          },
+          {
+            "count": 23,
+            "name": "pullPolicyNotAlways"
+          },
+          {
+            "count": 22,
+            "name": "automountServiceAccountToken"
+          },
+          {
+            "count": 22,
+            "name": "livenessProbeMissing"
+          }
+        ],
+        "uniqueFailedChecks": 23
+      },
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "quay.io/fairwinds/polaris:latest",
+          "polaris",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "Polaris version:10.1.8"
+      }
+    }
+  ]
+}

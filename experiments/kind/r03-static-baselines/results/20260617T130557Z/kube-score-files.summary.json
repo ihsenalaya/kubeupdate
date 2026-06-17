@@ -1,0 +1,49 @@
+{
+  "commentCount": 283,
+  "failingCheckInstances": 185,
+  "objectCount": 41,
+  "parseableJson": true,
+  "topFailingChecks": [
+    {
+      "count": 22,
+      "name": "container-ephemeral-storage-request-and-limit"
+    },
+    {
+      "count": 22,
+      "name": "container-image-pull-policy"
+    },
+    {
+      "count": 22,
+      "name": "container-resources"
+    },
+    {
+      "count": 22,
+      "name": "container-security-context-readonlyrootfilesystem"
+    },
+    {
+      "count": 22,
+      "name": "container-security-context-user-group-id"
+    },
+    {
+      "count": 22,
+      "name": "pod-networkpolicy"
+    },
+    {
+      "count": 22,
+      "name": "pod-topology-spread-constraints"
+    },
+    {
+      "count": 14,
+      "name": "deployment-has-host-podantiaffinity"
+    },
+    {
+      "count": 4,
+      "name": "statefulset-has-servicename"
+    },
+    {
+      "count": 3,
+      "name": "statefulset-has-host-podantiaffinity"
+    }
+  ],
+  "uniqueFailingChecks": 18
+}

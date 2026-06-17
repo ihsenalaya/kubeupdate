@@ -1,0 +1,53 @@
+{
+  "failedCheckInstances": 339,
+  "objectCount": 68,
+  "parseableJson": true,
+  "score": 67,
+  "severityCounts": {
+    "danger": 10,
+    "warning": 329
+  },
+  "topFailedChecks": [
+    {
+      "count": 23,
+      "name": "cpuLimitsMissing"
+    },
+    {
+      "count": 23,
+      "name": "cpuRequestsMissing"
+    },
+    {
+      "count": 23,
+      "name": "insecureCapabilities"
+    },
+    {
+      "count": 23,
+      "name": "linuxHardening"
+    },
+    {
+      "count": 23,
+      "name": "memoryLimitsMissing"
+    },
+    {
+      "count": 23,
+      "name": "memoryRequestsMissing"
+    },
+    {
+      "count": 23,
+      "name": "notReadOnlyRootFilesystem"
+    },
+    {
+      "count": 23,
+      "name": "pullPolicyNotAlways"
+    },
+    {
+      "count": 22,
+      "name": "automountServiceAccountToken"
+    },
+    {
+      "count": 22,
+      "name": "livenessProbeMissing"
+    }
+  ],
+  "uniqueFailedChecks": 23
+}

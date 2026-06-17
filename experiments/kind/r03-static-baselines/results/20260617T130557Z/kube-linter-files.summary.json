@@ -1,0 +1,48 @@
+{
+  "checksStatus": "Failed",
+  "parseableJson": true,
+  "reportCount": 113,
+  "topChecks": [
+    {
+      "count": 23,
+      "name": "no-read-only-root-fs"
+    },
+    {
+      "count": 23,
+      "name": "unset-cpu-requirements"
+    },
+    {
+      "count": 23,
+      "name": "unset-memory-requirements"
+    },
+    {
+      "count": 17,
+      "name": "no-anti-affinity"
+    },
+    {
+      "count": 15,
+      "name": "pdb-unhealthy-pod-eviction-policy"
+    },
+    {
+      "count": 4,
+      "name": "run-as-non-root"
+    },
+    {
+      "count": 2,
+      "name": "pdb-max-unavailable"
+    },
+    {
+      "count": 2,
+      "name": "pdb-min-available"
+    },
+    {
+      "count": 2,
+      "name": "privilege-escalation-container"
+    },
+    {
+      "count": 1,
+      "name": "dangling-service"
+    }
+  ],
+  "uniqueChecks": 11
+}
