@@ -3,8 +3,6 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "kubeupgrade-guardian-operator.fullname" . }}
-  labels:
-    {{- include "kubeupgrade-guardian-operator.labels" . | nindent 4 }}
 spec:
   minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
   selector:
