@@ -1,0 +1,1742 @@
+{
+  "apiVersionCounts": {
+    "admissionregistration.k8s.io/v1": 5,
+    "apiextensions.k8s.io/v1": 38,
+    "apps/v1": 13,
+    "batch/v1": 8,
+    "monitoring.coreos.com/v1": 50,
+    "networking.k8s.io/v1": 1,
+    "policy/v1": 2,
+    "rbac.authorization.k8s.io/v1": 88,
+    "v1": 76
+  },
+  "kindCounts": {
+    "Alertmanager": 1,
+    "ClusterRole": 38,
+    "ClusterRoleBinding": 26,
+    "ConfigMap": 34,
+    "CustomResourceDefinition": 38,
+    "DaemonSet": 1,
+    "Deployment": 12,
+    "IngressClass": 1,
+    "Job": 8,
+    "MutatingWebhookConfiguration": 2,
+    "PodDisruptionBudget": 2,
+    "Prometheus": 1,
+    "PrometheusRule": 35,
+    "Role": 12,
+    "RoleBinding": 12,
+    "Service": 23,
+    "ServiceAccount": 19,
+    "ServiceMonitor": 13,
+    "ValidatingWebhookConfiguration": 3
+  },
+  "namespaceCounts": {
+    "<cluster-scope>": 108,
+    "cert-manager": 17,
+    "external-dns": 3,
+    "ingress-nginx": 13,
+    "kube-system": 9,
+    "kyverno": 29,
+    "monitoring": 102
+  },
+  "resourceCount": 281,
+  "resourcesByChart": {
+    "cert-manager": [
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "cert-manager-cainjector",
+        "namespace": "cert-manager"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "cert-manager",
+        "namespace": "cert-manager"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "cert-manager-webhook",
+        "namespace": "cert-manager"
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "challenges.acme.cert-manager.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "orders.acme.cert-manager.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "certificaterequests.cert-manager.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "certificates.cert-manager.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "clusterissuers.cert-manager.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "issuers.cert-manager.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "cert-manager-cainjector",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "cert-manager-controller-issuers",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "cert-manager-controller-clusterissuers",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "cert-manager-controller-certificates",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "cert-manager-controller-orders",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "cert-manager-controller-challenges",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "cert-manager-controller-ingress-shim",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "cert-manager-cluster-view",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "cert-manager-view",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "cert-manager-edit",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "cert-manager-controller-approve:cert-manager-io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "cert-manager-controller-certificatesigningrequests",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "cert-manager-webhook:subjectaccessreviews",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "cert-manager-cainjector",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "cert-manager-controller-issuers",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "cert-manager-controller-clusterissuers",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "cert-manager-controller-certificates",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "cert-manager-controller-orders",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "cert-manager-controller-challenges",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "cert-manager-controller-ingress-shim",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "cert-manager-controller-approve:cert-manager-io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "cert-manager-controller-certificatesigningrequests",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "cert-manager-webhook:subjectaccessreviews",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "Role",
+        "name": "cert-manager-cainjector:leaderelection",
+        "namespace": "kube-system"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "Role",
+        "name": "cert-manager:leaderelection",
+        "namespace": "kube-system"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "Role",
+        "name": "cert-manager-tokenrequest",
+        "namespace": "cert-manager"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "Role",
+        "name": "cert-manager-webhook:dynamic-serving",
+        "namespace": "cert-manager"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "RoleBinding",
+        "name": "cert-manager-cainjector:leaderelection",
+        "namespace": "kube-system"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "RoleBinding",
+        "name": "cert-manager:leaderelection",
+        "namespace": "kube-system"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "RoleBinding",
+        "name": "cert-manager-tokenrequest",
+        "namespace": "cert-manager"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "RoleBinding",
+        "name": "cert-manager-webhook:dynamic-serving",
+        "namespace": "cert-manager"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "cert-manager-cainjector",
+        "namespace": "cert-manager"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "cert-manager",
+        "namespace": "cert-manager"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "cert-manager-webhook",
+        "namespace": "cert-manager"
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "cert-manager-cainjector",
+        "namespace": "cert-manager"
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "cert-manager",
+        "namespace": "cert-manager"
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "cert-manager-webhook",
+        "namespace": "cert-manager"
+      },
+      {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "cert-manager-webhook",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "cert-manager-webhook",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "cert-manager-startupapicheck",
+        "namespace": "cert-manager"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "Role",
+        "name": "cert-manager-startupapicheck:create-cert",
+        "namespace": "cert-manager"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "RoleBinding",
+        "name": "cert-manager-startupapicheck:create-cert",
+        "namespace": "cert-manager"
+      },
+      {
+        "apiVersion": "batch/v1",
+        "kind": "Job",
+        "name": "cert-manager-startupapicheck",
+        "namespace": "cert-manager"
+      }
+    ],
+    "external-dns": [
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "external-dns",
+        "namespace": "external-dns"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "external-dns",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "external-dns-viewer",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "external-dns",
+        "namespace": "external-dns"
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "external-dns",
+        "namespace": "external-dns"
+      }
+    ],
+    "ingress-nginx": [
+      {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "name": "ingress-nginx-controller",
+        "namespace": "ingress-nginx"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "ingress-nginx",
+        "namespace": "ingress-nginx"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "ingress-nginx-controller",
+        "namespace": "ingress-nginx"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "ingress-nginx",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "ingress-nginx",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "Role",
+        "name": "ingress-nginx",
+        "namespace": "ingress-nginx"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "RoleBinding",
+        "name": "ingress-nginx",
+        "namespace": "ingress-nginx"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "ingress-nginx-controller-admission",
+        "namespace": "ingress-nginx"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "ingress-nginx-controller",
+        "namespace": "ingress-nginx"
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "ingress-nginx-controller",
+        "namespace": "ingress-nginx"
+      },
+      {
+        "apiVersion": "networking.k8s.io/v1",
+        "kind": "IngressClass",
+        "name": "nginx",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "ingress-nginx-admission",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "ingress-nginx-admission",
+        "namespace": "ingress-nginx"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "ingress-nginx-admission",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "ingress-nginx-admission",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "Role",
+        "name": "ingress-nginx-admission",
+        "namespace": "ingress-nginx"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "RoleBinding",
+        "name": "ingress-nginx-admission",
+        "namespace": "ingress-nginx"
+      },
+      {
+        "apiVersion": "batch/v1",
+        "kind": "Job",
+        "name": "ingress-nginx-admission-create",
+        "namespace": "ingress-nginx"
+      },
+      {
+        "apiVersion": "batch/v1",
+        "kind": "Job",
+        "name": "ingress-nginx-admission-patch",
+        "namespace": "ingress-nginx"
+      }
+    ],
+    "kube-prometheus-stack": [
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "alertmanagerconfigs.monitoring.coreos.com",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "alertmanagers.monitoring.coreos.com",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "podmonitors.monitoring.coreos.com",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "probes.monitoring.coreos.com",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "prometheusagents.monitoring.coreos.com",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "prometheuses.monitoring.coreos.com",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "prometheusrules.monitoring.coreos.com",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "scrapeconfigs.monitoring.coreos.com",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "servicemonitors.monitoring.coreos.com",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "thanosrulers.monitoring.coreos.com",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "kube-prometheus-stack-grafana",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "kube-prometheus-stack-kube-state-metrics",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "kube-prometheus-stack-prometheus-node-exporter",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "kube-prometheus-stack-alertmanager",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "kube-prometheus-stack-operator",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "kube-prometheus-stack-prometheus",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-grafana-config-dashboards",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-grafana",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-grafana-datasource",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-alertmanager-overview",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-apiserver",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-cluster-total",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-controller-manager",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-etcd",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-grafana-overview",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-k8s-coredns",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-k8s-resources-cluster",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-k8s-resources-multicluster",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-k8s-resources-namespace",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-k8s-resources-node",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-k8s-resources-pod",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-k8s-resources-workload",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-k8s-resources-workloads-namespace",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-kubelet",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-namespace-by-pod",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-namespace-by-workload",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-node-cluster-rsrc-use",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-node-rsrc-use",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-nodes-aix",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-nodes-darwin",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-nodes",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-persistentvolumesusage",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-pod-total",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-prometheus",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-proxy",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-scheduler",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kube-prometheus-stack-workload-total",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kube-prometheus-stack-grafana-clusterrole",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kube-prometheus-stack-kube-state-metrics",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kube-prometheus-stack-operator",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kube-prometheus-stack-prometheus",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "kube-prometheus-stack-grafana-clusterrolebinding",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "kube-prometheus-stack-kube-state-metrics",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "kube-prometheus-stack-operator",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "kube-prometheus-stack-prometheus",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kube-prometheus-stack-grafana",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kube-prometheus-stack-kube-state-metrics",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kube-prometheus-stack-prometheus-node-exporter",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kube-prometheus-stack-alertmanager",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kube-prometheus-stack-coredns",
+        "namespace": "kube-system"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kube-prometheus-stack-kube-controller-manager",
+        "namespace": "kube-system"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kube-prometheus-stack-kube-etcd",
+        "namespace": "kube-system"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kube-prometheus-stack-kube-proxy",
+        "namespace": "kube-system"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kube-prometheus-stack-kube-scheduler",
+        "namespace": "kube-system"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kube-prometheus-stack-operator",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kube-prometheus-stack-prometheus",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "DaemonSet",
+        "name": "kube-prometheus-stack-prometheus-node-exporter",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "kube-prometheus-stack-grafana",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "kube-prometheus-stack-kube-state-metrics",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "kube-prometheus-stack-operator",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "Alertmanager",
+        "name": "kube-prometheus-stack-alertmanager",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "kube-prometheus-stack-admission",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "Prometheus",
+        "name": "kube-prometheus-stack-prometheus",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-alertmanager.rules",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-config-reloaders",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-etcd",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-general.rules",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-k8s.rules.container-cpu-usage-seconds-tot",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-k8s.rules.container-memory-cache",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-k8s.rules.container-memory-rss",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-k8s.rules.container-memory-swap",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-k8s.rules.container-memory-working-set-by",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-k8s.rules.container-resource",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-k8s.rules.pod-owner",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kube-apiserver-availability.rules",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kube-apiserver-burnrate.rules",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kube-apiserver-histogram.rules",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kube-apiserver-slos",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kube-prometheus-general.rules",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kube-prometheus-node-recording.rules",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kube-scheduler.rules",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kube-state-metrics",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kubelet.rules",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kubernetes-apps",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kubernetes-resources",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kubernetes-storage",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kubernetes-system-apiserver",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kubernetes-system-controller-manager",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kubernetes-system-kube-proxy",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kubernetes-system-kubelet",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kubernetes-system-scheduler",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-kubernetes-system",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-node-exporter.rules",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-node-exporter",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-node-network",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-node.rules",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-prometheus-operator",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "PrometheusRule",
+        "name": "kube-prometheus-stack-prometheus",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "ServiceMonitor",
+        "name": "kube-prometheus-stack-grafana",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "ServiceMonitor",
+        "name": "kube-prometheus-stack-kube-state-metrics",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "ServiceMonitor",
+        "name": "kube-prometheus-stack-prometheus-node-exporter",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "ServiceMonitor",
+        "name": "kube-prometheus-stack-alertmanager",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "ServiceMonitor",
+        "name": "kube-prometheus-stack-coredns",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "ServiceMonitor",
+        "name": "kube-prometheus-stack-apiserver",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "ServiceMonitor",
+        "name": "kube-prometheus-stack-kube-controller-manager",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "ServiceMonitor",
+        "name": "kube-prometheus-stack-kube-etcd",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "ServiceMonitor",
+        "name": "kube-prometheus-stack-kube-proxy",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "ServiceMonitor",
+        "name": "kube-prometheus-stack-kube-scheduler",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "ServiceMonitor",
+        "name": "kube-prometheus-stack-kubelet",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "ServiceMonitor",
+        "name": "kube-prometheus-stack-operator",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "monitoring.coreos.com/v1",
+        "kind": "ServiceMonitor",
+        "name": "kube-prometheus-stack-prometheus",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "kube-prometheus-stack-admission",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "kube-prometheus-stack-admission",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kube-prometheus-stack-admission",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "kube-prometheus-stack-admission",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "Role",
+        "name": "kube-prometheus-stack-admission",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "RoleBinding",
+        "name": "kube-prometheus-stack-admission",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "batch/v1",
+        "kind": "Job",
+        "name": "kube-prometheus-stack-admission-create",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "batch/v1",
+        "kind": "Job",
+        "name": "kube-prometheus-stack-admission-patch",
+        "namespace": "monitoring"
+      }
+    ],
+    "kyverno": [
+      {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "name": "kyverno-admission-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "kyverno-admission-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "kyverno-background-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "kyverno-cleanup-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "kyverno-reports-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kyverno",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "name": "kyverno-metrics",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "cleanuppolicies.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "clustercleanuppolicies.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "clusterpolicies.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "globalcontextentries.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "policies.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "policyexceptions.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "updaterequests.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "clusterephemeralreports.reports.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "ephemeralreports.reports.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "clusterpolicyreports.wgpolicyk8s.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "policyreports.wgpolicyk8s.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "deletingpolicies.policies.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "generatingpolicies.policies.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "imagevalidatingpolicies.policies.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "mutatingpolicies.policies.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "namespaceddeletingpolicies.policies.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "namespacedgeneratingpolicies.policies.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "namespacedimagevalidatingpolicies.policies.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "namespacedmutatingpolicies.policies.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "namespacedvalidatingpolicies.policies.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "policyexceptions.policies.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "apiextensions.k8s.io/v1",
+        "kind": "CustomResourceDefinition",
+        "name": "validatingpolicies.policies.kyverno.io",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:admission-controller",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:admission-controller:core",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:background-controller",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:background-controller:core",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:cleanup-controller",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:cleanup-controller:core",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:rbac:admin:policies",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:rbac:view:policies",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:rbac:admin:policyreports",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:rbac:view:policyreports",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:rbac:admin:reports",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:rbac:view:reports",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:rbac:admin:updaterequests",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:rbac:view:updaterequests",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:reports-controller",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:reports-controller:core",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "kyverno:admission-controller",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "kyverno:admission-controller:view",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "kyverno:background-controller",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "kyverno:background-controller:view",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "kyverno:cleanup-controller",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "kyverno:reports-controller",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "kyverno:reports-controller:view",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "Role",
+        "name": "kyverno:admission-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "Role",
+        "name": "kyverno:background-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "Role",
+        "name": "kyverno:cleanup-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "Role",
+        "name": "kyverno:reports-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "RoleBinding",
+        "name": "kyverno:admission-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "RoleBinding",
+        "name": "kyverno:background-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "RoleBinding",
+        "name": "kyverno:cleanup-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "RoleBinding",
+        "name": "kyverno:reports-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kyverno-svc",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kyverno-svc-metrics",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kyverno-background-controller-metrics",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kyverno-cleanup-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kyverno-cleanup-controller-metrics",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "name": "kyverno-reports-controller-metrics",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "kyverno-admission-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "kyverno-background-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "kyverno-cleanup-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "kyverno-reports-controller",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "name": "kyverno-migrate-resources",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRole",
+        "name": "kyverno:migrate-resources",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "ClusterRoleBinding",
+        "name": "kyverno:migrate-resources",
+        "namespace": ""
+      },
+      {
+        "apiVersion": "batch/v1",
+        "kind": "Job",
+        "name": "kyverno-migrate-resources",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "batch/v1",
+        "kind": "Job",
+        "name": "kyverno-rm-webhooks",
+        "namespace": "kyverno"
+      },
+      {
+        "apiVersion": "batch/v1",
+        "kind": "Job",
+        "name": "kyverno-scale-to-zero",
+        "namespace": "kyverno"
+      }
+    ]
+  }
+}

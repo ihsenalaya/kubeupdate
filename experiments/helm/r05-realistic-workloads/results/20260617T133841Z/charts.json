@@ -1,0 +1,327 @@
+[
+  {
+    "apiVersionCounts": {
+      "admissionregistration.k8s.io/v1": 1,
+      "apps/v1": 1,
+      "batch/v1": 2,
+      "networking.k8s.io/v1": 1,
+      "policy/v1": 1,
+      "rbac.authorization.k8s.io/v1": 8,
+      "v1": 5
+    },
+    "archivedBytes": 22194,
+    "bytes": 22211,
+    "chart": "ingress-nginx/ingress-nginx",
+    "command": [
+      "helm",
+      "template",
+      "ingress-nginx",
+      "ingress-nginx/ingress-nginx",
+      "--version",
+      "4.15.1",
+      "--namespace",
+      "ingress-nginx",
+      "--create-namespace",
+      "--skip-tests",
+      "--set",
+      "controller.replicaCount=2"
+    ],
+    "documentCount": 19,
+    "excludedSecretCount": 0,
+    "excludedSecrets": [],
+    "includeCrds": false,
+    "kindCounts": {
+      "ClusterRole": 2,
+      "ClusterRoleBinding": 2,
+      "ConfigMap": 1,
+      "Deployment": 1,
+      "IngressClass": 1,
+      "Job": 2,
+      "PodDisruptionBudget": 1,
+      "Role": 2,
+      "RoleBinding": 2,
+      "Service": 2,
+      "ServiceAccount": 2,
+      "ValidatingWebhookConfiguration": 1
+    },
+    "manifest": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/ingress-nginx.yaml",
+    "name": "ingress-nginx",
+    "namespace": "ingress-nginx",
+    "namespaceCounts": {
+      "<cluster-scope>": 6,
+      "ingress-nginx": 13
+    },
+    "rawSha256": "45cc0b897e41a26e52c983dfb2a2980c0056d3c664c73f13139fe76f07592109",
+    "release": "ingress-nginx",
+    "resourceCount": 19,
+    "sha256": "55a978790a1e9aa2d514b8e8d514f3d10d61a9a0731882638b36646519cceb21",
+    "values": [
+      "controller.replicaCount=2"
+    ],
+    "version": "4.15.1"
+  },
+  {
+    "apiVersionCounts": {
+      "admissionregistration.k8s.io/v1": 2,
+      "apiextensions.k8s.io/v1": 6,
+      "apps/v1": 3,
+      "batch/v1": 1,
+      "rbac.authorization.k8s.io/v1": 33,
+      "v1": 7
+    },
+    "archivedBytes": 1020114,
+    "bytes": 1020118,
+    "chart": "jetstack/cert-manager",
+    "command": [
+      "helm",
+      "template",
+      "cert-manager",
+      "jetstack/cert-manager",
+      "--version",
+      "v1.20.2",
+      "--namespace",
+      "cert-manager",
+      "--create-namespace",
+      "--skip-tests",
+      "--include-crds",
+      "--set",
+      "crds.enabled=true"
+    ],
+    "documentCount": 52,
+    "excludedSecretCount": 0,
+    "excludedSecrets": [],
+    "includeCrds": true,
+    "kindCounts": {
+      "ClusterRole": 13,
+      "ClusterRoleBinding": 10,
+      "CustomResourceDefinition": 6,
+      "Deployment": 3,
+      "Job": 1,
+      "MutatingWebhookConfiguration": 1,
+      "Role": 5,
+      "RoleBinding": 5,
+      "Service": 3,
+      "ServiceAccount": 4,
+      "ValidatingWebhookConfiguration": 1
+    },
+    "manifest": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/cert-manager.yaml",
+    "name": "cert-manager",
+    "namespace": "cert-manager",
+    "namespaceCounts": {
+      "<cluster-scope>": 31,
+      "cert-manager": 17,
+      "kube-system": 4
+    },
+    "rawSha256": "048a9b575229b1bc5d920b11458c55f666c567ca8b2c1849e263335d5fb9cab3",
+    "release": "cert-manager",
+    "resourceCount": 52,
+    "sha256": "e488f7dfa28db92b1c5c1a93a46b0249ec4792e4a7d41e9d4352f0d86ba3b2ed",
+    "values": [
+      "crds.enabled=true"
+    ],
+    "version": "v1.20.2"
+  },
+  {
+    "apiVersionCounts": {
+      "apps/v1": 1,
+      "rbac.authorization.k8s.io/v1": 2,
+      "v1": 2
+    },
+    "archivedBytes": 4537,
+    "bytes": 4541,
+    "chart": "external-dns/external-dns",
+    "command": [
+      "helm",
+      "template",
+      "external-dns",
+      "external-dns/external-dns",
+      "--version",
+      "1.21.1",
+      "--namespace",
+      "external-dns",
+      "--create-namespace",
+      "--skip-tests",
+      "--set",
+      "provider.name=azure",
+      "--set",
+      "policy=sync"
+    ],
+    "documentCount": 5,
+    "excludedSecretCount": 0,
+    "excludedSecrets": [],
+    "includeCrds": false,
+    "kindCounts": {
+      "ClusterRole": 1,
+      "ClusterRoleBinding": 1,
+      "Deployment": 1,
+      "Service": 1,
+      "ServiceAccount": 1
+    },
+    "manifest": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/external-dns.yaml",
+    "name": "external-dns",
+    "namespace": "external-dns",
+    "namespaceCounts": {
+      "<cluster-scope>": 2,
+      "external-dns": 3
+    },
+    "rawSha256": "3e28eed35d756bb2fe179b6726d1b4e62149ae13ba4168b8ee7790040ee8d3e6",
+    "release": "external-dns",
+    "resourceCount": 5,
+    "sha256": "297f4b922e43920d03d4455aac962fddfa67e1054c39a1c0cd62566956b9c666",
+    "values": [
+      "provider.name=azure",
+      "policy=sync"
+    ],
+    "version": "1.21.1"
+  },
+  {
+    "apiVersionCounts": {
+      "admissionregistration.k8s.io/v1": 2,
+      "apiextensions.k8s.io/v1": 10,
+      "apps/v1": 4,
+      "batch/v1": 2,
+      "monitoring.coreos.com/v1": 50,
+      "rbac.authorization.k8s.io/v1": 12,
+      "v1": 49
+    },
+    "archivedBytes": 5151877,
+    "bytes": 5156830,
+    "chart": "prometheus-community/kube-prometheus-stack",
+    "command": [
+      "helm",
+      "template",
+      "kube-prometheus-stack",
+      "prometheus-community/kube-prometheus-stack",
+      "--version",
+      "86.2.3",
+      "--namespace",
+      "monitoring",
+      "--create-namespace",
+      "--skip-tests",
+      "--include-crds",
+      "--set",
+      "grafana.enabled=true",
+      "--set",
+      "prometheus.prometheusSpec.replicas=1",
+      "--set",
+      "alertmanager.alertmanagerSpec.replicas=1"
+    ],
+    "documentCount": 129,
+    "excludedSecretCount": 2,
+    "excludedSecrets": [
+      {
+        "apiVersion": "v1",
+        "kind": "Secret",
+        "name": "kube-prometheus-stack-grafana",
+        "namespace": "monitoring"
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Secret",
+        "name": "alertmanager-kube-prometheus-stack-alertmanager",
+        "namespace": "monitoring"
+      }
+    ],
+    "includeCrds": true,
+    "kindCounts": {
+      "Alertmanager": 1,
+      "ClusterRole": 5,
+      "ClusterRoleBinding": 5,
+      "ConfigMap": 31,
+      "CustomResourceDefinition": 10,
+      "DaemonSet": 1,
+      "Deployment": 3,
+      "Job": 2,
+      "MutatingWebhookConfiguration": 1,
+      "Prometheus": 1,
+      "PrometheusRule": 35,
+      "Role": 1,
+      "RoleBinding": 1,
+      "Service": 11,
+      "ServiceAccount": 7,
+      "ServiceMonitor": 13,
+      "ValidatingWebhookConfiguration": 1
+    },
+    "manifest": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/kube-prometheus-stack.yaml",
+    "name": "kube-prometheus-stack",
+    "namespace": "monitoring",
+    "namespaceCounts": {
+      "<cluster-scope>": 22,
+      "kube-system": 5,
+      "monitoring": 102
+    },
+    "rawSha256": "a9a50d2d3d5f0540b0873b10c9f7f0c713a4daeb21ef15ca12c0f200d5366c65",
+    "release": "kube-prometheus-stack",
+    "resourceCount": 129,
+    "sha256": "39f298091fc796050109082d5c907e6cfd76bda985e0e605a1b6288efd2540d1",
+    "values": [
+      "grafana.enabled=true",
+      "prometheus.prometheusSpec.replicas=1",
+      "alertmanager.alertmanagerSpec.replicas=1"
+    ],
+    "version": "86.2.3"
+  },
+  {
+    "apiVersionCounts": {
+      "apiextensions.k8s.io/v1": 22,
+      "apps/v1": 4,
+      "batch/v1": 3,
+      "policy/v1": 1,
+      "rbac.authorization.k8s.io/v1": 33,
+      "v1": 13
+    },
+    "archivedBytes": 5717779,
+    "bytes": 5717870,
+    "chart": "kyverno/kyverno",
+    "command": [
+      "helm",
+      "template",
+      "kyverno",
+      "kyverno/kyverno",
+      "--version",
+      "3.8.1",
+      "--namespace",
+      "kyverno",
+      "--create-namespace",
+      "--skip-tests",
+      "--include-crds",
+      "--set",
+      "admissionController.replicas=2",
+      "--set",
+      "backgroundController.replicas=1"
+    ],
+    "documentCount": 76,
+    "excludedSecretCount": 0,
+    "excludedSecrets": [],
+    "includeCrds": true,
+    "kindCounts": {
+      "ClusterRole": 17,
+      "ClusterRoleBinding": 8,
+      "ConfigMap": 2,
+      "CustomResourceDefinition": 22,
+      "Deployment": 4,
+      "Job": 3,
+      "PodDisruptionBudget": 1,
+      "Role": 4,
+      "RoleBinding": 4,
+      "Service": 6,
+      "ServiceAccount": 5
+    },
+    "manifest": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/kyverno.yaml",
+    "name": "kyverno",
+    "namespace": "kyverno",
+    "namespaceCounts": {
+      "<cluster-scope>": 47,
+      "kyverno": 29
+    },
+    "rawSha256": "e25acb62ba107898a002ce179004383f800d860981d34049d58649dfad10dfc6",
+    "release": "kyverno",
+    "resourceCount": 76,
+    "sha256": "b68445d14af7ed252abe3e7b22a861049fceb7ea9eec89b7193400dc20f7c149",
+    "values": [
+      "admissionController.replicas=2",
+      "backgroundController.replicas=1"
+    ],
+    "version": "3.8.1"
+  }
+]
