@@ -1,0 +1,235 @@
+{
+  "targetVersion": "1.32",
+  "scope": "Kind cluster with Kubernetes 1.24.15, controlled manifests, and four core risk families plus deprecated APIs.",
+  "expectedFindings": [
+    {
+      "id": "gt-workload-low-replicas",
+      "family": "WorkloadAvailability",
+      "type": "WORKLOAD_AVAILABILITY_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r01-low-replicas",
+        "name": "payment-api"
+      },
+      "messageContains": "fewer than 2 replicas"
+    },
+    {
+      "id": "gt-readiness-missing-probe",
+      "family": "ReadinessProbes",
+      "type": "MISSING_READINESS_PROBE",
+      "severity": "Medium",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r01-missing-readiness",
+        "name": "checkout-api"
+      },
+      "messageContains": "has no readinessProbe"
+    },
+    {
+      "id": "gt-pdb-min-available-blocking",
+      "family": "PDB",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "Critical",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "namespace": "r01-pdb-min-blocking",
+        "name": "orders-api"
+      },
+      "messageContains": "may block disruption"
+    },
+    {
+      "id": "gt-pdb-max-unavailable-zero",
+      "family": "PDB",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "namespace": "r01-pdb-max-zero",
+        "name": "billing-api"
+      },
+      "messageContains": "may block disruption"
+    },
+    {
+      "id": "gt-pdb-stale-selector",
+      "family": "PDB",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "namespace": "r01-pdb-no-match",
+        "name": "stale-pdb"
+      },
+      "messageContains": "does not match any assessed workload"
+    },
+    {
+      "id": "gt-pdb-missing",
+      "family": "PDB",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "Low",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r01-pdb-missing",
+        "name": "search-api"
+      },
+      "messageContains": "has no matching PodDisruptionBudget"
+    },
+    {
+      "id": "gt-standalone-pod",
+      "family": "WorkloadAvailability",
+      "type": "WORKLOAD_AVAILABILITY_RISK",
+      "severity": "Medium",
+      "resource": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "namespace": "r01-standalone-pod",
+        "name": "manual-pod"
+      },
+      "messageContains": "is standalone"
+    },
+    {
+      "id": "gt-policy-restricted-namespace-privileged",
+      "family": "PolicyRisk",
+      "type": "POLICY_RISK",
+      "severity": "Medium",
+      "resource": {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "name": "r01-policy-restricted"
+      },
+      "messageContains": "enforces Pod Security restricted"
+    },
+    {
+      "id": "gt-policy-privileged",
+      "family": "PolicyRisk",
+      "type": "POLICY_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r01-policy-restricted",
+        "name": "legacy-worker"
+      },
+      "messageContains": "privileged=true"
+    },
+    {
+      "id": "gt-policy-run-as-non-root-absent",
+      "family": "PolicyRisk",
+      "type": "POLICY_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r01-policy-restricted",
+        "name": "legacy-worker"
+      },
+      "messageContains": "runAsNonRoot absent"
+    },
+    {
+      "id": "gt-policy-restricted-namespace-missing-security-context",
+      "family": "PolicyRisk",
+      "type": "POLICY_RISK",
+      "severity": "Medium",
+      "resource": {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "name": "r01-policy-missing-sc"
+      },
+      "messageContains": "enforces Pod Security restricted"
+    },
+    {
+      "id": "gt-policy-missing-security-context",
+      "family": "PolicyRisk",
+      "type": "POLICY_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r01-policy-missing-sc",
+        "name": "unsafe-api"
+      },
+      "messageContains": "missing securityContext"
+    },
+    {
+      "id": "gt-admission-fail-policy",
+      "family": "AdmissionWebhook",
+      "type": "ADMISSION_WEBHOOK_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r01-risky-webhook"
+      },
+      "messageContains": "failurePolicy=Fail"
+    },
+    {
+      "id": "gt-admission-missing-service",
+      "family": "AdmissionWebhook",
+      "type": "ADMISSION_WEBHOOK_RISK",
+      "severity": "Critical",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r01-risky-webhook"
+      },
+      "messageContains": "referenced service is absent"
+    },
+    {
+      "id": "gt-admission-broad-scope",
+      "family": "AdmissionWebhook",
+      "type": "ADMISSION_WEBHOOK_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r01-risky-webhook"
+      },
+      "messageContains": "namespaceSelector is absent"
+    },
+    {
+      "id": "gt-deprecated-pdb",
+      "family": "DeprecatedAPI",
+      "type": "DEPRECATED_OR_REMOVED_API",
+      "severity": "Critical",
+      "resource": {
+        "apiVersion": "policy/v1beta1",
+        "kind": "PodDisruptionBudget",
+        "namespace": "r01-deprecated-api",
+        "name": "legacy-pdb"
+      },
+      "messageContains": "removed in Kubernetes 1.25"
+    },
+    {
+      "id": "gt-deprecated-cronjob",
+      "family": "DeprecatedAPI",
+      "type": "DEPRECATED_OR_REMOVED_API",
+      "severity": "Critical",
+      "resource": {
+        "apiVersion": "batch/v1beta1",
+        "kind": "CronJob",
+        "namespace": "r01-deprecated-api",
+        "name": "legacy-cron"
+      },
+      "messageContains": "removed in Kubernetes 1.25"
+    },
+    {
+      "id": "gt-deprecated-hpa",
+      "family": "DeprecatedAPI",
+      "type": "DEPRECATED_OR_REMOVED_API",
+      "severity": "Critical",
+      "resource": {
+        "apiVersion": "autoscaling/v2beta2",
+        "kind": "HorizontalPodAutoscaler",
+        "namespace": "r01-deprecated-api",
+        "name": "legacy-hpa"
+      },
+      "messageContains": "removed in Kubernetes 1.26"
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+I0617 10:36:28.993307  334689 warnings.go:107] "Warning: v1 ComponentStatus is deprecated in v1.19+"
+I0617 10:36:30.594061  334689 warnings.go:107] "Warning: policy/v1beta1 PodSecurityPolicy is deprecated in v1.21+, unavailable in v1.25+"

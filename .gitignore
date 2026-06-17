@@ -18,3 +18,5 @@ article/generated/
 secrets/
 .local/
 gitops/
+__pycache__/
+*.pyc

@@ -1,0 +1,29 @@
+[
+	{
+		"Name": "legacy-cron",
+		"Namespace": "r01-deprecated-api",
+		"Kind": "CronJob",
+		"ApiVersion": "batch/v1beta1",
+		"RuleSet": "Deprecated APIs removed in 1.25",
+		"ReplaceWith": "batch/v1",
+		"Since": "1.21.0"
+	},
+	{
+		"Name": "legacy-pdb",
+		"Namespace": "r01-deprecated-api",
+		"Kind": "PodDisruptionBudget",
+		"ApiVersion": "policy/v1beta1",
+		"RuleSet": "Deprecated APIs removed in 1.25",
+		"ReplaceWith": "policy/v1",
+		"Since": "1.21.0"
+	},
+	{
+		"Name": "legacy-hpa",
+		"Namespace": "r01-deprecated-api",
+		"Kind": "HorizontalPodAutoscaler",
+		"ApiVersion": "autoscaling/v2beta2",
+		"RuleSet": "Deprecated APIs removed in 1.26",
+		"ReplaceWith": "autoscaling/v2",
+		"Since": "1.23.0"
+	}
+]

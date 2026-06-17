@@ -1,0 +1,77 @@
+[
+  {
+    "available": true,
+    "command": [
+      "pluto",
+      "detect-files",
+      "-d",
+      "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/kind/r01-benchmark/manifests",
+      "-o",
+      "json",
+      "-t",
+      "k8s=v1.32.0",
+      "--ignore-deprecations",
+      "--ignore-removals",
+      "--ignore-unavailable-replacements"
+    ],
+    "durationSeconds": 0.215,
+    "name": "pluto-files",
+    "returncode": 0
+  },
+  {
+    "available": true,
+    "command": [
+      "pluto",
+      "detect-api-resources",
+      "--kube-context",
+      "kind-kug-r01",
+      "-o",
+      "json",
+      "-t",
+      "k8s=v1.32.0",
+      "--ignore-deprecations",
+      "--ignore-removals",
+      "--ignore-unavailable-replacements"
+    ],
+    "durationSeconds": 2.552,
+    "name": "pluto-cluster",
+    "returncode": 0
+  },
+  {
+    "available": true,
+    "command": [
+      "kubent",
+      "-c=false",
+      "--helm3=false",
+      "-f",
+      "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/kind/r01-benchmark/manifests/00-scenarios.yaml",
+      "-o",
+      "json",
+      "-t",
+      "1.32.0",
+      "--log-level",
+      "error"
+    ],
+    "durationSeconds": 0.135,
+    "name": "kubent-files",
+    "returncode": 0
+  },
+  {
+    "available": true,
+    "command": [
+      "kubent",
+      "-x",
+      "kind-kug-r01",
+      "--helm3=false",
+      "-o",
+      "json",
+      "-t",
+      "1.32.0",
+      "--log-level",
+      "error"
+    ],
+    "durationSeconds": 6.381,
+    "name": "kubent-cluster",
+    "returncode": 0
+  }
+]

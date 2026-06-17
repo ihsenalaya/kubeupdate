@@ -1,0 +1,485 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-system
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-low-replicas
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-missing-readiness
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-pdb-min-blocking
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-pdb-max-zero
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-pdb-no-match
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-pdb-missing
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-standalone-pod
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-policy-restricted
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-policy-missing-sc
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-admission-target
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-deprecated-api
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-safe
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-api
+  namespace: r01-low-replicas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-api
+  template:
+    metadata:
+      labels:
+        app: payment-api
+    spec:
+      containers:
+        - name: api
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checkout-api
+  namespace: r01-missing-readiness
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: checkout-api
+  template:
+    metadata:
+      labels:
+        app: checkout-api
+    spec:
+      containers:
+        - name: api
+          image: registry.k8s.io/pause:3.9
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: checkout-api
+  namespace: r01-missing-readiness
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: checkout-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-api
+  namespace: r01-pdb-min-blocking
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: orders-api
+  template:
+    metadata:
+      labels:
+        app: orders-api
+    spec:
+      containers:
+        - name: api
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: orders-api
+  namespace: r01-pdb-min-blocking
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: orders-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: billing-api
+  namespace: r01-pdb-max-zero
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: billing-api
+  template:
+    metadata:
+      labels:
+        app: billing-api
+    spec:
+      containers:
+        - name: api
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: billing-api
+  namespace: r01-pdb-max-zero
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: billing-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-api
+  namespace: r01-pdb-no-match
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: inventory-api
+  template:
+    metadata:
+      labels:
+        app: inventory-api
+    spec:
+      containers:
+        - name: api
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: inventory-api
+  namespace: r01-pdb-no-match
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: inventory-api
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: stale-pdb
+  namespace: r01-pdb-no-match
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: absent
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-api
+  namespace: r01-pdb-missing
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: search-api
+  template:
+    metadata:
+      labels:
+        app: search-api
+    spec:
+      containers:
+        - name: api
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: manual-pod
+  namespace: r01-standalone-pod
+spec:
+  containers:
+    - name: worker
+      image: registry.k8s.io/pause:3.9
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        allowPrivilegeEscalation: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: legacy-worker
+  namespace: r01-policy-restricted
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: legacy-worker
+  template:
+    metadata:
+      labels:
+        app: legacy-worker
+    spec:
+      containers:
+        - name: worker
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            privileged: true
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: legacy-worker
+  namespace: r01-policy-restricted
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: legacy-worker
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unsafe-api
+  namespace: r01-policy-missing-sc
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: unsafe-api
+  template:
+    metadata:
+      labels:
+        app: unsafe-api
+    spec:
+      containers:
+        - name: api
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: unsafe-api
+  namespace: r01-policy-missing-sc
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: unsafe-api
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: r01-risky-webhook
+webhooks:
+  - name: policy.example.com
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+    failurePolicy: Fail
+    clientConfig:
+      service:
+        namespace: r01-admission-target
+        name: missing-webhook
+        path: /validate
+    rules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["UPDATE"]
+        resources: ["configmaps"]
+        scope: Namespaced
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: legacy-target
+  namespace: r01-deprecated-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: legacy-target
+  template:
+    metadata:
+      labels:
+        app: legacy-target
+    spec:
+      containers:
+        - name: app
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: legacy-pdb
+  namespace: r01-deprecated-api
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: legacy-target
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: legacy-cron
+  namespace: r01-deprecated-api
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: job
+              image: registry.k8s.io/pause:3.9
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: legacy-hpa
+  namespace: r01-deprecated-api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: legacy-target
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profile-api
+  namespace: r01-safe
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: profile-api
+  template:
+    metadata:
+      labels:
+        app: profile-api
+    spec:
+      containers:
+        - name: api
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: profile-api
+  namespace: r01-safe
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: profile-api

@@ -19,16 +19,16 @@
 \newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\kagent}{\textsc{kagent}}
 
-\title{Evidence-Guided Kubernetes Upgrade Readiness: A Bounded-Write Operator Artifact and Empirical Evaluation Protocol}
+\title{Evidence-Guided Kubernetes Upgrade Readiness: A Bounded-Write Operator Artifact and Controlled Benchmark}
 
 \author{Ihsen Alaya%
-\thanks{Manuscript draft prepared for technical review. This version reports implementation fidelity, local validation, and an empirical evaluation protocol.}}
+\thanks{Manuscript draft prepared for technical review. This version reports implementation fidelity, local validation, a controlled Kind benchmark, and a protocol for broader production-cluster evaluation.}}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Kubernetes upgrades are recurring software evolution activities in which platform changes interact with application APIs, disruption budgets, admission controls, workload availability assumptions, scheduling capacity, operators, add-ons, and observability capabilities. Existing operational tools are useful for detecting deprecated Kubernetes APIs, but upgrade readiness also depends on whether workloads can tolerate node disruption, whether admission policies will allow recreated objects, whether platform engineers can collect sufficient evidence, and whether remediation actions are traceable to concrete cluster state. This paper presents \tool, a Kubernetes-native bounded-write operator artifact for evidence-guided upgrade readiness assessment. The artifact implements two custom resources, \crd{UpgradeAssessment} and \crd{UpgradePlan}, and deterministic read-only checkers that produce structured findings, evidence records, aggregate risk scores, non-executing decisions, and prioritized remediation actions. The operator does not upgrade clusters, drain nodes, patch workloads, or apply remediations; it reads assessed resources and writes only its own assessment status and generated plan resources. We report implementation fidelity against the current artifact and local validation from the Go test suite, which executed 17 tests with 0 failures and supports implementation sanity. The broader empirical study is specified as a reproducible protocol covering controlled Kind scenarios, managed AKS validation, API-deprecation baselines, expert review, optional field studies, and scoring-sensitivity analysis. Future explanation support is discussed but remains outside the evaluated artifact.
+Kubernetes upgrades are recurring software evolution activities in which platform changes interact with application APIs, disruption budgets, admission controls, workload availability assumptions, scheduling capacity, operators, add-ons, and observability capabilities. Existing operational tools are useful for detecting deprecated Kubernetes APIs, but upgrade readiness also depends on whether workloads can tolerate node disruption, whether admission policies will allow recreated objects, whether platform engineers can collect sufficient evidence, and whether remediation actions are traceable to concrete cluster state. This paper presents \tool, a Kubernetes-native bounded-write operator artifact for evidence-guided upgrade readiness assessment. The artifact implements two custom resources, \crd{UpgradeAssessment} and \crd{UpgradePlan}, and deterministic read-only checkers that produce structured findings, evidence records, aggregate risk scores, non-executing decisions, and prioritized remediation actions. The operator does not upgrade clusters, drain nodes, patch workloads, or apply remediations; it reads assessed resources and writes only its own assessment status and generated plan resources. We report implementation fidelity, local validation from \code{go test ./...}, and a controlled Kind benchmark with 18 labeled findings across deprecated API, workload availability, readiness, PDB, admission, and policy-risk families. In this controlled benchmark, \tool{} matched all labeled findings with no false positives or false negatives, while Pluto and kubent matched the three deprecated-API findings but did not cover the 15 non-API upgrade-readiness findings. The broader production-oriented empirical study remains specified as a reproducible protocol covering managed AKS validation, expert review, optional field studies, resource metrics, and scoring-sensitivity analysis. Future explanation support is discussed but remains outside the evaluated artifact.
 \end{abstract}
 
 \section*{Index Terms}
@@ -49,8 +49,8 @@ The paper makes four scoped contributions.
 \begin{enumerate}[leftmargin=*]
   \item An evidence-guided model for Kubernetes upgrade readiness assessment that links risk categories to observable evidence and non-executing remediation actions.
   \item A bounded-write Kubernetes operator artifact implementing \crd{UpgradeAssessment}, \crd{UpgradePlan}, deterministic checkers, scoring, decisions, and idempotent plan generation.
-  \item An implementation-fidelity analysis that maps manuscript claims to implemented and locally tested artifact behavior.
-  \item A reproducible empirical evaluation protocol for future controlled benchmarks, API-deprecation baselines, managed AKS validation, and expert review.
+  \item An implementation-fidelity analysis that maps manuscript claims to implemented, locally tested, and benchmark-observed artifact behavior.
+  \item A reproducible controlled Kind benchmark comparing \tool{} with Pluto and kubent on labeled upgrade-readiness scenarios, plus a protocol for broader managed-cluster and expert-review evaluation.
 \end{enumerate}
 
 \section{Background and Problem Statement}
@@ -67,7 +67,7 @@ The problem addressed by this paper is:
 
 \emph{Given a Kubernetes cluster and a target Kubernetes minor version, how can platform engineers obtain a repeatable, auditable, evidence-backed readiness assessment that covers more than API deprecations while avoiding unsafe automated remediation?}
 
-A Q1-grade version of this problem requires two levels of evidence. First, the system artifact must faithfully implement the claimed model. Second, empirical evaluation must show detection coverage, false positives, false negatives, actionability, and operational utility in representative clusters. This paper reports the first level and defines the second as an evaluation protocol rather than pretending it has already been executed.
+A Q1-grade version of this problem requires multiple levels of evidence. First, the system artifact must faithfully implement the claimed model. Second, controlled evaluation must show detection coverage, false positives, and false negatives against labeled scenarios. Third, production-oriented evaluation must assess actionability, transferability, cost, and operational utility in representative clusters. This paper reports the first two levels for a bounded artifact and defines the third level as an evaluation protocol rather than pretending that production generalization has already been established.
 
 \section{Kubernetes Upgrade Readiness Risk Families}
 Upgrade readiness is not a single property. It is a set of risk families that interact during upgrade preparation and execution. Table~\ref{tab:risk-taxonomy} summarizes the risk taxonomy used by \tool.
@@ -230,7 +230,7 @@ The planner converts non-informational findings into required actions. Each acti
 This section is deliberately explicit because it is where a reviewer should look for overclaiming.
 
 \subsection{Artifact Fidelity}
-The manuscript was aligned with the operator artifact inspected at commit \code{f9de9bf}. The artifact includes:
+The manuscript was aligned with the operator artifact used by benchmark run \code{20260617T083259Z} and committed as \code{cf35395}. The artifact includes:
 \begin{itemize}[leftmargin=*]
   \item Go API types for \crd{UpgradeAssessment}, \crd{UpgradePlan}, \code{Finding}, \code{Evidence}, \code{RequiredAction}, summary, risk levels, and decisions.
   \item Generated CRD YAML for \crd{UpgradeAssessment} and \crd{UpgradePlan}.
@@ -256,9 +256,9 @@ Table~\ref{tab:fidelity-matrix} records which claims are supported by the curren
     Workload availability checker & Yes & Yes & Core checker claim & Detects low-replica and standalone-pod risks. \\
     Readiness probe checker & Yes & Yes & Core checker claim & Detects missing container readiness probes. \\
     PDB checker & Yes & Yes & Core checker claim & Detects blocking disruption-budget patterns. \\
-    Admission webhook checker & Yes & Yes & Core checker claim & Detects risky failure policy and missing services. \\
+    Admission webhook checker & Yes & Yes & Core checker claim & Detects risky failure policy, missing services, and broad namespace scope. \\
     Policy risk checker & Partial & Yes & Scoped checker claim & Covers selected Pod Security and policy-engine indicators only. \\
-    Deprecated API checker & Partial & No dedicated test & Scoped checker claim & Uses a small static MVP removed-API table. \\
+    Deprecated API checker & Partial & Yes & Scoped checker claim & Uses a small static MVP removed-API table and last-applied source filtering to avoid API-server conversion false positives. \\
     Capacity checker & Yes & Yes & Core checker claim & Conservative one-node-loss headroom check. \\
     Observability checker & Yes & Yes & Scoped checker claim & Heuristic signal, not proof of monitoring quality. \\
     RBAC gap modeling & Yes & Yes & Core assessment-gap claim & Forbidden API calls become explicit findings. \\
@@ -268,7 +268,7 @@ Table~\ref{tab:fidelity-matrix} records which claims are supported by the curren
   \end{tabular}
 \end{table*}
 
-Features absent from this matrix, including provider-specific collectors, baseline benchmarking, field validation, and explanation-agent integration, are not used as empirical claims in this manuscript.
+Features absent from this matrix, including provider-specific collectors, broad field validation, resource-cost evaluation, and explanation-agent integration, are not used as empirical claims in this manuscript.
 
 \begin{table*}[t]
   \centering
@@ -283,6 +283,8 @@ Features absent from this matrix, including provider-specific collectors, baseli
     The operator detects low-replica workload scenarios. & Local checker test for low-replica workloads. & Locally validated & Supported for covered fixture behavior. \\
     The operator detects missing readiness probe scenarios. & Local checker test for missing readiness probes. & Locally validated & Supported for covered fixture behavior. \\
     The operator detects a blocking PDB scenario. & Local checker test for a single-replica workload with blocking PDB. & Locally validated & Supported for covered fixture behavior. \\
+    The operator detects labeled controlled benchmark findings. & Kind run \code{20260617T083259Z}: 18 TP, 0 FP, 0 FN against benchmark ground truth. & Controlled benchmark & Supported only for the controlled scenarios and labels in the replication package. \\
+    Pluto and kubent cover only the API-deprecation subset in the benchmark. & Pluto/kubent file and cluster runs each matched 3 deprecated-API findings and missed 15 non-API findings. & Controlled benchmark & Supports scoped baseline positioning, not general superiority. \\
     The operator models RBAC gaps as findings. & Local checker test for forbidden API access. & Locally validated & Supported for covered RBAC-denial behavior. \\
     The operator performs bounded-write assessment. & Controller implementation and CRD/status write scope. & Implemented behavior & Supports bounded-write artifact description. \\
     \bottomrule
@@ -292,7 +294,7 @@ Features absent from this matrix, including provider-specific collectors, baseli
 \subsection{Scope Boundaries}
 The artifact scope is intentionally bounded:
 \begin{itemize}[leftmargin=*]
-  \item empirical metrics are produced by the study protocol, not by the controller implementation itself;
+  \item controlled benchmark metrics are produced by the external reproducibility package, not by the controller implementation itself;
   \item the removed-API checker uses an MVP static table rather than a complete versioned database;
   \item managed-provider evidence collection for AKS node-pool upgrade settings is outside the current controller;
   \item add-on support-matrix reasoning for cert-manager, ingress controllers, policy engines, storage drivers, and observability stacks is outside the core checker set;
@@ -305,7 +307,7 @@ The phrase ``read-only'' is precise only with respect to assessed cluster resour
 
 \section{Local Artifact Validation}
 \label{sec:local-validation}
-The local validation objective is artifact sanity, not production effectiveness. The command \code{go test ./...} was executed against the operator repository. The test run completed with 17 passed tests and 0 failed tests. Packages without tests were reported as such by Go. Table~\ref{tab:tests} summarizes the covered behavior.
+The local validation objective is artifact sanity, not production effectiveness. The command \code{go test ./...} was executed against the operator repository and completed with 0 failures. A JSON-formatted run reported 27 passing test events, including subtests, across the checked packages. Packages without tests were reported as such by Go. Table~\ref{tab:tests} summarizes the covered behavior.
 
 \begin{table*}[t]
   \centering
@@ -319,7 +321,9 @@ The local validation objective is artifact sanity, not production effectiveness.
     Readiness probes & Missing container readiness probe is detected & Passed \\
     PDB risk & Single-replica workload with \code{minAvailable: 1} is critical & Passed \\
     Admission webhook risk & \code{failurePolicy=Fail} and missing webhook service are detected & Passed \\
+    Admission selector scope & Nil and empty namespace selectors are treated as broad scope & Passed \\
     Policy risk & Restricted namespace and privileged workload produce findings & Passed \\
+    Deprecated API source filter & Legacy last-applied source is detected while modern source manifests served through legacy endpoints are not flagged & Passed \\
     Capacity & Insufficient one-node-loss headroom is detected & Passed \\
     Observability & Missing monitoring namespace is detected & Passed \\
     RBAC gap & Forbidden list call becomes \code{RBAC\_ASSESSMENT\_GAP} & Passed \\
@@ -330,11 +334,70 @@ The local validation objective is artifact sanity, not production effectiveness.
   \end{tabular}
 \end{table*}
 
-Reviewer interpretation: this test suite supports claims about implemented behavior and deterministic transformations. It does not support claims about production recall, false-positive rate, human effort reduction, or upgrade outcome quality. Those require the evaluation protocol below.
+Reviewer interpretation: this test suite supports claims about implemented behavior and deterministic transformations. It does not support claims about production recall, human effort reduction, or upgrade outcome quality. Controlled recall and false-positive evidence are reported separately in Section~\ref{sec:controlled-results}; production-oriented claims require the broader evaluation protocol in Section~\ref{sec:evaluation-protocol}.
+
+\section{Controlled Benchmark Results}
+\label{sec:controlled-results}
+This section reports the first executed empirical slice. The benchmark is intentionally controlled: it is designed to test whether the current artifact detects labeled upgrade-readiness findings in reproducible Kind scenarios, not whether the system generalizes to all production clusters.
+
+\subsection{Benchmark Setup}
+The benchmark package is archived under \code{experiments/kind/r01-benchmark}. The final validated run is \code{results/20260617T083259Z}. It used Kind image \code{kindest/node:v1.24.15} to allow creation of Kubernetes APIs removed by later releases, target Kubernetes version \code{1.32}, Pluto \code{5.24.0}, and kubent \code{0.7.3}. The run created labeled scenarios for deprecated APIs, workload availability, readiness probes, PDB risks, admission webhook risks, and policy risks. Capacity and observability were intentionally disabled in this benchmark and remain outside the measured result.
+
+The ground truth contains 18 expected findings: 3 deprecated-API findings, 2 workload-availability findings, 1 readiness finding, 4 PDB findings, 3 admission-webhook findings, and 5 policy-risk findings. Raw outputs include the \crd{UpgradeAssessment}, generated \crd{UpgradePlan}, baseline reports, normalized findings, metrics, controller logs, and tool-version records.
+
+\subsection{RQ1: Risk Family Occurrence}
+All six targeted risk families were exercised by the controlled scenarios. The generated assessment reported 18 findings: 5 critical, 8 high, 4 medium, and 1 low. The aggregate score was 222 with critical aggregate risk. This result should be interpreted as scenario coverage evidence, not as a distribution of risks in real clusters.
+
+\subsection{RQ2: Detection Accuracy}
+Table~\ref{tab:controlled-overall} reports overall benchmark metrics. Against the controlled ground truth, \tool{} produced 18 true positives, 0 false positives, and 0 false negatives. Table~\ref{tab:controlled-family} reports per-family counts for \tool{}.
+
+\begin{table*}[t]
+  \centering
+  \caption{Controlled benchmark overall metrics for run \code{20260617T083259Z}.}
+  \label{tab:controlled-overall}
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Tool & TP & FP & FN & Precision & Recall & F1 \\
+    \midrule
+    \tool{} & 18 & 0 & 0 & 1.0000 & 1.0000 & 1.0000 \\
+    Pluto files & 3 & 0 & 15 & 1.0000 & 0.1667 & 0.2857 \\
+    Pluto cluster & 3 & 0 & 15 & 1.0000 & 0.1667 & 0.2857 \\
+    kubent files & 3 & 0 & 15 & 1.0000 & 0.1667 & 0.2857 \\
+    kubent cluster & 3 & 0 & 15 & 1.0000 & 0.1667 & 0.2857 \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+\begin{table}[t]
+  \centering
+  \caption{\tool{} controlled benchmark metrics by risk family.}
+  \label{tab:controlled-family}
+  \begin{tabular}{lrrr}
+    \toprule
+    Family & TP & FP & FN \\
+    \midrule
+    Admission webhook & 3 & 0 & 0 \\
+    Deprecated API & 3 & 0 & 0 \\
+    PDB & 4 & 0 & 0 \\
+    Policy risk & 5 & 0 & 0 \\
+    Readiness probes & 1 & 0 & 0 \\
+    Workload availability & 2 & 0 & 0 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{RQ3: Baseline Coverage}
+Pluto and kubent correctly matched the three deprecated-API findings in both file and cluster modes. They did not detect the 15 non-API findings because those findings concern readiness probes, replica assumptions, PDB semantics, admission webhook configuration, and policy risk. This result supports a narrow claim: API-deprecation tools are necessary baselines but do not cover the broader readiness model evaluated here. It does not prove that \tool{} is better in all upgrade workflows.
+
+\subsection{Error Analysis}
+The final controlled run produced no \tool{} false positives or false negatives against the benchmark labels. During benchmark construction, the harness exposed two implementation defects before the final measurement. First, the controller did not register \code{apiextensions.k8s.io/v1} in its runtime scheme, which caused CRD-listing checkers to fail in a live cluster. Second, the deprecated-API checker initially treated all objects served through a legacy endpoint as deprecated, even when their source manifest used the modern API. The final artifact fixes these defects by registering the CRD scheme and requiring last-applied source evidence for deprecated-API findings. A third precision issue was avoided by treating empty admission namespace selectors as broad scope, matching Kubernetes admission semantics.
+
+\subsection{Interpretation Limits}
+This benchmark is deliberately small and controlled. It does not include production workloads, managed-provider upgrade settings, resource-cost instrumentation, expert actionability ratings, or scoring calibration. The result is sufficient to answer the reviewer objection that the manuscript had no empirical result beyond unit tests. It is not sufficient to claim production effectiveness, statistically robust accuracy, or calibrated risk prediction.
 
 \section{Empirical Evaluation Protocol}
 \label{sec:evaluation-protocol}
-This section defines the empirical study design that accompanies the artifact. The protocol separates scenario construction, baseline execution, managed-cluster validation, expert review, metric computation, and scoring-sensitivity analysis.
+This section defines the broader empirical study design that should follow the controlled benchmark. The protocol separates expanded scenario construction, baseline execution, managed-cluster validation, expert review, metric computation, resource-cost measurement, and scoring-sensitivity analysis.
 
 \begin{figure*}[t]
   \centering
@@ -370,8 +433,8 @@ This section defines the empirical study design that accompanies the artifact. T
   \item[RQ5.] In a future extension, does a constrained explanation layer affect review quality without introducing unsupported recommendations?
 \end{description}
 
-\subsection{Controlled Benchmark}
-The planned benchmark should contain 30 to 50 Kind scenarios across the risk families in Table~\ref{tab:risk-taxonomy}. Each scenario must include manifests, target Kubernetes version, injected risk mechanism, expected findings, and ground-truth labels. Scenarios should include single-risk and multi-risk cases. The benchmark must archive \tool{} output, baseline output, and scripts so reviewers can reproduce the comparison.
+\subsection{Expanded Controlled Benchmark}
+The first controlled benchmark contains 18 labeled findings and is reported in Section~\ref{sec:controlled-results}. Before a full journal submission, the benchmark should be expanded to 30 to 50 Kind scenarios across the risk families in Table~\ref{tab:risk-taxonomy}. Each scenario must include manifests, target Kubernetes version, injected risk mechanism, expected findings, and ground-truth labels. Scenarios should include single-risk and multi-risk cases. The benchmark must continue to archive \tool{} output, baseline output, and scripts so reviewers can reproduce the comparison.
 
 \subsection{Baselines}
 Pluto and kubent should be used as narrow API-deprecation baselines, not as broad readiness baselines \cite{pluto,kubent}. Helm API migration documentation and the Helm mapkubeapis plugin should be used for Helm-release API migration context \cite{helmKubernetesApis,helmMapKubeApis}. A manual platform-engineering checklist should serve as the broad operational baseline. Comparisons must be stratified by risk family; a single global F1 score against API-deprecation-only tools would be misleading.
@@ -421,7 +484,7 @@ Table~\ref{tab:planned-metrics} summarizes the metrics and evidence sources spec
     \toprule
     Experiment & Minimum execution requirement & Metrics produced & Output artifact \\
     \midrule
-    Controlled Kind benchmark & 30--50 labeled scenarios with single-risk and multi-risk cases & Per-family detection counts, runtime, risk-family coverage & Scenario catalog \\
+    Expanded Kind benchmark & Current 18-finding benchmark plus 30--50 labeled scenarios with single-risk and multi-risk cases & Per-family detection counts, runtime, risk-family coverage & Scenario catalog \\
     Pluto/kubent comparison & Version-pinned baseline runs with archived raw output & Agreement, disagreement, family-level coverage & Baseline table \\
     False-positive/false-negative analysis & Independent ground truth and reviewed error examples & Precision, recall, F1, false positives, false negatives & Error taxonomy \\
     AKS validation & At least one minimal and preferably one platform-like AKS cluster & Transferability notes, runtime, RBAC gaps, provider-specific misses & Environment table \\
@@ -433,17 +496,16 @@ Table~\ref{tab:planned-metrics} summarizes the metrics and evidence sources spec
 \end{table*}
 
 \subsection{Reproducibility Package Structure}
-The planned empirical study should be accompanied by a version-pinned reproducibility package with the following structure:
+The current controlled benchmark is packaged under \code{experiments/kind/r01-benchmark}. The broader empirical study should keep the same separation of executable scripts, ground truth, raw outputs, processed metrics, and final tables:
 
 \begin{verbatim}
 experiments/
   kind/
-    scenarios/
-    ground-truth.yaml
-    run-kubeupgrade-guardian.sh
-    run-pluto.sh
-    run-kubent.sh
-    collect-results.py
+    r01-benchmark/
+      manifests/
+      ground-truth.json
+      run_kind_benchmark.py
+      results/20260617T083259Z/
   aks/
     cluster-profile-template.yaml
     run-assessment.sh
@@ -456,14 +518,14 @@ experiments/
     tables/
 \end{verbatim}
 
-This structure separates executable scripts, ground truth, raw outputs, processed metrics, and final tables so that measurements can be audited without mixing generated artifacts with manually curated labels.
+This structure makes the measured result auditable while leaving room for managed-cluster and expert-review artifacts.
 
 \section{Discussion}
 \subsection{Why Evidence Matters}
 Evidence changes the review conversation. A finding such as ``PDB may block disruption'' is more useful when it points to the PDB name, selector, matched workload, replica count, and exact \code{minAvailable} or \code{maxUnavailable} value. Similarly, an RBAC-denied list call is not merely a tool error; it is evidence that the assessment cannot establish readiness for a resource family. This makes uncertainty visible.
 
 \subsection{Where the Current Artifact Is Useful}
-The current artifact is useful as a repeatable pre-upgrade inspection framework, a structured way to expose evidence and assessment gaps, and a basis for comparing broader readiness risk categories against API-deprecation tools. Its value is strongest when teams want a Kubernetes-native record of findings and proposed actions without granting the tool authority to mutate workloads.
+The current artifact is useful as a repeatable pre-upgrade inspection framework, a structured way to expose evidence and assessment gaps, and a basis for comparing broader readiness risk categories against API-deprecation tools. The controlled benchmark shows that the artifact can detect the labeled risks in the current scenario package. Its value is strongest when teams want a Kubernetes-native record of findings and proposed actions without granting the tool authority to mutate workloads.
 
 \subsection{Where the Current Artifact Is Weak}
 The deprecated-API checker uses a small static MVP table. The observability checker is heuristic. The capacity checker is conservative and does not model all scheduler, autoscaler, topology, taint, priority, or managed-provider behaviors. Policy analysis is not a full admission dry run. Add-on and operator compatibility are not yet deeply analyzed. The score is not calibrated by production outcomes. These weaknesses are acceptable for an artifact-scope paper only if they remain explicit.
@@ -476,9 +538,9 @@ The deprecated-API checker uses a small static MVP table. The observability chec
 
 \textbf{Internal validity.} Checker defects, incomplete API tables, incorrect benchmark labels, or baseline misconfiguration can bias results. Mitigations include independent scenario review, command archival, deterministic fixtures, and version-pinned tools.
 
-\textbf{External validity.} Kind scenarios cannot represent all production clusters. AKS validation would add managed-cluster evidence but remains provider-specific. Production clusters may include proprietary controllers, custom admission chains, and hidden operational constraints.
+\textbf{External validity.} The controlled Kind benchmark demonstrates behavior on labeled scenarios, not production generality. AKS validation would add managed-cluster evidence but remains provider-specific. Production clusters may include proprietary controllers, custom admission chains, and hidden operational constraints.
 
-\textbf{Conclusion validity.} No production effectiveness claim should be made until sample size, expert-review protocol, and statistical analysis are sufficient. The current local test suite supports implementation sanity only.
+\textbf{Conclusion validity.} No production effectiveness claim should be made until sample size, expert-review protocol, resource-cost measurement, and statistical analysis are sufficient. The current local test suite supports implementation sanity, and the controlled benchmark supports only bounded scenario-level accuracy.
 
 \textbf{Agent validity.} If \kagent{} is later evaluated, the study must separate deterministic evidence quality from agent explanation quality. Unsupported agent output must count against the agent layer even if the text appears plausible.
 
@@ -509,7 +571,7 @@ Admission controllers, admission webhooks, ValidatingAdmissionPolicy, Pod Securi
 AIOps research studies operational automation, incident management, and failure management at scale \cite{dang2019,notaro2021}. LLM-for-software-engineering surveys and empirical security studies show both opportunities and risks: AI assistance can help with explanation and synthesis, but it may also produce unsupported or insecure output and encourage overconfidence \cite{hou2024,perry2023,pearce2022,fu2025}. This motivates the paper's cautious stance on \kagent{}: an agent layer should be optional, evidence-bounded, non-authoritative, and separately evaluated.
 
 \section{Conclusion}
-This paper reconstructs Kubernetes upgrade readiness as evidence-guided impact analysis over live cluster state. \tool{} implements this idea as a Kubernetes-native bounded-write operator that materializes assessments and plans through \crd{UpgradeAssessment} and \crd{UpgradePlan}. The current artifact includes deterministic checkers, structured evidence, scoring, decisions, and non-executing remediation actions. Local validation supports implementation sanity: 17 Go tests passed with 0 failures. The empirical protocol specifies how to extend this evidence through controlled benchmarks, API-deprecation baselines, managed AKS validation, expert plan review, privacy controls, scoring-sensitivity analysis, and strict ablation before any \kagent{} claim. The reviewer-facing standard is simple: every claim must be traceable either to implemented artifact behavior, measured evaluation evidence, or explicitly marked future work.
+This paper reconstructs Kubernetes upgrade readiness as evidence-guided impact analysis over live cluster state. \tool{} implements this idea as a Kubernetes-native bounded-write operator that materializes assessments and plans through \crd{UpgradeAssessment} and \crd{UpgradePlan}. The current artifact includes deterministic checkers, structured evidence, scoring, decisions, and non-executing remediation actions. Local validation completed with \code{go test ./...} and 0 failures; the JSON test run reported 27 passing test events including subtests. The controlled Kind benchmark reported 18 true positives, 0 false positives, and 0 false negatives for \tool{} against the current labeled scenario package, while Pluto and kubent covered only the three deprecated-API findings. The broader protocol specifies how to extend this evidence through expanded scenarios, managed AKS validation, expert plan review, privacy controls, resource-cost measurement, scoring-sensitivity analysis, and strict ablation before any \kagent{} claim. The reviewer-facing standard is simple: every claim must be traceable either to implemented artifact behavior, measured evaluation evidence, or explicitly marked future work.
 
 \begin{thebibliography}{99}
 \bibitem{lehman1980}

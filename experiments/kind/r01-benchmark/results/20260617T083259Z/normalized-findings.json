@@ -1,0 +1,391 @@
+{
+  "KubeUpgrade Guardian": [
+    {
+      "family": "AdmissionWebhook",
+      "message": "ValidatingWebhookConfiguration r01-risky-webhook webhook policy.example.com has risk: failurePolicy=Fail.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r01-risky-webhook"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "ValidatingWebhookConfiguration r01-risky-webhook webhook policy.example.com has risk: namespaceSelector is absent.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r01-risky-webhook"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "ValidatingWebhookConfiguration r01-risky-webhook webhook policy.example.com has risk: referenced service is absent.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r01-risky-webhook"
+      },
+      "severity": "Critical",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "DeprecatedAPI",
+      "message": "CronJob r01-deprecated-api/legacy-cron uses batch/v1beta1 removed in Kubernetes 1.25.",
+      "resource": {
+        "apiVersion": "batch/v1beta1",
+        "kind": "CronJob",
+        "name": "legacy-cron",
+        "namespace": "r01-deprecated-api"
+      },
+      "severity": "Critical",
+      "source": "KubeUpgrade Guardian",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    },
+    {
+      "family": "DeprecatedAPI",
+      "message": "HorizontalPodAutoscaler r01-deprecated-api/legacy-hpa uses autoscaling/v2beta2 removed in Kubernetes 1.26.",
+      "resource": {
+        "apiVersion": "autoscaling/v2beta2",
+        "kind": "HorizontalPodAutoscaler",
+        "name": "legacy-hpa",
+        "namespace": "r01-deprecated-api"
+      },
+      "severity": "Critical",
+      "source": "KubeUpgrade Guardian",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    },
+    {
+      "family": "DeprecatedAPI",
+      "message": "PodDisruptionBudget r01-deprecated-api/legacy-pdb uses policy/v1beta1 removed in Kubernetes 1.25.",
+      "resource": {
+        "apiVersion": "policy/v1beta1",
+        "kind": "PodDisruptionBudget",
+        "name": "legacy-pdb",
+        "namespace": "r01-deprecated-api"
+      },
+      "severity": "Critical",
+      "source": "KubeUpgrade Guardian",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    },
+    {
+      "family": "ReadinessProbes",
+      "message": "Container api in Deployment r01-missing-readiness/checkout-api has no readinessProbe.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "checkout-api",
+        "namespace": "r01-missing-readiness"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "MISSING_READINESS_PROBE"
+    },
+    {
+      "family": "PDB",
+      "message": "PDB r01-pdb-max-zero/billing-api may block disruption for Deployment r01-pdb-max-zero/billing-api.",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "name": "billing-api",
+        "namespace": "r01-pdb-max-zero"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PDB",
+      "message": "PDB r01-pdb-min-blocking/orders-api may block disruption for Deployment r01-pdb-min-blocking/orders-api.",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "name": "orders-api",
+        "namespace": "r01-pdb-min-blocking"
+      },
+      "severity": "Critical",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PDB",
+      "message": "Deployment r01-pdb-missing/search-api has no matching PodDisruptionBudget.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "search-api",
+        "namespace": "r01-pdb-missing"
+      },
+      "severity": "Low",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PDB",
+      "message": "PDB r01-pdb-no-match/stale-pdb does not match any assessed workload.",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "name": "stale-pdb",
+        "namespace": "r01-pdb-no-match"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Deployment r01-policy-missing-sc/unsafe-api may violate restricted policy: missing securityContext.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "unsafe-api",
+        "namespace": "r01-policy-missing-sc"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Namespace r01-policy-missing-sc enforces Pod Security restricted.",
+      "resource": {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "name": "r01-policy-missing-sc"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Deployment r01-policy-restricted/legacy-worker may violate restricted policy: privileged=true.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "legacy-worker",
+        "namespace": "r01-policy-restricted"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Deployment r01-policy-restricted/legacy-worker may violate restricted policy: runAsNonRoot absent.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "legacy-worker",
+        "namespace": "r01-policy-restricted"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Namespace r01-policy-restricted enforces Pod Security restricted.",
+      "resource": {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "name": "r01-policy-restricted"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "WorkloadAvailability",
+      "message": "Deployment r01-low-replicas/payment-api has fewer than 2 replicas.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "payment-api",
+        "namespace": "r01-low-replicas"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "WORKLOAD_AVAILABILITY_RISK"
+    },
+    {
+      "family": "WorkloadAvailability",
+      "message": "Pod r01-standalone-pod/manual-pod is standalone and may be lost during node disruption.",
+      "resource": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "manual-pod",
+        "namespace": "r01-standalone-pod"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "WORKLOAD_AVAILABILITY_RISK"
+    }
+  ],
+  "Pluto cluster": [
+    {
+      "family": "DeprecatedAPI",
+      "message": "HorizontalPodAutoscaler legacy-hpa uses autoscaling/v2beta2",
+      "resource": {
+        "apiVersion": "autoscaling/v2beta2",
+        "kind": "HorizontalPodAutoscaler",
+        "name": "legacy-hpa"
+      },
+      "severity": "Critical",
+      "source": "Pluto cluster",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    },
+    {
+      "family": "DeprecatedAPI",
+      "message": "CronJob legacy-cron uses batch/v1beta1",
+      "resource": {
+        "apiVersion": "batch/v1beta1",
+        "kind": "CronJob",
+        "name": "legacy-cron"
+      },
+      "severity": "Critical",
+      "source": "Pluto cluster",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    },
+    {
+      "family": "DeprecatedAPI",
+      "message": "PodDisruptionBudget legacy-pdb uses policy/v1beta1",
+      "resource": {
+        "apiVersion": "policy/v1beta1",
+        "kind": "PodDisruptionBudget",
+        "name": "legacy-pdb"
+      },
+      "severity": "Critical",
+      "source": "Pluto cluster",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    }
+  ],
+  "Pluto files": [
+    {
+      "family": "DeprecatedAPI",
+      "message": "PodDisruptionBudget legacy-pdb uses policy/v1beta1",
+      "resource": {
+        "apiVersion": "policy/v1beta1",
+        "kind": "PodDisruptionBudget",
+        "name": "legacy-pdb"
+      },
+      "severity": "Critical",
+      "source": "Pluto files",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    },
+    {
+      "family": "DeprecatedAPI",
+      "message": "CronJob legacy-cron uses batch/v1beta1",
+      "resource": {
+        "apiVersion": "batch/v1beta1",
+        "kind": "CronJob",
+        "name": "legacy-cron"
+      },
+      "severity": "Critical",
+      "source": "Pluto files",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    },
+    {
+      "family": "DeprecatedAPI",
+      "message": "HorizontalPodAutoscaler legacy-hpa uses autoscaling/v2beta2",
+      "resource": {
+        "apiVersion": "autoscaling/v2beta2",
+        "kind": "HorizontalPodAutoscaler",
+        "name": "legacy-hpa"
+      },
+      "severity": "Critical",
+      "source": "Pluto files",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    }
+  ],
+  "kubent cluster": [
+    {
+      "family": "DeprecatedAPI",
+      "message": "CronJob legacy-cron uses batch/v1beta1",
+      "resource": {
+        "apiVersion": "batch/v1beta1",
+        "kind": "CronJob",
+        "name": "legacy-cron",
+        "namespace": "r01-deprecated-api"
+      },
+      "severity": "Critical",
+      "source": "kubent cluster",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    },
+    {
+      "family": "DeprecatedAPI",
+      "message": "PodDisruptionBudget legacy-pdb uses policy/v1beta1",
+      "resource": {
+        "apiVersion": "policy/v1beta1",
+        "kind": "PodDisruptionBudget",
+        "name": "legacy-pdb",
+        "namespace": "r01-deprecated-api"
+      },
+      "severity": "Critical",
+      "source": "kubent cluster",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    },
+    {
+      "family": "DeprecatedAPI",
+      "message": "HorizontalPodAutoscaler legacy-hpa uses autoscaling/v2beta2",
+      "resource": {
+        "apiVersion": "autoscaling/v2beta2",
+        "kind": "HorizontalPodAutoscaler",
+        "name": "legacy-hpa",
+        "namespace": "r01-deprecated-api"
+      },
+      "severity": "Critical",
+      "source": "kubent cluster",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    }
+  ],
+  "kubent files": [
+    {
+      "family": "DeprecatedAPI",
+      "message": "CronJob legacy-cron uses batch/v1beta1",
+      "resource": {
+        "apiVersion": "batch/v1beta1",
+        "kind": "CronJob",
+        "name": "legacy-cron",
+        "namespace": "r01-deprecated-api"
+      },
+      "severity": "Critical",
+      "source": "kubent files",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    },
+    {
+      "family": "DeprecatedAPI",
+      "message": "PodDisruptionBudget legacy-pdb uses policy/v1beta1",
+      "resource": {
+        "apiVersion": "policy/v1beta1",
+        "kind": "PodDisruptionBudget",
+        "name": "legacy-pdb",
+        "namespace": "r01-deprecated-api"
+      },
+      "severity": "Critical",
+      "source": "kubent files",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    },
+    {
+      "family": "DeprecatedAPI",
+      "message": "HorizontalPodAutoscaler legacy-hpa uses autoscaling/v2beta2",
+      "resource": {
+        "apiVersion": "autoscaling/v2beta2",
+        "kind": "HorizontalPodAutoscaler",
+        "name": "legacy-hpa",
+        "namespace": "r01-deprecated-api"
+      },
+      "severity": "Critical",
+      "source": "kubent files",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    }
+  ]
+}
