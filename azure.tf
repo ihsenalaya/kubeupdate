@@ -44,6 +44,14 @@ resource "azurerm_subnet" "jump_host" {
   address_prefixes     = var.jump_host_subnet_prefixes
 }
 
+resource "azurerm_subnet" "private_endpoints" {
+  name                              = "snet-private-endpoints"
+  resource_group_name               = azurerm_resource_group.platform.name
+  virtual_network_name              = azurerm_virtual_network.platform.name
+  address_prefixes                  = var.private_endpoint_subnet_prefixes
+  private_endpoint_network_policies = "Disabled"
+}
+
 resource "azurerm_private_dns_zone" "platform" {
   name                = local.base_domain
   resource_group_name = azurerm_resource_group.platform.name
@@ -160,23 +168,87 @@ resource "azurerm_user_assigned_identity" "velero" {
   tags                = local.common_tags
 }
 
-resource "azapi_resource" "container_registry" {
-  type      = "Microsoft.ContainerRegistry/registries@2023-07-01"
-  name      = "acr${replace(local.name_slug, "-", "")}${local.compact_suffix}"
-  parent_id = azurerm_resource_group.platform.id
-  location  = azurerm_resource_group.platform.location
-  tags      = local.common_tags
-
-  body = {
-    sku = {
-      name = "Basic"
-    }
-    properties = {
-      adminUserEnabled = false
-    }
+resource "terraform_data" "container_registry" {
+  input = {
+    name                = "acr${replace(local.name_slug, "-", "")}${local.compact_suffix}"
+    resource_group_name = azurerm_resource_group.platform.name
+    location            = azurerm_resource_group.platform.location
   }
 
-  response_export_values = ["properties.loginServer"]
+  provisioner "local-exec" {
+    interpreter = ["/bin/bash", "-c"]
+    command     = <<-EOT
+      set -euo pipefail
+      if ! az acr show --resource-group '${self.input.resource_group_name}' --name '${self.input.name}' >/dev/null 2>&1; then
+        az acr create \
+          --resource-group '${self.input.resource_group_name}' \
+          --name '${self.input.name}' \
+          --sku Premium \
+          --admin-enabled false \
+          --location '${self.input.location}' \
+          --only-show-errors \
+          --output none
+      fi
+
+      az acr update \
+        --resource-group '${self.input.resource_group_name}' \
+        --name '${self.input.name}' \
+        --allow-trusted-services true \
+        --default-action Allow \
+        --only-show-errors \
+        --output none
+    EOT
+  }
+
+  provisioner "local-exec" {
+    interpreter = ["/bin/bash", "-c"]
+    when        = destroy
+    command     = "az acr delete --resource-group '${self.input.resource_group_name}' --name '${self.input.name}' --yes --only-show-errors || true"
+  }
+
+  depends_on = [azurerm_resource_group.platform]
+}
+
+data "azurerm_container_registry" "platform" {
+  name                = terraform_data.container_registry.input.name
+  resource_group_name = azurerm_resource_group.platform.name
+
+  depends_on = [terraform_data.container_registry]
+}
+
+resource "azurerm_private_dns_zone" "acr" {
+  name                = "privatelink.azurecr.io"
+  resource_group_name = azurerm_resource_group.platform.name
+  tags                = local.common_tags
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "acr" {
+  name                  = "pdnslink-${local.name_slug}-acr-${local.compact_suffix}"
+  resource_group_name   = azurerm_resource_group.platform.name
+  private_dns_zone_name = azurerm_private_dns_zone.acr.name
+  virtual_network_id    = azurerm_virtual_network.platform.id
+  registration_enabled  = false
+  tags                  = local.common_tags
+}
+
+resource "azurerm_private_endpoint" "acr" {
+  name                = "pe-${local.name_slug}-acr-${local.compact_suffix}"
+  location            = azurerm_resource_group.platform.location
+  resource_group_name = azurerm_resource_group.platform.name
+  subnet_id           = azurerm_subnet.private_endpoints.id
+  tags                = local.common_tags
+
+  private_service_connection {
+    name                           = "psc-${local.name_slug}-acr-${local.compact_suffix}"
+    private_connection_resource_id = data.azurerm_container_registry.platform.id
+    is_manual_connection           = false
+    subresource_names              = ["registry"]
+  }
+
+  private_dns_zone_group {
+    name                 = "default"
+    private_dns_zone_ids = [azurerm_private_dns_zone.acr.id]
+  }
 }
 
 resource "azurerm_role_assignment" "aks_network_contributor_vnet" {
@@ -371,9 +443,23 @@ resource "azurerm_role_assignment" "current_aks_rbac_cluster_admin" {
 }
 
 resource "azurerm_role_assignment" "aks_acr_pull" {
-  scope                            = azapi_resource.container_registry.id
+  scope                            = data.azurerm_container_registry.platform.id
   role_definition_name             = "AcrPull"
   principal_id                     = azurerm_kubernetes_cluster.platform.kubelet_identity[0].object_id
+  skip_service_principal_aad_check = true
+}
+
+resource "azurerm_role_assignment" "jump_host_acr_push" {
+  scope                            = data.azurerm_container_registry.platform.id
+  role_definition_name             = "AcrPush"
+  principal_id                     = azurerm_linux_virtual_machine.jump_host.identity[0].principal_id
+  skip_service_principal_aad_check = true
+}
+
+resource "azurerm_role_assignment" "jump_host_storage_blob_reader" {
+  scope                            = azurerm_storage_account.velero.id
+  role_definition_name             = "Storage Blob Data Reader"
+  principal_id                     = azurerm_linux_virtual_machine.jump_host.identity[0].principal_id
   skip_service_principal_aad_check = true
 }
 
@@ -470,6 +556,10 @@ resource "azurerm_postgresql_flexible_server" "lab" {
   public_network_access_enabled = true
   backup_retention_days         = 7
   tags                          = local.common_tags
+
+  lifecycle {
+    ignore_changes = [zone]
+  }
 }
 
 resource "azurerm_postgresql_flexible_server_database" "catalog" {

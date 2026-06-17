@@ -69,7 +69,7 @@
           "azure.workload.identity/use": "true"
         "serviceAccount":
           "annotations":
-            "azure.workload.identity/client-id": "a1102690-3226-436b-9ec4-195695d76345"
+            "azure.workload.identity/client-id": "e07afd21-8b7a-4dad-b72d-dfbee70e731b"
           "name": "cert-manager"
     "repoURL": "https://charts.jetstack.io"
     "targetRevision": "v1.20.2"
@@ -127,7 +127,7 @@
         "registry": "txt"
         "serviceAccount":
           "annotations":
-            "azure.workload.identity/client-id": "93db2207-a147-49ae-a3f4-4f699e38fce8"
+            "azure.workload.identity/client-id": "fb259b02-ae66-4bf5-90db-f96a02313a52"
           "labels":
             "azure.workload.identity/use": "true"
           "name": "external-dns"
@@ -191,7 +191,7 @@
         "replicaCount": 1
         "serviceAccount":
           "annotations":
-            "azure.workload.identity/client-id": "c503d0de-0551-4807-b99d-d32b0f7ffbd5"
+            "azure.workload.identity/client-id": "d13eac4c-c6f0-41bf-9b8f-e3ede63a269d"
           "extraLabels":
             "azure.workload.identity/use": "true"
           "name": "external-secrets"
@@ -295,7 +295,7 @@
             "memory": "128Mi"
         "service":
           "annotations":
-            "external-dns.alpha.kubernetes.io/hostname": "argocd.aks.ihsenalaya.xyz,grafana.aks.ihsenalaya.xyz,jaeger.aks.ihsenalaya.xyz,kubecost.aks.ihsenalaya.xyz,neuvector.aks.ihsenalaya.xyz"
+            "external-dns.alpha.kubernetes.io/hostname": "argocd.aks.ihsenalaya.xyz,grafana.aks.ihsenalaya.xyz,jaeger.aks.ihsenalaya.xyz,kubecost.aks.ihsenalaya.xyz,neuvector.aks.ihsenalaya.xyz,lab.aks.ihsenalaya.xyz"
             "service.beta.kubernetes.io/azure-load-balancer-internal": "true"
             "service.beta.kubernetes.io/azure-load-balancer-internal-subnet": "snet-aks-nodes"
             "service.beta.kubernetes.io/azure-load-balancer-ipv4": "10.42.0.100"
@@ -510,6 +510,50 @@
     - "CreateNamespace=true"
     - "ServerSideApply=true"
     - "RespectIgnoreDifferences=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "kubeupgrade-guardian-operator"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "kubeupgrade-guardian-system"
+    "server": "https://kubernetes.default.svc"
+  "project": "platform"
+  "source":
+    "helm":
+      "releaseName": "kubeupgrade-guardian"
+      "values": |
+        "image":
+          "pullPolicy": "IfNotPresent"
+          "repository": "acrihsenaksfbd882.azurecr.io/kubeupgrade-guardian-operator"
+          "tag": "0.1.0"
+        "replicaCount": 1
+        "resources":
+          "limits":
+            "cpu": "500m"
+            "memory": "256Mi"
+          "requests":
+            "cpu": "50m"
+            "memory": "96Mi"
+    "path": "gitops/charts/kubeupgrade-guardian-operator"
+    "repoURL": "https://github.com/ihsenalaya/kubeupdate.git"
+    "targetRevision": "main"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+    - "SkipDryRunOnMissingResource=true"
 
 ---
 "apiVersion": "argoproj.io/v1alpha1"
@@ -942,7 +986,7 @@
                     "environment": "AzurePublicCloud"
                     "hostedZoneName": "ihsenalaya.xyz"
                     "managedIdentity":
-                      "clientID": "a1102690-3226-436b-9ec4-195695d76345"
+                      "clientID": "e07afd21-8b7a-4dad-b72d-dfbee70e731b"
                     "resourceGroupName": "ihsen"
                     "subscriptionID": "ec0e829d-64e1-43fd-b721-ecf5b5112773"
         - "apiVersion": "cert-manager.io/v1"
@@ -1463,6 +1507,58 @@
     "argocd.argoproj.io/sync-wave": "0"
   "finalizers":
   - "resources-finalizer.argocd.argoproj.io"
+  "name": "upgrade-lab"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "upgrade-lab"
+    "server": "https://kubernetes.default.svc"
+  "project": "platform"
+  "source":
+    "helm":
+      "releaseName": "upgrade-lab"
+      "values": |
+        "externalSecrets":
+          "keys":
+            "clientCertificate": "lab-client-certificate"
+            "cosmosMongoUri": "lab-cosmos-mongo-uri"
+            "postgresDsn": "lab-postgres-dsn"
+            "redisUrl": "lab-redis-url"
+            "sqlServerJdbcUrl": "lab-sqlserver-jdbc-url"
+            "sqlServerPassword": "lab-sqlserver-password"
+            "sqlServerUsername": "lab-sqlserver-username"
+          "secretStoreName": "azure-keyvault"
+          "targetSecretName": "upgrade-lab-secrets"
+        "global":
+          "imagePullPolicy": "IfNotPresent"
+          "imageRegistry": "acrihsenaksfbd882.azurecr.io"
+          "imageTag": "0.1.0"
+        "ingress":
+          "gateway":
+            "name": "platform-gateway"
+            "namespace": "istio-ingress"
+          "host": "lab.aks.ihsenalaya.xyz"
+    "path": "gitops/charts/upgrade-lab"
+    "repoURL": "https://github.com/ihsenalaya/kubeupdate.git"
+    "targetRevision": "main"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+    - "SkipDryRunOnMissingResource=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
   "name": "velero"
   "namespace": "argocd"
 "spec":
@@ -1531,7 +1627,7 @@
         "serviceAccount":
           "server":
             "annotations":
-              "azure.workload.identity/client-id": "c81fe924-9611-40cd-ad20-7fe4f4eb7fc2"
+              "azure.workload.identity/client-id": "1d5d19d0-1c4a-4e88-bd96-825cda2050da"
             "name": "velero"
     "repoURL": "https://vmware-tanzu.github.io/helm-charts"
     "targetRevision": "12.0.3"

@@ -601,7 +601,7 @@ locals {
 
   kubeupgrade_guardian_values = {
     image = {
-      repository = "${azapi_resource.container_registry.output.properties.loginServer}/kubeupgrade-guardian-operator"
+      repository = "${data.azurerm_container_registry.platform.login_server}/kubeupgrade-guardian-operator"
       tag        = var.artifact_tag
       pullPolicy = "IfNotPresent"
     }
@@ -620,7 +620,7 @@ locals {
 
   upgrade_lab_values = {
     global = {
-      imageRegistry   = azapi_resource.container_registry.output.properties.loginServer
+      imageRegistry   = data.azurerm_container_registry.platform.login_server
       imageTag        = var.artifact_tag
       imagePullPolicy = "IfNotPresent"
     }

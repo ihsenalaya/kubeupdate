@@ -38,6 +38,11 @@ output "jump_host_public_ip" {
   value       = azurerm_public_ip.jump_host.ip_address
 }
 
+output "jump_host_name" {
+  description = "Azure VM name for the Ubuntu jump host."
+  value       = azurerm_linux_virtual_machine.jump_host.name
+}
+
 output "jump_host_private_ip" {
   description = "Private IP of the Ubuntu jump host."
   value       = azurerm_network_interface.jump_host.private_ip_address
@@ -65,12 +70,12 @@ output "velero_storage_account_name" {
 
 output "acr_name" {
   description = "Azure Container Registry name used for lab and operator images."
-  value       = azapi_resource.container_registry.name
+  value       = data.azurerm_container_registry.platform.name
 }
 
 output "acr_login_server" {
   description = "Azure Container Registry login server."
-  value       = azapi_resource.container_registry.output.properties.loginServer
+  value       = data.azurerm_container_registry.platform.login_server
 }
 
 output "artifact_tag" {

@@ -52,25 +52,6 @@ locals {
     raw                     = "2.0.2"
   }
 
-  lab_services = {
-    edge = {
-      image = "upgrade-lab/edge-api"
-      port  = 3000
-    }
-    catalog = {
-      image = "upgrade-lab/catalog-service"
-      port  = 8000
-    }
-    orders = {
-      image = "upgrade-lab/orders-service"
-      port  = 8080
-    }
-    signals = {
-      image = "upgrade-lab/signals-service"
-      port  = 8090
-    }
-  }
-
   common_tags = merge(
     {
       environment = var.environment

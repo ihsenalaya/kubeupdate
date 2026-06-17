@@ -124,6 +124,12 @@ variable "jump_host_subnet_prefixes" {
   default     = ["10.42.5.0/24"]
 }
 
+variable "private_endpoint_subnet_prefixes" {
+  description = "Private endpoint subnet prefixes."
+  type        = list(string)
+  default     = ["10.42.6.0/24"]
+}
+
 variable "ingress_private_ip" {
   description = "Static private IP assigned to the internal Istio ingress load balancer."
   type        = string
