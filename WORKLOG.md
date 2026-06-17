@@ -1,6 +1,6 @@
 # AKS Upgrade Lab - Suivi
 
-Derniere mise a jour: 2026-06-17 02:08 UTC
+Derniere mise a jour: 2026-06-17 02:31 UTC
 
 ## Etat global
 
@@ -15,8 +15,8 @@ Derniere mise a jour: 2026-06-17 02:08 UTC
 - [x] ACR finalise en mode Premium avec private endpoint, DNS prive, AcrPull AKS et AcrPush VM.
 - [x] Images operator/lab et charts Helm OCI publies depuis la VM jump host via ACR prive.
 - [x] GitOps pousse par l'automatisation apres correction du lint Terraform.
-- [ ] AKS recree, configure, apps synchronisees et verifiees.
-- [ ] Environnement supprime apres verification.
+- [x] AKS recree, configure, apps synchronisees et verifiees depuis la VM jump host.
+- [x] Environnement supprime apres verification.
 
 ## Notes
 
@@ -31,3 +31,5 @@ Derniere mise a jour: 2026-06-17 02:08 UTC
 - Les bases de donnees et Redis sont des services PaaS Azure; les secrets et le certificat applicatif passent par Azure Key Vault et External Secrets.
 - Validation locale: `terraform validate`, `terraform plan`, `helm lint` sur le chart lab, `docker build` du service Java Orders avec le Dockerfile Maven builder.
 - Validation artefacts: `scripts/publish-artifacts.sh` a publie `kubeupgrade-guardian-operator`, `upgrade-lab/edge-api`, `upgrade-lab/catalog-service`, `upgrade-lab/orders-service`, `upgrade-lab/signals-service`, `helm/kubeupgrade-guardian-operator` et `helm/upgrade-lab` en tags `0.1.0` puis `0.1.1` dans ACR.
+- Validation cluster finale: toutes les applications ArgoCD etaient `Synced` et `Healthy`; l'operator, Istio ingress, NeuVector et les quatre microservices du lab etaient rolled out; `BackupStorageLocation/default` etait `Available`; Istio exposait l'IP interne `10.42.0.100`.
+- Suppression finale: `scripts/destroy.sh` a detruit 88 ressources; `az group exists` retourne `false` pour `rg-ihsen-aks-mvp-we` et le node resource group, ACR est absent, `terraform state list` est vide, et `terraform plan -destroy -detailed-exitcode` retourne `0` avec `No changes`.
