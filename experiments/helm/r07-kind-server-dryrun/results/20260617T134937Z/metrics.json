@@ -1,0 +1,316 @@
+{
+  "runs": [
+    {
+      "chart": "cert-manager",
+      "commands": [
+        {
+          "command": [
+            "kubectl",
+            "--context",
+            "kind-kug-r07-helm-dryrun",
+            "apply",
+            "--server-side=true",
+            "-f",
+            "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/cert-manager/crds.yaml"
+          ],
+          "durationSeconds": 1.006,
+          "name": "apply-crds",
+          "returncode": 0,
+          "stderrBytes": 0,
+          "stderrSample": "",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdoutBytes": 570,
+          "stdoutSample": "customresourcedefinition.apiextensions.k8s.io/challenges.acme.cert-manager.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/orders.acme.cert-manager.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/certificaterequests.cert-manager.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/certificates.cert-manager.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/clusterissuers.cert-manager.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/issuers.cert-manager.io serverside-applied",
+          "stdoutSha256": "718b6854e2bf8d0cd8e6de04a962cc90fa28e10087968339fae052e07288a89d"
+        },
+        {
+          "command": [
+            "kubectl",
+            "--context",
+            "kind-kug-r07-helm-dryrun",
+            "wait",
+            "--for=condition=Established",
+            "-f",
+            "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/cert-manager/crds.yaml",
+            "--timeout=60s"
+          ],
+          "durationSeconds": 1.394,
+          "name": "wait-crds-established",
+          "returncode": 0,
+          "stderrBytes": 0,
+          "stderrSample": "",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdoutBytes": 540,
+          "stdoutSample": "customresourcedefinition.apiextensions.k8s.io/challenges.acme.cert-manager.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/orders.acme.cert-manager.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/certificaterequests.cert-manager.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/certificates.cert-manager.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/clusterissuers.cert-manager.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/issuers.cert-manager.io condition met",
+          "stdoutSha256": "a33b8dc003771507200145446be10114a4422ab2931f83ab3a41001b64c69369"
+        },
+        {
+          "command": [
+            "kubectl",
+            "--context",
+            "kind-kug-r07-helm-dryrun",
+            "apply",
+            "--dry-run=server",
+            "-f",
+            "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/cert-manager/resources.yaml"
+          ],
+          "durationSeconds": 1.15,
+          "name": "server-dry-run-resources",
+          "returncode": 0,
+          "stderrBytes": 0,
+          "stderrSample": "",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdoutBytes": 4129,
+          "stdoutSample": "serviceaccount/cert-manager-cainjector created (server dry run)\nserviceaccount/cert-manager created (server dry run)\nserviceaccount/cert-manager-webhook created (server dry run)\nclusterrole.rbac.authorization.k8s.io/cert-manager-cainjector created (server dry run)\nclusterrole.rbac.authorization.k8s.io/cert-manager-controller-issuers created (server dry run)\nclusterrole.rbac.authorization.k8s.io/cert-manager-controller-clusterissuers created (server dry run)\nclusterrole.rbac.authorization.k8s.io/cert-manager-controller-certificates created (server dry run)\nclusterrole.rbac.authorization.k8s.io/cert-manager-controller-orders created (server dry run)\nclusterrole.rbac.authorization.k8s.io/cert-manager-controller-challenges created (server dry run)\nclusterrole.rbac.authorization.k8s.io/cert-manager-controller-ingress-shim created (server dry run)\nclusterrole.rbac.authorization.k8s.io/cert-manager-cluster-view created (server dry run)\nclusterrole.rbac.authorization.k8s.io/cert-manager-view created (server dry run)\nclusterrole.rbac.authorization.k8s.io/cert-manager-edit created (server dry run)\nclusterrole.rbac.authorization.k8s.io/cert-manager-controller-approve:cert-manager-io created (server dry run)\nclusterrole.rbac.authorization.k8s.io/cert-manager-controller-certificatesigningrequests created (server dry run)\nclusterrole.rbac.authorization.k8s.io/cert-manager-webhook:subjectaccessreviews created (server dry run)\nclusterrolebinding.rbac.authorization.k8s.io/cert-manager-cainjector created (server dry run)\nclusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-issuers created (server dry run)\nclusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-clusterissuers created (server dry run)\nclusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-certificates created (server dry run)\nclusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-orders created (server dry run)\nclusterrolebinding.rbac.authorization.k8s.io/cert-ma",
+          "stdoutSha256": "cd8ecfe69eeb2aca9e2cb0956f0aafe9a33ea31f6af86cbc209d987dfce9c191"
+        }
+      ],
+      "crdManifest": {
+        "bytes": 974104,
+        "documents": 6,
+        "path": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/cert-manager/crds.yaml",
+        "sha256": "5ce6033c05edcbc764df28cb73c356324e9f48e217bb8de4a767eddfa5d796f0"
+      },
+      "resourceManifest": {
+        "bytes": 46006,
+        "documents": 46,
+        "path": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/cert-manager/resources.yaml",
+        "sha256": "8c975bb76a3fdd993b7db52614f19ab63d392d4debb253cb3397e832d00d5264"
+      },
+      "sourceManifest": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/cert-manager.yaml",
+      "success": true
+    },
+    {
+      "chart": "external-dns",
+      "commands": [
+        {
+          "command": [
+            "kubectl",
+            "--context",
+            "kind-kug-r07-helm-dryrun",
+            "apply",
+            "--dry-run=server",
+            "-f",
+            "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/external-dns/resources.yaml"
+          ],
+          "durationSeconds": 0.605,
+          "name": "server-dry-run-resources",
+          "returncode": 0,
+          "stderrBytes": 0,
+          "stderrSample": "",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdoutBytes": 319,
+          "stdoutSample": "serviceaccount/external-dns created (server dry run)\nclusterrole.rbac.authorization.k8s.io/external-dns created (server dry run)\nclusterrolebinding.rbac.authorization.k8s.io/external-dns-viewer created (server dry run)\nservice/external-dns created (server dry run)\ndeployment.apps/external-dns created (server dry run)",
+          "stdoutSha256": "24eebf15d61149448bea7ffa231432cbfea0ae79ff348ccf7a8902ea219877ab"
+        }
+      ],
+      "crdManifest": {
+        "documents": 0
+      },
+      "resourceManifest": {
+        "bytes": 4537,
+        "documents": 5,
+        "path": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/external-dns/resources.yaml",
+        "sha256": "297f4b922e43920d03d4455aac962fddfa67e1054c39a1c0cd62566956b9c666"
+      },
+      "sourceManifest": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/external-dns.yaml",
+      "success": true
+    },
+    {
+      "chart": "ingress-nginx",
+      "commands": [
+        {
+          "command": [
+            "kubectl",
+            "--context",
+            "kind-kug-r07-helm-dryrun",
+            "apply",
+            "--dry-run=server",
+            "-f",
+            "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/ingress-nginx/resources.yaml"
+          ],
+          "durationSeconds": 0.767,
+          "name": "server-dry-run-resources",
+          "returncode": 0,
+          "stderrBytes": 0,
+          "stderrSample": "",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdoutBytes": 1405,
+          "stdoutSample": "poddisruptionbudget.policy/ingress-nginx-controller created (server dry run)\nserviceaccount/ingress-nginx created (server dry run)\nconfigmap/ingress-nginx-controller created (server dry run)\nclusterrole.rbac.authorization.k8s.io/ingress-nginx created (server dry run)\nclusterrolebinding.rbac.authorization.k8s.io/ingress-nginx created (server dry run)\nrole.rbac.authorization.k8s.io/ingress-nginx created (server dry run)\nrolebinding.rbac.authorization.k8s.io/ingress-nginx created (server dry run)\nservice/ingress-nginx-controller-admission created (server dry run)\nservice/ingress-nginx-controller created (server dry run)\ndeployment.apps/ingress-nginx-controller created (server dry run)\ningressclass.networking.k8s.io/nginx created (server dry run)\nvalidatingwebhookconfiguration.admissionregistration.k8s.io/ingress-nginx-admission created (server dry run)\nserviceaccount/ingress-nginx-admission created (server dry run)\nclusterrole.rbac.authorization.k8s.io/ingress-nginx-admission created (server dry run)\nclusterrolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created (server dry run)\nrole.rbac.authorization.k8s.io/ingress-nginx-admission created (server dry run)\nrolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created (server dry run)\njob.batch/ingress-nginx-admission-create created (server dry run)\njob.batch/ingress-nginx-admission-patch created (server dry run)",
+          "stdoutSha256": "18114e1b48717864fe66b8294ee48d4192f3726ad3ff6e3846342707dcd558e0"
+        }
+      ],
+      "crdManifest": {
+        "documents": 0
+      },
+      "resourceManifest": {
+        "bytes": 22194,
+        "documents": 19,
+        "path": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/ingress-nginx/resources.yaml",
+        "sha256": "55a978790a1e9aa2d514b8e8d514f3d10d61a9a0731882638b36646519cceb21"
+      },
+      "sourceManifest": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/ingress-nginx.yaml",
+      "success": true
+    },
+    {
+      "chart": "kube-prometheus-stack",
+      "commands": [
+        {
+          "command": [
+            "kubectl",
+            "--context",
+            "kind-kug-r07-helm-dryrun",
+            "apply",
+            "--server-side=true",
+            "-f",
+            "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/kube-prometheus-stack/crds.yaml"
+          ],
+          "durationSeconds": 3.892,
+          "name": "apply-crds",
+          "returncode": 0,
+          "stderrBytes": 0,
+          "stderrSample": "",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdoutBytes": 1012,
+          "stdoutSample": "customresourcedefinition.apiextensions.k8s.io/alertmanagerconfigs.monitoring.coreos.com serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/alertmanagers.monitoring.coreos.com serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/podmonitors.monitoring.coreos.com serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/probes.monitoring.coreos.com serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/prometheusagents.monitoring.coreos.com serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/prometheuses.monitoring.coreos.com serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/prometheusrules.monitoring.coreos.com serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/scrapeconfigs.monitoring.coreos.com serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/servicemonitors.monitoring.coreos.com serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/thanosrulers.monitoring.coreos.com serverside-applied",
+          "stdoutSha256": "b216176e6b6297f328533407f27ed249c1405b2375605f9338de3b6c3ac9ed9b"
+        },
+        {
+          "command": [
+            "kubectl",
+            "--context",
+            "kind-kug-r07-helm-dryrun",
+            "wait",
+            "--for=condition=Established",
+            "-f",
+            "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/kube-prometheus-stack/crds.yaml",
+            "--timeout=60s"
+          ],
+          "durationSeconds": 2.954,
+          "name": "wait-crds-established",
+          "returncode": 0,
+          "stderrBytes": 0,
+          "stderrSample": "",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdoutBytes": 962,
+          "stdoutSample": "customresourcedefinition.apiextensions.k8s.io/alertmanagerconfigs.monitoring.coreos.com condition met\ncustomresourcedefinition.apiextensions.k8s.io/alertmanagers.monitoring.coreos.com condition met\ncustomresourcedefinition.apiextensions.k8s.io/podmonitors.monitoring.coreos.com condition met\ncustomresourcedefinition.apiextensions.k8s.io/probes.monitoring.coreos.com condition met\ncustomresourcedefinition.apiextensions.k8s.io/prometheusagents.monitoring.coreos.com condition met\ncustomresourcedefinition.apiextensions.k8s.io/prometheuses.monitoring.coreos.com condition met\ncustomresourcedefinition.apiextensions.k8s.io/prometheusrules.monitoring.coreos.com condition met\ncustomresourcedefinition.apiextensions.k8s.io/scrapeconfigs.monitoring.coreos.com condition met\ncustomresourcedefinition.apiextensions.k8s.io/servicemonitors.monitoring.coreos.com condition met\ncustomresourcedefinition.apiextensions.k8s.io/thanosrulers.monitoring.coreos.com condition met",
+          "stdoutSha256": "0e04b255db30f74d324e6d93bea9c06d05b37c095997c35024fa154cb5f3fef8"
+        },
+        {
+          "command": [
+            "kubectl",
+            "--context",
+            "kind-kug-r07-helm-dryrun",
+            "apply",
+            "--dry-run=server",
+            "-f",
+            "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/kube-prometheus-stack/resources.yaml"
+          ],
+          "durationSeconds": 3.375,
+          "name": "server-dry-run-resources",
+          "returncode": 0,
+          "stderrBytes": 0,
+          "stderrSample": "",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdoutBytes": 10684,
+          "stdoutSample": "serviceaccount/kube-prometheus-stack-grafana created (server dry run)\nserviceaccount/kube-prometheus-stack-kube-state-metrics created (server dry run)\nserviceaccount/kube-prometheus-stack-prometheus-node-exporter created (server dry run)\nserviceaccount/kube-prometheus-stack-alertmanager created (server dry run)\nserviceaccount/kube-prometheus-stack-operator created (server dry run)\nserviceaccount/kube-prometheus-stack-prometheus created (server dry run)\nconfigmap/kube-prometheus-stack-grafana-config-dashboards created (server dry run)\nconfigmap/kube-prometheus-stack-grafana created (server dry run)\nconfigmap/kube-prometheus-stack-grafana-datasource created (server dry run)\nconfigmap/kube-prometheus-stack-alertmanager-overview created (server dry run)\nconfigmap/kube-prometheus-stack-apiserver created (server dry run)\nconfigmap/kube-prometheus-stack-cluster-total created (server dry run)\nconfigmap/kube-prometheus-stack-controller-manager created (server dry run)\nconfigmap/kube-prometheus-stack-etcd created (server dry run)\nconfigmap/kube-prometheus-stack-grafana-overview created (server dry run)\nconfigmap/kube-prometheus-stack-k8s-coredns created (server dry run)\nconfigmap/kube-prometheus-stack-k8s-resources-cluster created (server dry run)\nconfigmap/kube-prometheus-stack-k8s-resources-multicluster created (server dry run)\nconfigmap/kube-prometheus-stack-k8s-resources-namespace created (server dry run)\nconfigmap/kube-prometheus-stack-k8s-resources-node created (server dry run)\nconfigmap/kube-prometheus-stack-k8s-resources-pod created (server dry run)\nconfigmap/kube-prometheus-stack-k8s-resources-workload created (server dry run)\nconfigmap/kube-prometheus-stack-k8s-resources-workloads-namespace created (server dry run)\nconfigmap/kube-prometheus-stack-kubelet created (server dry run)\nconfigmap/kube-prometheus-stack-namespace-by-pod created (server dry run)\nconfigmap/kube-prometheus-stack-namespace-by-workload created (server dry run)\nconfigmap/kube-prometheus-stack-node-",
+          "stdoutSha256": "97e5b1364b5cb1a64a2067020377fa0a7c76a30ab40ae700261f7a69b7b1e777"
+        }
+      ],
+      "crdManifest": {
+        "bytes": 4494006,
+        "documents": 10,
+        "path": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/kube-prometheus-stack/crds.yaml",
+        "sha256": "be13b2d9f59b8377078c10ef50bbeb51752e1b563a61d11eaea574ad5995f032"
+      },
+      "resourceManifest": {
+        "bytes": 657867,
+        "documents": 119,
+        "path": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/kube-prometheus-stack/resources.yaml",
+        "sha256": "39495102aa0477c01de235b366f5d3597bb4c26de50c08350623f631a9f56160"
+      },
+      "sourceManifest": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/kube-prometheus-stack.yaml",
+      "success": true
+    },
+    {
+      "chart": "kyverno",
+      "commands": [
+        {
+          "command": [
+            "kubectl",
+            "--context",
+            "kind-kug-r07-helm-dryrun",
+            "apply",
+            "--server-side=true",
+            "-f",
+            "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/kyverno/crds.yaml"
+          ],
+          "durationSeconds": 4.493,
+          "name": "apply-crds",
+          "returncode": 0,
+          "stderrBytes": 0,
+          "stderrSample": "",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdoutBytes": 2247,
+          "stdoutSample": "customresourcedefinition.apiextensions.k8s.io/cleanuppolicies.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/clustercleanuppolicies.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/clusterpolicies.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/globalcontextentries.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/policies.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/policyexceptions.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/updaterequests.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/clusterephemeralreports.reports.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/ephemeralreports.reports.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/clusterpolicyreports.wgpolicyk8s.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/policyreports.wgpolicyk8s.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/deletingpolicies.policies.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/generatingpolicies.policies.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/imagevalidatingpolicies.policies.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/mutatingpolicies.policies.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/namespaceddeletingpolicies.policies.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/namespacedgeneratingpolicies.policies.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/namespacedimagevalidatingpolicies.policies.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/namespacedmutatingpolicies.policies.kyverno.io serverside-applied\ncustomresourcedefinition.apiextensions.k8s.io/namespacedvalidatingpolicie",
+          "stdoutSha256": "ff42c54ed9999e89e6799cf4a0e0f093f7ad568e37f23e572e795b68a9bb68d3"
+        },
+        {
+          "command": [
+            "kubectl",
+            "--context",
+            "kind-kug-r07-helm-dryrun",
+            "wait",
+            "--for=condition=Established",
+            "-f",
+            "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/kyverno/crds.yaml",
+            "--timeout=60s"
+          ],
+          "durationSeconds": 4.205,
+          "name": "wait-crds-established",
+          "returncode": 0,
+          "stderrBytes": 0,
+          "stderrSample": "",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdoutBytes": 2137,
+          "stdoutSample": "customresourcedefinition.apiextensions.k8s.io/cleanuppolicies.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/clustercleanuppolicies.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/clusterpolicies.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/globalcontextentries.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/policies.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/policyexceptions.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/updaterequests.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/clusterephemeralreports.reports.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/ephemeralreports.reports.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/clusterpolicyreports.wgpolicyk8s.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/policyreports.wgpolicyk8s.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/deletingpolicies.policies.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/generatingpolicies.policies.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/imagevalidatingpolicies.policies.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/mutatingpolicies.policies.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/namespaceddeletingpolicies.policies.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/namespacedgeneratingpolicies.policies.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/namespacedimagevalidatingpolicies.policies.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/namespacedmutatingpolicies.policies.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/namespacedvalidatingpolicies.policies.kyverno.io condition met\ncustomresourcedefinition.apiextensions.k8s.io/policyexcepti",
+          "stdoutSha256": "5a26c457e8294a320a67dd09455951884f53e87ea75019e6ec8bbffd87c4084c"
+        },
+        {
+          "command": [
+            "kubectl",
+            "--context",
+            "kind-kug-r07-helm-dryrun",
+            "apply",
+            "--dry-run=server",
+            "-f",
+            "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/kyverno/resources.yaml"
+          ],
+          "durationSeconds": 1.342,
+          "name": "server-dry-run-resources",
+          "returncode": 0,
+          "stderrBytes": 0,
+          "stderrSample": "",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdoutBytes": 4414,
+          "stdoutSample": "poddisruptionbudget.policy/kyverno-admission-controller created (server dry run)\nserviceaccount/kyverno-admission-controller created (server dry run)\nserviceaccount/kyverno-background-controller created (server dry run)\nserviceaccount/kyverno-cleanup-controller created (server dry run)\nserviceaccount/kyverno-reports-controller created (server dry run)\nconfigmap/kyverno created (server dry run)\nconfigmap/kyverno-metrics created (server dry run)\nclusterrole.rbac.authorization.k8s.io/kyverno:admission-controller created (server dry run)\nclusterrole.rbac.authorization.k8s.io/kyverno:admission-controller:core created (server dry run)\nclusterrole.rbac.authorization.k8s.io/kyverno:background-controller created (server dry run)\nclusterrole.rbac.authorization.k8s.io/kyverno:background-controller:core created (server dry run)\nclusterrole.rbac.authorization.k8s.io/kyverno:cleanup-controller created (server dry run)\nclusterrole.rbac.authorization.k8s.io/kyverno:cleanup-controller:core created (server dry run)\nclusterrole.rbac.authorization.k8s.io/kyverno:rbac:admin:policies created (server dry run)\nclusterrole.rbac.authorization.k8s.io/kyverno:rbac:view:policies created (server dry run)\nclusterrole.rbac.authorization.k8s.io/kyverno:rbac:admin:policyreports created (server dry run)\nclusterrole.rbac.authorization.k8s.io/kyverno:rbac:view:policyreports created (server dry run)\nclusterrole.rbac.authorization.k8s.io/kyverno:rbac:admin:reports created (server dry run)\nclusterrole.rbac.authorization.k8s.io/kyverno:rbac:view:reports created (server dry run)\nclusterrole.rbac.authorization.k8s.io/kyverno:rbac:admin:updaterequests created (server dry run)\nclusterrole.rbac.authorization.k8s.io/kyverno:rbac:view:updaterequests created (server dry run)\nclusterrole.rbac.authorization.k8s.io/kyverno:reports-controller created (server dry run)\nclusterrole.rbac.authorization.k8s.io/kyverno:reports-controller:core created (server dry run)\nclusterrolebinding.rbac.authorization.k8s.io/kyverno:admis",
+          "stdoutSha256": "0ac3a2903f7a174665499587c46c6fafec78cd4826fc4ae770afa8422c7c75c2"
+        }
+      ],
+      "crdManifest": {
+        "bytes": 5639334,
+        "documents": 22,
+        "path": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/kyverno/crds.yaml",
+        "sha256": "f9475e627069f2afc69d4334ce55b74394ff611b0e0a0c0988176ef753c98165"
+      },
+      "resourceManifest": {
+        "bytes": 78441,
+        "documents": 54,
+        "path": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r07-kind-server-dryrun/results/20260617T134937Z/generated/kyverno/resources.yaml",
+        "sha256": "7dbce329de60e6e840622e96a5a449d8887851a7458f7e529c78d74fdcd97ff4"
+      },
+      "sourceManifest": "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/kyverno.yaml",
+      "success": true
+    }
+  ]
+}

@@ -9,6 +9,7 @@
 \usepackage{lmodern}
 \usepackage{booktabs}
 \usepackage{array}
+\usepackage{amsmath}
 \usepackage{enumitem}
 \usepackage{tikz}
 \usepackage[hidelinks]{hyperref}
@@ -44,6 +45,17 @@ Operational teams often complement official guidance with tools such as Pluto, k
 This paper argues that Kubernetes upgrade readiness should be treated as evidence-guided impact analysis over live cluster state. Rather than producing only warnings or checklist items, an assessment should generate findings that identify affected resources, observable evidence, severity, operational impact, and a non-executing remediation recommendation. Those findings should be materialized in a Kubernetes-native artifact so that platform engineers can review, audit, store, and compare assessments before upgrade execution.
 
 We instantiate this idea in \tool, a read-only-by-design operator artifact. The current implementation exposes \crd{UpgradeAssessment} and \crd{UpgradePlan}; findings and evidence are structured fields inside those resources, not standalone CRDs. The artifact implements deterministic checkers for workload availability, missing readiness probes, PodDisruptionBudget risks, admission webhooks, policy risks, deprecated or removed APIs, capacity drain risk, observability gaps, and RBAC assessment gaps. It computes aggregate scores and decisions, then creates a prioritized \crd{UpgradePlan} without executing any disruptive action.
+
+\paragraph{Research Questions.}
+This paper investigates five research questions:
+\begin{description}[leftmargin=*,style=nextline]
+  \item[RQ1 --- Detection Coverage.] To what extent does \tool{} detect upgrade-readiness risks across controlled and realistic Kubernetes configurations?
+  \item[RQ2 --- Comparative Value.] How does \tool{} compare with existing Kubernetes analysis tools across different risk families?
+  \item[RQ3 --- Actionability.] Do platform engineers find the generated upgrade plans useful, correct, and actionable?
+  \item[RQ4 --- Scalability.] How does \tool{} behave as the number of Kubernetes objects increases?
+  \item[RQ5 --- Managed Kubernetes Portability.] Can the approach be applied to managed Kubernetes environments without requiring destructive privileges?
+\end{description}
+RQ1 and RQ2 are addressed by the controlled evaluation in Section~\ref{sec:controlled-results} and by the baseline comparison in Section~\ref{sec:related}. RQ3, RQ4, and RQ5 are open validation questions documented in Section~\ref{sec:future-work}; the current paper provides partial evidence for RQ5 through the AKS smoke-test validation.
 
 The paper makes four scoped contributions.
 \begin{enumerate}[leftmargin=*]
@@ -111,6 +123,9 @@ The model is organized around four concepts.
   \item[Assessment.] A bounded snapshot of readiness for a target Kubernetes version and namespace scope. In the artifact, this is materialized as \crd{UpgradeAssessment}.
   \item[Plan.] A non-executing remediation artifact that orders required actions and carries the heuristic priority decision. In the artifact, this is materialized as \crd{UpgradePlan}.
 \end{description}
+
+\paragraph{Formal notation.}
+Let $R$ be the set of Kubernetes resource objects in the assessed cluster, $V$ the target minor version (e.g., \code{1.32}), and $\mathcal{F}$ the set of finding types. A checker $c$ produces a set of findings $F_c(R,V) \subseteq \mathcal{F}$. The aggregate finding set is $F = \bigcup_c F_c(R,V)$. The heuristic priority score is $S = \sum_{f \in F} w(f)$, where $w(\text{Critical}) = 25$, $w(\text{High}) = 10$, $w(\text{Medium}) = 4$, $w(\text{Low}) = 1$, and $w(\text{Info}) = 0$. The non-executing decision $\Delta$ is determined by: $\Delta = \textsc{DoNotUpgrade}$ if $\exists f \in F$ with $f.\mathit{severity} = \text{Critical}$; $\Delta = \textsc{ProceedWithCaution}$ if $S > 30$; and $\Delta = \textsc{Proceed}$ otherwise. These thresholds are heuristic and not calibrated against production outcomes; $S$ is a deterministic sort key, not a probability of failure.
 
 \begin{figure*}[t]
   \centering
@@ -624,6 +639,7 @@ The repository now contains executable benchmark packages and generated summarie
 \textbf{Agent validity.} The evaluated artifact does not include \kagent{} or another explanation agent. Agentic output is therefore outside all reported metrics.
 
 \section{Related Work}
+\label{sec:related}
 \subsection{Software Evolution and Change Impact Analysis}
 The framing of upgrades as software evolution builds on Lehman's view of long-lived software change and later software evolution work \cite{lehman1980,mens2008}. The evidence-guided model is closest to change impact analysis, where the goal is to identify what a change may affect before applying it \cite{bohner1996}. \tool{} applies this idea to a live Kubernetes cluster by treating the target Kubernetes version as the change and cluster resources as potentially affected artifacts.
 
@@ -693,7 +709,7 @@ The current severity weights are a deterministic sort key, not a calibrated risk
 Adding kube-score, Polaris, Popeye, and kube-linter to the comparison set would produce a more complete view of the upgrade-readiness tooling landscape and clarify where \tool{} provides complementary coverage.
 
 \section{Conclusion}
-This paper reconstructs Kubernetes upgrade readiness as evidence-guided impact analysis over live cluster state. \tool{} implements this idea as a Kubernetes-native bounded-write operator that materializes assessments and plans through \crd{UpgradeAssessment} and \crd{UpgradePlan}. The current artifact includes deterministic checkers, structured evidence, scoring, decisions, and non-executing remediation actions. Local validation completed with \code{go test ./...} and 0 failures. The controlled Kind conformance run \code{20260617T091703Z} reported 31 true positives, 0 false positives, and 0 false negatives for \tool{} against the labeled scenario package, with 0 observations on 5 negative controls. Pluto and kubent matched all 4 deprecated-API findings in the API subset, while the 27 non-API readiness labels remained outside their scope. The managed AKS validation run \code{20260617T101556Z} reported 21 true positives, 0 false positives, and 0 false negatives against Kubernetes-modern scenario labels, 0 observations on 5 negative controls, and 8 separately reported AKS-managed webhook observations. The artifact contributes three things that a static script or CLI tool does not provide: (1) a reusable Kubernetes-native record of findings that persists across runs and is inspectable with \code{kubectl}; (2) explicit RBAC-gap findings that make assessment uncertainty visible rather than silently omitted; and (3) a non-executing prioritized plan that links remediation to evidence without granting the tool authority to mutate the assessed cluster. Production effectiveness and expert-rated actionability remain open validation questions documented in Section~\ref{sec:future-work}.
+This paper proposes an evidence-guided impact-analysis approach to Kubernetes upgrade readiness and instantiates it as \tool, a bounded-write Kubernetes-native operator. The approach differs from aggregating specialized CLI tools in three ways: (1) it produces a unified evidence trail linking each finding to its source resource and observable cluster fact; (2) it models assessment uncertainty explicitly through RBAC-gap findings rather than silently omitting inaccessible families; and (3) it materializes findings and remediation plans as persistent, inspectable Kubernetes resources rather than ephemeral command-line output. The current artifact includes deterministic checkers, structured evidence, scoring, decisions, and non-executing remediation actions. Local validation completed with \code{go test ./...} and 0 failures. The controlled Kind conformance run \code{20260617T091703Z} reported 31 true positives, 0 false positives, and 0 false negatives for \tool{} against the labeled scenario package, with 0 observations on 5 negative controls. Pluto and kubent matched all 4 deprecated-API findings in the API subset, while the 27 non-API readiness labels remained outside their scope. The managed AKS validation run \code{20260617T101556Z} reported 21 true positives, 0 false positives, and 0 false negatives against Kubernetes-modern scenario labels, 0 observations on 5 negative controls, and 8 separately reported AKS-managed webhook observations. Production effectiveness and expert-rated actionability remain open validation questions documented in Section~\ref{sec:future-work}.
 
 \begin{thebibliography}{99}
 \bibitem{lehman1980}
