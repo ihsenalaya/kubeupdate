@@ -36,7 +36,7 @@ Status values:
 | R26 | A faire | Plan feedback | The paper needs a realistic schedule and resource plan for the experiments. | Add roadmap appendix or update `EVALUATION_ROADMAP.md` with 2-3 month schedule and required resources. |
 | R27 | A faire | Plan feedback | Need comparison with Polaris, kube-bench, and Cluster API, not only Pluto/kubent. | Add positioning table or subsection. |
 | R28 | A faire | Plan feedback | Operator reliability literature should be connected to design choices. | Explain how bounded-write, non-execution, status-only writes, and idempotent plan generation reduce operator failure risk. |
-| R29 | A faire | Plan feedback | Add `CHANGES_LOG.md` for editor/reviewer traceability. | Create a changelog of manuscript revisions and review-response actions. |
+| R29 | Complete | Plan feedback | Add `CHANGES_LOG.md` for editor/reviewer traceability. | `CHANGES_LOG.md` created and committed with benchmark, article, and tracker update summary. |
 | R30 | Complete | Plan feedback | Reproducibility package must include scripts, manifests, versions, and archived outputs. | Benchmark package includes manifests, ground truth, runner, tool versions, raw outputs, normalized findings, metrics, and summary for run `20260617T091703Z`. |
 | R31 | Complete | Plan feedback | Search for dangerous expressions such as `we demonstrate`, `we prove`, `significantly improves`, `validated`, and `outperforms`. | Verified manuscript avoids dangerous superiority/proof wording and separates baseline scope. |
 | R32 | Complete | Plan feedback | Add tests and/or benchmark scenarios where possible. | Expanded Kind benchmark to 31 positive labels and 5 explicit negative controls. |

@@ -11,3 +11,4 @@
   - Non-API readiness labels: KubeUpgrade Guardian covered 27/27; Pluto/kubent are recorded as API-focused baselines.
 - Updated the article to report experiments and results only, removing internal review/readiness language from the manuscript.
 - Updated benchmark documentation and the reviewer remark tracker with verified completed items only.
+- Added `ARTICLE_REMARKS_AUDIT.md` to compare each tracked remark against the current article and identify conforming, partial, and open items.
