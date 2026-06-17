@@ -104,7 +104,8 @@ kubectl get clusterpolicy
 kubectl get nodepool.karpenter.sh
 kubectl -n monitoring get externalsecret grafana-admin
 kubectl -n upgrade-lab get externalsecret upgrade-lab-secrets
-kubectl -n upgrade-lab get virtualservice upgrade-lab
+kubectl -n upgrade-lab get virtualservice upgrade-lab-upgrade-lab
+kubectl -n velero wait --for=jsonpath='{.status.phase}'=Available backupstoragelocation/default --timeout=10m
 kubectl -n velero get backupstoragelocation
 EOF
 

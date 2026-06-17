@@ -1,6 +1,6 @@
 # AKS Upgrade Lab - Suivi
 
-Derniere mise a jour: 2026-06-17 01:55 UTC
+Derniere mise a jour: 2026-06-17 02:08 UTC
 
 ## Etat global
 
@@ -25,6 +25,7 @@ Derniere mise a jour: 2026-06-17 01:55 UTC
 - Le premier push GitOps a ete bloque par `tflint` sur un local Terraform inutilise; `local.lab_services` est supprime avant reprise du push.
 - Le premier check post-deploiement a revele deux problemes corriges dans l'automatisation: pod Istio gateway cree avec image `auto` avant readiness d'istiod, et image Node `edge-api` avec utilisateur nomme incompatible avec `runAsNonRoot`. Le check tourne maintenant depuis la VM jump host et `edge-api` utilise `USER 1000`.
 - Le second check a montre que `upgrade-lab` etait sain mais `OutOfSync` uniquement sur l'`ExternalSecret`, a cause des valeurs par defaut ajoutees par le CRD sous `remoteRef`. Le chart rend ces valeurs explicites pour converger.
+- Velero etait `Unavailable` parce que les bundles de build etaient stockes dans le container de backup. Les artefacts de build passent maintenant par un container dedie `artifact-builds`, et le script nettoie l'ancien prefixe `artifact-builds/*` du bucket Velero.
 - West Europe refuse PostgreSQL/MySQL Flexible Server et Cosmos DB zonal sur cette subscription; les bases applicatives sont configurees en `francecentral`, avec Cosmos sans zone redundancy.
 - Azure Database for MySQL Flexible Server refuse aussi `francecentral` pour cette subscription; `orders-service` utilise maintenant Azure SQL Database et le driver JDBC SQL Server.
 - Les bases de donnees et Redis sont des services PaaS Azure; les secrets et le certificat applicatif passent par Azure Key Vault et External Secrets.

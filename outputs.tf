@@ -68,6 +68,11 @@ output "velero_storage_account_name" {
   value       = azurerm_storage_account.velero.name
 }
 
+output "artifact_storage_container_name" {
+  description = "Storage container used as a transient source bundle handoff for VM artifact publishing."
+  value       = azurerm_storage_container.artifact_builds.name
+}
+
 output "acr_name" {
   description = "Azure Container Registry name used for lab and operator images."
   value       = data.azurerm_container_registry.platform.name

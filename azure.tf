@@ -498,6 +498,12 @@ resource "azurerm_storage_container" "velero" {
   container_access_type = "private"
 }
 
+resource "azurerm_storage_container" "artifact_builds" {
+  name                  = "artifact-builds"
+  storage_account_id    = azurerm_storage_account.velero.id
+  container_access_type = "private"
+}
+
 resource "azurerm_role_assignment" "velero_storage_blob_contributor" {
   scope                            = azurerm_storage_account.velero.id
   role_definition_name             = "Storage Blob Data Contributor"

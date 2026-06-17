@@ -10,6 +10,7 @@ artifact_tag="$(terraform -chdir="${repo_root}" output -raw artifact_tag)"
 resource_group_name="$(terraform -chdir="${repo_root}" output -raw resource_group_name)"
 jump_host_name="$(terraform -chdir="${repo_root}" output -raw jump_host_name)"
 storage_account_name="$(terraform -chdir="${repo_root}" output -raw velero_storage_account_name)"
+artifact_container_name="$(terraform -chdir="${repo_root}" output -raw artifact_storage_container_name)"
 
 if [[ ! -d "${operator_dir}" ]]; then
   echo "Missing operator directory: ${operator_dir}"
@@ -21,7 +22,7 @@ trap 'rm -rf "${tmpdir}"' EXIT
 
 bundle_dir="${tmpdir}/bundle"
 bundle_file="${tmpdir}/artifact-sources.tgz"
-blob_name="artifact-builds/source-${artifact_tag}-$(date +%s).tgz"
+blob_name="source-${artifact_tag}-$(date +%s).tgz"
 remote_script="${tmpdir}/publish-on-jump-host.sh"
 
 mkdir -p "${bundle_dir}/kubeupdate" "${bundle_dir}/kubeupgrade-guardian-operator"
@@ -46,10 +47,25 @@ storage_account_key="$(az storage account keys list \
   --query "[0].value" \
   -o tsv)"
 
+az storage container create \
+  --account-name "${storage_account_name}" \
+  --account-key "${storage_account_key}" \
+  --name "${artifact_container_name}" \
+  --only-show-errors \
+  --output none
+
+az storage blob delete-batch \
+  --account-name "${storage_account_name}" \
+  --account-key "${storage_account_key}" \
+  --source velero \
+  --pattern "artifact-builds/*" \
+  --only-show-errors \
+  --output none || true
+
 az storage blob upload \
   --account-name "${storage_account_name}" \
   --account-key "${storage_account_key}" \
-  --container-name velero \
+  --container-name "${artifact_container_name}" \
   --name "${blob_name}" \
   --file "${bundle_file}" \
   --overwrite \
@@ -95,7 +111,7 @@ login_to_acr() {
 for attempt in \$(seq 1 30); do
   if az storage blob download \
     --account-name '${storage_account_name}' \
-    --container-name velero \
+    --container-name '${artifact_container_name}' \
     --name '${blob_name}' \
     --file "\${archive}" \
     --auth-mode login \
