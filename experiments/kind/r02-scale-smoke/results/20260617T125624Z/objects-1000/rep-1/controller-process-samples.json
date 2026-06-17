@@ -1,0 +1,20 @@
+[
+  {
+    "cpuSeconds": 2.13,
+    "elapsedSeconds": 0.55,
+    "pidCount": 1,
+    "rssMiB": 43.711
+  },
+  {
+    "cpuSeconds": 2.13,
+    "elapsedSeconds": 1.751,
+    "pidCount": 1,
+    "rssMiB": 43.711
+  },
+  {
+    "cpuSeconds": 2.13,
+    "elapsedSeconds": 3.236,
+    "pidCount": 1,
+    "rssMiB": 43.711
+  }
+]

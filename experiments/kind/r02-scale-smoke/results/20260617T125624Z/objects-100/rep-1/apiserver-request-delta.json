@@ -1,0 +1,59 @@
+{
+  "available": true,
+  "deltas": [
+    {
+      "delta": 1.0,
+      "series": "verb=GET|resource=upgradeassessments|subresource=|code=200"
+    },
+    {
+      "delta": 1.0,
+      "series": "verb=GET|resource=upgradeassessments|subresource=|code=404"
+    },
+    {
+      "delta": 1.0,
+      "series": "verb=GET|resource=upgradeplans|subresource=|code=200"
+    },
+    {
+      "delta": 1.0,
+      "series": "verb=LIST|resource=deployments|subresource=|code=200"
+    },
+    {
+      "delta": 1.0,
+      "series": "verb=LIST|resource=poddisruptionbudgets|subresource=|code=200"
+    },
+    {
+      "delta": 1.0,
+      "series": "verb=POST|resource=upgradeassessments|subresource=|code=201"
+    },
+    {
+      "delta": 1.0,
+      "series": "verb=POST|resource=upgradeplans|subresource=|code=201"
+    },
+    {
+      "delta": 25.0,
+      "series": "verb=PUT|resource=deployments|subresource=status|code=200"
+    },
+    {
+      "delta": 20.0,
+      "series": "verb=PUT|resource=deployments|subresource=status|code=409"
+    },
+    {
+      "delta": 22.0,
+      "series": "verb=PUT|resource=poddisruptionbudgets|subresource=status|code=200"
+    },
+    {
+      "delta": 7.0,
+      "series": "verb=PUT|resource=upgradeassessments|subresource=status|code=200"
+    },
+    {
+      "delta": 2.0,
+      "series": "verb=PUT|resource=upgradeassessments|subresource=status|code=409"
+    },
+    {
+      "delta": 4.0,
+      "series": "verb=PUT|resource=upgradeplans|subresource=status|code=200"
+    }
+  ],
+  "note": "Cluster-level API-server request counter delta during the assessment window; includes controller requests and harness polling.",
+  "totalDelta": 87.0
+}

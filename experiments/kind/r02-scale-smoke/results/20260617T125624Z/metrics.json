@@ -1,0 +1,132 @@
+{
+  "aggregates": [
+    {
+      "apiRequestTotalDeltaMax": 87.0,
+      "apiRequestTotalDeltaMean": 87.0,
+      "apiRequestTotalDeltaMin": 87.0,
+      "cpuSecondsDeltaMax": 0.0,
+      "cpuSecondsDeltaMean": 0.0,
+      "cpuSecondsDeltaMin": 0.0,
+      "durationSecondsMax": 3.829,
+      "durationSecondsMean": 3.829,
+      "durationSecondsMin": 3.829,
+      "findingCountMax": 50,
+      "findingCountMean": 50.0,
+      "findingCountMin": 50,
+      "objectCount": 100,
+      "peakRssMiBMax": 43.711,
+      "peakRssMiBMean": 43.711,
+      "peakRssMiBMin": 43.711,
+      "runs": 1
+    },
+    {
+      "apiRequestTotalDeltaMax": 40.0,
+      "apiRequestTotalDeltaMean": 40.0,
+      "apiRequestTotalDeltaMin": 40.0,
+      "cpuSecondsDeltaMax": 0.0,
+      "cpuSecondsDeltaMean": 0.0,
+      "cpuSecondsDeltaMin": 0.0,
+      "durationSecondsMax": 1.528,
+      "durationSecondsMean": 1.528,
+      "durationSecondsMin": 1.528,
+      "findingCountMax": 250,
+      "findingCountMean": 250.0,
+      "findingCountMin": 250,
+      "objectCount": 500,
+      "peakRssMiBMax": 43.711,
+      "peakRssMiBMean": 43.711,
+      "peakRssMiBMin": 43.711,
+      "runs": 1
+    },
+    {
+      "apiRequestTotalDeltaMax": 122.0,
+      "apiRequestTotalDeltaMean": 122.0,
+      "apiRequestTotalDeltaMin": 122.0,
+      "cpuSecondsDeltaMax": 0.0,
+      "cpuSecondsDeltaMean": 0.0,
+      "cpuSecondsDeltaMin": 0.0,
+      "durationSecondsMax": 4.195,
+      "durationSecondsMean": 4.195,
+      "durationSecondsMin": 4.195,
+      "findingCountMax": 500,
+      "findingCountMean": 500.0,
+      "findingCountMin": 500,
+      "objectCount": 1000,
+      "peakRssMiBMax": 43.711,
+      "peakRssMiBMean": 43.711,
+      "peakRssMiBMin": 43.711,
+      "runs": 1
+    }
+  ],
+  "runs": [
+    {
+      "apiRequestDeltaAvailable": true,
+      "apiRequestTotalDelta": 87.0,
+      "cpuSecondsDelta": 0.0,
+      "deploymentCount": 50,
+      "durationSeconds": 3.829,
+      "findingCount": 50,
+      "objectCount": 100,
+      "pdbCount": 50,
+      "peakPidCount": 1,
+      "peakRssMiB": 43.711,
+      "repetition": 1,
+      "riskLevel": "Critical",
+      "runDir": "objects-100/rep-1",
+      "score": 500,
+      "summary": {
+        "critical": 0,
+        "high": 50,
+        "low": 0,
+        "medium": 0,
+        "totalFindings": 50
+      }
+    },
+    {
+      "apiRequestDeltaAvailable": true,
+      "apiRequestTotalDelta": 40.0,
+      "cpuSecondsDelta": 0.0,
+      "deploymentCount": 250,
+      "durationSeconds": 1.528,
+      "findingCount": 250,
+      "objectCount": 500,
+      "pdbCount": 250,
+      "peakPidCount": 1,
+      "peakRssMiB": 43.711,
+      "repetition": 1,
+      "riskLevel": "Critical",
+      "runDir": "objects-500/rep-1",
+      "score": 2500,
+      "summary": {
+        "critical": 0,
+        "high": 250,
+        "low": 0,
+        "medium": 0,
+        "totalFindings": 250
+      }
+    },
+    {
+      "apiRequestDeltaAvailable": true,
+      "apiRequestTotalDelta": 122.0,
+      "cpuSecondsDelta": 0.0,
+      "deploymentCount": 500,
+      "durationSeconds": 4.195,
+      "findingCount": 500,
+      "objectCount": 1000,
+      "pdbCount": 500,
+      "peakPidCount": 1,
+      "peakRssMiB": 43.711,
+      "repetition": 1,
+      "riskLevel": "Critical",
+      "runDir": "objects-1000/rep-1",
+      "score": 5000,
+      "summary": {
+        "critical": 0,
+        "high": 500,
+        "low": 0,
+        "medium": 0,
+        "totalFindings": 500
+      }
+    }
+  ]
+}
