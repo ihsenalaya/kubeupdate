@@ -1,0 +1,154 @@
+{
+  "byFamily": {
+    "AdmissionWebhook": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 4
+    },
+    "DeprecatedAPI": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 4
+    },
+    "PDB": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 7
+    },
+    "PolicyRisk": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 8
+    },
+    "ReadinessProbes": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 5
+    },
+    "WorkloadAvailability": {
+      "f1": 0.0,
+      "falseNegatives": [
+        {
+          "family": "WorkloadAvailability",
+          "id": "gt-workload-low-replicas",
+          "messageContains": "fewer than 2 replicas",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "payment-api",
+            "namespace": "r01-low-replicas"
+          },
+          "severity": "High",
+          "type": "WORKLOAD_AVAILABILITY_RISK"
+        },
+        {
+          "family": "WorkloadAvailability",
+          "id": "gt-standalone-pod",
+          "messageContains": "is standalone",
+          "resource": {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "name": "manual-pod",
+            "namespace": "r01-standalone-pod"
+          },
+          "severity": "Medium",
+          "type": "WORKLOAD_AVAILABILITY_RISK"
+        },
+        {
+          "family": "WorkloadAvailability",
+          "id": "gt-workload-stateful-single",
+          "messageContains": "fewer than 2 replicas",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "StatefulSet",
+            "name": "cache-singleton",
+            "namespace": "r01-workload-stateful-single"
+          },
+          "severity": "High",
+          "type": "WORKLOAD_AVAILABILITY_RISK"
+        }
+      ],
+      "falsePositives": [],
+      "fn": 3,
+      "fp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "tp": 0
+    }
+  },
+  "overall": {
+    "f1": 0.9492,
+    "falseNegatives": [
+      {
+        "family": "WorkloadAvailability",
+        "id": "gt-workload-low-replicas",
+        "messageContains": "fewer than 2 replicas",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "payment-api",
+          "namespace": "r01-low-replicas"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "family": "WorkloadAvailability",
+        "id": "gt-standalone-pod",
+        "messageContains": "is standalone",
+        "resource": {
+          "apiVersion": "v1",
+          "kind": "Pod",
+          "name": "manual-pod",
+          "namespace": "r01-standalone-pod"
+        },
+        "severity": "Medium",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "family": "WorkloadAvailability",
+        "id": "gt-workload-stateful-single",
+        "messageContains": "fewer than 2 replicas",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "StatefulSet",
+          "name": "cache-singleton",
+          "namespace": "r01-workload-stateful-single"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      }
+    ],
+    "falsePositives": [],
+    "fn": 3,
+    "fp": 0,
+    "precision": 1.0,
+    "recall": 0.9032,
+    "tp": 28
+  }
+}

@@ -1,0 +1,258 @@
+{
+  "byFamily": {
+    "AdmissionWebhook": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 4
+    },
+    "DeprecatedAPI": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 4
+    },
+    "PDB": {
+      "f1": 0.0,
+      "falseNegatives": [
+        {
+          "family": "PDB",
+          "id": "gt-pdb-min-available-blocking",
+          "messageContains": "may block disruption",
+          "resource": {
+            "apiVersion": "policy/v1",
+            "kind": "PodDisruptionBudget",
+            "name": "orders-api",
+            "namespace": "r01-pdb-min-blocking"
+          },
+          "severity": "Critical",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-max-unavailable-zero",
+          "messageContains": "may block disruption",
+          "resource": {
+            "apiVersion": "policy/v1",
+            "kind": "PodDisruptionBudget",
+            "name": "billing-api",
+            "namespace": "r01-pdb-max-zero"
+          },
+          "severity": "High",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-stale-selector",
+          "messageContains": "does not match any assessed workload",
+          "resource": {
+            "apiVersion": "policy/v1",
+            "kind": "PodDisruptionBudget",
+            "name": "stale-pdb",
+            "namespace": "r01-pdb-no-match"
+          },
+          "severity": "High",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-missing",
+          "messageContains": "has no matching PodDisruptionBudget",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "search-api",
+            "namespace": "r01-pdb-missing"
+          },
+          "severity": "Low",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-stateful-max-unavailable-zero",
+          "messageContains": "may block disruption",
+          "resource": {
+            "apiVersion": "policy/v1",
+            "kind": "PodDisruptionBudget",
+            "name": "accounts-db",
+            "namespace": "r01-pdb-stateful-max-zero"
+          },
+          "severity": "High",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-percentage-min-available",
+          "messageContains": "may block disruption",
+          "resource": {
+            "apiVersion": "policy/v1",
+            "kind": "PodDisruptionBudget",
+            "name": "report-api",
+            "namespace": "r01-pdb-percentage"
+          },
+          "severity": "Critical",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-stateful-missing",
+          "messageContains": "has no matching PodDisruptionBudget",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "StatefulSet",
+            "name": "warehouse-db",
+            "namespace": "r01-pdb-stateful-missing"
+          },
+          "severity": "Low",
+          "type": "PDB_BLOCKING_RISK"
+        }
+      ],
+      "falsePositives": [],
+      "fn": 7,
+      "fp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "tp": 0
+    },
+    "PolicyRisk": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 8
+    },
+    "ReadinessProbes": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 5
+    },
+    "WorkloadAvailability": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 3
+    }
+  },
+  "overall": {
+    "f1": 0.8727,
+    "falseNegatives": [
+      {
+        "family": "PDB",
+        "id": "gt-pdb-min-available-blocking",
+        "messageContains": "may block disruption",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "orders-api",
+          "namespace": "r01-pdb-min-blocking"
+        },
+        "severity": "Critical",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "family": "PDB",
+        "id": "gt-pdb-max-unavailable-zero",
+        "messageContains": "may block disruption",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "billing-api",
+          "namespace": "r01-pdb-max-zero"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "family": "PDB",
+        "id": "gt-pdb-stale-selector",
+        "messageContains": "does not match any assessed workload",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "stale-pdb",
+          "namespace": "r01-pdb-no-match"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "family": "PDB",
+        "id": "gt-pdb-missing",
+        "messageContains": "has no matching PodDisruptionBudget",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "search-api",
+          "namespace": "r01-pdb-missing"
+        },
+        "severity": "Low",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "family": "PDB",
+        "id": "gt-pdb-stateful-max-unavailable-zero",
+        "messageContains": "may block disruption",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "accounts-db",
+          "namespace": "r01-pdb-stateful-max-zero"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "family": "PDB",
+        "id": "gt-pdb-percentage-min-available",
+        "messageContains": "may block disruption",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "report-api",
+          "namespace": "r01-pdb-percentage"
+        },
+        "severity": "Critical",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "family": "PDB",
+        "id": "gt-pdb-stateful-missing",
+        "messageContains": "has no matching PodDisruptionBudget",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "StatefulSet",
+          "name": "warehouse-db",
+          "namespace": "r01-pdb-stateful-missing"
+        },
+        "severity": "Low",
+        "type": "PDB_BLOCKING_RISK"
+      }
+    ],
+    "falsePositives": [],
+    "fn": 7,
+    "fp": 0,
+    "precision": 1.0,
+    "recall": 0.7742,
+    "tp": 24
+  }
+}

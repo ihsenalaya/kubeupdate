@@ -1,0 +1,349 @@
+[
+  {
+    "family": "DeprecatedAPI",
+    "message": "CronJob r01-deprecated-api/legacy-cron uses batch/v1beta1 removed in Kubernetes 1.25.",
+    "resource": {
+      "apiVersion": "batch/v1beta1",
+      "kind": "CronJob",
+      "name": "legacy-cron",
+      "namespace": "r01-deprecated-api"
+    },
+    "severity": "Critical",
+    "source": "KubeUpgrade Guardian",
+    "type": "DEPRECATED_OR_REMOVED_API"
+  },
+  {
+    "family": "DeprecatedAPI",
+    "message": "HorizontalPodAutoscaler r01-deprecated-api/legacy-hpa uses autoscaling/v2beta2 removed in Kubernetes 1.26.",
+    "resource": {
+      "apiVersion": "autoscaling/v2beta2",
+      "kind": "HorizontalPodAutoscaler",
+      "name": "legacy-hpa",
+      "namespace": "r01-deprecated-api"
+    },
+    "severity": "Critical",
+    "source": "KubeUpgrade Guardian",
+    "type": "DEPRECATED_OR_REMOVED_API"
+  },
+  {
+    "family": "DeprecatedAPI",
+    "message": "PodDisruptionBudget r01-deprecated-api/legacy-pdb uses policy/v1beta1 removed in Kubernetes 1.25.",
+    "resource": {
+      "apiVersion": "policy/v1beta1",
+      "kind": "PodDisruptionBudget",
+      "name": "legacy-pdb",
+      "namespace": "r01-deprecated-api"
+    },
+    "severity": "Critical",
+    "source": "KubeUpgrade Guardian",
+    "type": "DEPRECATED_OR_REMOVED_API"
+  },
+  {
+    "family": "DeprecatedAPI",
+    "message": "PodSecurityPolicy /legacy-psp uses policy/v1beta1 removed in Kubernetes 1.25.",
+    "resource": {
+      "apiVersion": "policy/v1beta1",
+      "kind": "PodSecurityPolicy",
+      "name": "legacy-psp"
+    },
+    "severity": "Critical",
+    "source": "KubeUpgrade Guardian",
+    "type": "DEPRECATED_OR_REMOVED_API"
+  },
+  {
+    "family": "ReadinessProbes",
+    "message": "Container api in Deployment r01-missing-readiness/checkout-api has no readinessProbe.",
+    "resource": {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "name": "checkout-api",
+      "namespace": "r01-missing-readiness"
+    },
+    "severity": "Medium",
+    "source": "KubeUpgrade Guardian",
+    "type": "MISSING_READINESS_PROBE"
+  },
+  {
+    "family": "ReadinessProbes",
+    "message": "Container agent in DaemonSet r01-readiness-daemonset/node-agent has no readinessProbe.",
+    "resource": {
+      "apiVersion": "apps/v1",
+      "kind": "DaemonSet",
+      "name": "node-agent",
+      "namespace": "r01-readiness-daemonset"
+    },
+    "severity": "Medium",
+    "source": "KubeUpgrade Guardian",
+    "type": "MISSING_READINESS_PROBE"
+  },
+  {
+    "family": "ReadinessProbes",
+    "message": "Container api in Deployment r01-readiness-multi-container/composite-api has no readinessProbe.",
+    "resource": {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "name": "composite-api",
+      "namespace": "r01-readiness-multi-container"
+    },
+    "severity": "Medium",
+    "source": "KubeUpgrade Guardian",
+    "type": "MISSING_READINESS_PROBE"
+  },
+  {
+    "family": "ReadinessProbes",
+    "message": "Container sidecar in Deployment r01-readiness-multi-container/composite-api has no readinessProbe.",
+    "resource": {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "name": "composite-api",
+      "namespace": "r01-readiness-multi-container"
+    },
+    "severity": "Medium",
+    "source": "KubeUpgrade Guardian",
+    "type": "MISSING_READINESS_PROBE"
+  },
+  {
+    "family": "ReadinessProbes",
+    "message": "Container db in StatefulSet r01-readiness-statefulset/ledger-db has no readinessProbe.",
+    "resource": {
+      "apiVersion": "apps/v1",
+      "kind": "StatefulSet",
+      "name": "ledger-db",
+      "namespace": "r01-readiness-statefulset"
+    },
+    "severity": "Medium",
+    "source": "KubeUpgrade Guardian",
+    "type": "MISSING_READINESS_PROBE"
+  },
+  {
+    "family": "PDB",
+    "message": "PDB r01-pdb-max-zero/billing-api may block disruption for Deployment r01-pdb-max-zero/billing-api.",
+    "resource": {
+      "apiVersion": "policy/v1",
+      "kind": "PodDisruptionBudget",
+      "name": "billing-api",
+      "namespace": "r01-pdb-max-zero"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "PDB_BLOCKING_RISK"
+  },
+  {
+    "family": "PDB",
+    "message": "PDB r01-pdb-min-blocking/orders-api may block disruption for Deployment r01-pdb-min-blocking/orders-api.",
+    "resource": {
+      "apiVersion": "policy/v1",
+      "kind": "PodDisruptionBudget",
+      "name": "orders-api",
+      "namespace": "r01-pdb-min-blocking"
+    },
+    "severity": "Critical",
+    "source": "KubeUpgrade Guardian",
+    "type": "PDB_BLOCKING_RISK"
+  },
+  {
+    "family": "PDB",
+    "message": "Deployment r01-pdb-missing/search-api has no matching PodDisruptionBudget.",
+    "resource": {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "name": "search-api",
+      "namespace": "r01-pdb-missing"
+    },
+    "severity": "Low",
+    "source": "KubeUpgrade Guardian",
+    "type": "PDB_BLOCKING_RISK"
+  },
+  {
+    "family": "PDB",
+    "message": "PDB r01-pdb-no-match/stale-pdb does not match any assessed workload.",
+    "resource": {
+      "apiVersion": "policy/v1",
+      "kind": "PodDisruptionBudget",
+      "name": "stale-pdb",
+      "namespace": "r01-pdb-no-match"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "PDB_BLOCKING_RISK"
+  },
+  {
+    "family": "PDB",
+    "message": "PDB r01-pdb-percentage/report-api may block disruption for Deployment r01-pdb-percentage/report-api.",
+    "resource": {
+      "apiVersion": "policy/v1",
+      "kind": "PodDisruptionBudget",
+      "name": "report-api",
+      "namespace": "r01-pdb-percentage"
+    },
+    "severity": "Critical",
+    "source": "KubeUpgrade Guardian",
+    "type": "PDB_BLOCKING_RISK"
+  },
+  {
+    "family": "PDB",
+    "message": "PDB r01-pdb-stateful-max-zero/accounts-db may block disruption for StatefulSet r01-pdb-stateful-max-zero/accounts-db.",
+    "resource": {
+      "apiVersion": "policy/v1",
+      "kind": "PodDisruptionBudget",
+      "name": "accounts-db",
+      "namespace": "r01-pdb-stateful-max-zero"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "PDB_BLOCKING_RISK"
+  },
+  {
+    "family": "PDB",
+    "message": "StatefulSet r01-pdb-stateful-missing/warehouse-db has no matching PodDisruptionBudget.",
+    "resource": {
+      "apiVersion": "apps/v1",
+      "kind": "StatefulSet",
+      "name": "warehouse-db",
+      "namespace": "r01-pdb-stateful-missing"
+    },
+    "severity": "Low",
+    "source": "KubeUpgrade Guardian",
+    "type": "PDB_BLOCKING_RISK"
+  },
+  {
+    "family": "PolicyRisk",
+    "message": "Deployment r01-policy-hostpath/storage-worker may violate restricted policy: allowPrivilegeEscalation=true.",
+    "resource": {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "name": "storage-worker",
+      "namespace": "r01-policy-hostpath"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "POLICY_RISK"
+  },
+  {
+    "family": "PolicyRisk",
+    "message": "Deployment r01-policy-hostpath/storage-worker may violate restricted policy: hostPath volume.",
+    "resource": {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "name": "storage-worker",
+      "namespace": "r01-policy-hostpath"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "POLICY_RISK"
+  },
+  {
+    "family": "PolicyRisk",
+    "message": "Namespace r01-policy-hostpath enforces Pod Security restricted.",
+    "resource": {
+      "apiVersion": "v1",
+      "kind": "Namespace",
+      "name": "r01-policy-hostpath"
+    },
+    "severity": "Medium",
+    "source": "KubeUpgrade Guardian",
+    "type": "POLICY_RISK"
+  },
+  {
+    "family": "PolicyRisk",
+    "message": "Deployment r01-policy-missing-sc/unsafe-api may violate restricted policy: missing securityContext.",
+    "resource": {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "name": "unsafe-api",
+      "namespace": "r01-policy-missing-sc"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "POLICY_RISK"
+  },
+  {
+    "family": "PolicyRisk",
+    "message": "Namespace r01-policy-missing-sc enforces Pod Security restricted.",
+    "resource": {
+      "apiVersion": "v1",
+      "kind": "Namespace",
+      "name": "r01-policy-missing-sc"
+    },
+    "severity": "Medium",
+    "source": "KubeUpgrade Guardian",
+    "type": "POLICY_RISK"
+  },
+  {
+    "family": "PolicyRisk",
+    "message": "Deployment r01-policy-restricted/legacy-worker may violate restricted policy: privileged=true.",
+    "resource": {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "name": "legacy-worker",
+      "namespace": "r01-policy-restricted"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "POLICY_RISK"
+  },
+  {
+    "family": "PolicyRisk",
+    "message": "Deployment r01-policy-restricted/legacy-worker may violate restricted policy: runAsNonRoot absent.",
+    "resource": {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "name": "legacy-worker",
+      "namespace": "r01-policy-restricted"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "POLICY_RISK"
+  },
+  {
+    "family": "PolicyRisk",
+    "message": "Namespace r01-policy-restricted enforces Pod Security restricted.",
+    "resource": {
+      "apiVersion": "v1",
+      "kind": "Namespace",
+      "name": "r01-policy-restricted"
+    },
+    "severity": "Medium",
+    "source": "KubeUpgrade Guardian",
+    "type": "POLICY_RISK"
+  },
+  {
+    "family": "WorkloadAvailability",
+    "message": "Deployment r01-low-replicas/payment-api has fewer than 2 replicas.",
+    "resource": {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "name": "payment-api",
+      "namespace": "r01-low-replicas"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "WORKLOAD_AVAILABILITY_RISK"
+  },
+  {
+    "family": "WorkloadAvailability",
+    "message": "Pod r01-standalone-pod/manual-pod is standalone and may be lost during node disruption.",
+    "resource": {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "name": "manual-pod",
+      "namespace": "r01-standalone-pod"
+    },
+    "severity": "Medium",
+    "source": "KubeUpgrade Guardian",
+    "type": "WORKLOAD_AVAILABILITY_RISK"
+  },
+  {
+    "family": "WorkloadAvailability",
+    "message": "StatefulSet r01-workload-stateful-single/cache-singleton has fewer than 2 replicas.",
+    "resource": {
+      "apiVersion": "apps/v1",
+      "kind": "StatefulSet",
+      "name": "cache-singleton",
+      "namespace": "r01-workload-stateful-single"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "WORKLOAD_AVAILABILITY_RISK"
+  }
+]

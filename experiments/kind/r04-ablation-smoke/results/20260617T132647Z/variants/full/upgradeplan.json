@@ -1,0 +1,518 @@
+{
+  "apiVersion": "upgrade.guardian.io/v1alpha1",
+  "kind": "UpgradePlan",
+  "metadata": {
+    "creationTimestamp": "2026-06-17T13:28:00Z",
+    "generation": 1,
+    "name": "r04-assessment-plan",
+    "namespace": "r04-system",
+    "ownerReferences": [
+      {
+        "apiVersion": "upgrade.guardian.io/v1alpha1",
+        "blockOwnerDeletion": true,
+        "controller": true,
+        "kind": "UpgradeAssessment",
+        "name": "r04-assessment",
+        "uid": "2a2c57c9-4095-4f3d-8a25-883ec757da08"
+      }
+    ],
+    "resourceVersion": "1069",
+    "uid": "20450ffe-237d-46ac-8d89-743b566da4cc"
+  },
+  "spec": {
+    "assessmentRef": {
+      "name": "r04-assessment",
+      "namespace": "r04-system"
+    },
+    "decision": "DoNotUpgrade",
+    "recommendedOrder": [
+      "fix-critical-blockers",
+      "fix-high-risk-workloads",
+      "validate-admission-policies",
+      "validate-observability",
+      "proceed-with-controlled-upgrade"
+    ],
+    "requiredActions": [
+      {
+        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "category": "AdmissionWebhook",
+        "evidenceRefs": [
+          "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_R01_MUTATING_FAIL_WEBHOOK_MUTATE_EXAMPLE_COM"
+        ],
+        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-r01-mutating-fail-webhook-mutate-example-com-failurepolicy=fail",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "r01-mutating-fail-webhook"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "category": "AdmissionWebhook",
+        "evidenceRefs": [
+          "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_R01_RISKY_WEBHOOK_POLICY_EXAMPLE_COM"
+        ],
+        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-r01-risky-webhook-policy-example-com-failurepolicy=fail",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "r01-risky-webhook"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "category": "AdmissionWebhook",
+        "evidenceRefs": [
+          "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_R01_RISKY_WEBHOOK_POLICY_EXAMPLE_COM"
+        ],
+        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-r01-risky-webhook-policy-example-com-namespaceselector-is-absent",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "r01-risky-webhook"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Restore the webhook Service or remove the webhook configuration before upgrade.",
+        "category": "AdmissionWebhook",
+        "evidenceRefs": [
+          "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_R01_RISKY_WEBHOOK_POLICY_EXAMPLE_COM"
+        ],
+        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-r01-risky-webhook-policy-example-com-referenced-service-is-absent",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "r01-risky-webhook"
+        },
+        "severity": "Critical"
+      },
+      {
+        "action": "Migrate this resource to a served API version before upgrading.",
+        "category": "DeprecatedAPI",
+        "evidenceRefs": [
+          "DEPRECATED_OR_REMOVED_API_EVIDENCE_R01_DEPRECATED_API_CRONJOB_LEGACY_CRON"
+        ],
+        "id": "remediate-deprecated-or-removed-api-r01-deprecated-api-cronjob-legacy-cron",
+        "resource": {
+          "apiVersion": "batch/v1beta1",
+          "kind": "CronJob",
+          "name": "legacy-cron",
+          "namespace": "r01-deprecated-api"
+        },
+        "severity": "Critical"
+      },
+      {
+        "action": "Migrate this resource to a served API version before upgrading.",
+        "category": "DeprecatedAPI",
+        "evidenceRefs": [
+          "DEPRECATED_OR_REMOVED_API_EVIDENCE_R01_DEPRECATED_API_HORIZONTALPODAUTOSCALER_LEGACY_HPA"
+        ],
+        "id": "remediate-deprecated-or-removed-api-r01-deprecated-api-horizontalpodautoscaler-legacy-hpa",
+        "resource": {
+          "apiVersion": "autoscaling/v2beta2",
+          "kind": "HorizontalPodAutoscaler",
+          "name": "legacy-hpa",
+          "namespace": "r01-deprecated-api"
+        },
+        "severity": "Critical"
+      },
+      {
+        "action": "Migrate this resource to a served API version before upgrading.",
+        "category": "DeprecatedAPI",
+        "evidenceRefs": [
+          "DEPRECATED_OR_REMOVED_API_EVIDENCE_R01_DEPRECATED_API_PODDISRUPTIONBUDGET_LEGACY_PDB"
+        ],
+        "id": "remediate-deprecated-or-removed-api-r01-deprecated-api-poddisruptionbudget-legacy-pdb",
+        "resource": {
+          "apiVersion": "policy/v1beta1",
+          "kind": "PodDisruptionBudget",
+          "name": "legacy-pdb",
+          "namespace": "r01-deprecated-api"
+        },
+        "severity": "Critical"
+      },
+      {
+        "action": "Migrate this resource to a served API version before upgrading.",
+        "category": "DeprecatedAPI",
+        "evidenceRefs": [
+          "DEPRECATED_OR_REMOVED_API_EVIDENCE__PODSECURITYPOLICY_LEGACY_PSP"
+        ],
+        "id": "remediate-deprecated-or-removed-api--podsecuritypolicy-legacy-psp",
+        "resource": {
+          "apiVersion": "policy/v1beta1",
+          "kind": "PodSecurityPolicy",
+          "name": "legacy-psp"
+        },
+        "severity": "Critical"
+      },
+      {
+        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "category": "ReadinessProbes",
+        "evidenceRefs": [
+          "MISSING_READINESS_PROBE_EVIDENCE_R01_MISSING_READINESS_DEPLOYMENT_CHECKOUT_API_API"
+        ],
+        "id": "remediate-missing-readiness-probe-r01-missing-readiness-deployment-checkout-api-api",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "checkout-api",
+          "namespace": "r01-missing-readiness"
+        },
+        "severity": "Medium"
+      },
+      {
+        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "category": "ReadinessProbes",
+        "evidenceRefs": [
+          "MISSING_READINESS_PROBE_EVIDENCE_R01_READINESS_DAEMONSET_DAEMONSET_NODE_AGENT_AGENT"
+        ],
+        "id": "remediate-missing-readiness-probe-r01-readiness-daemonset-daemonset-node-agent-agent",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "DaemonSet",
+          "name": "node-agent",
+          "namespace": "r01-readiness-daemonset"
+        },
+        "severity": "Medium"
+      },
+      {
+        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "category": "ReadinessProbes",
+        "evidenceRefs": [
+          "MISSING_READINESS_PROBE_EVIDENCE_R01_READINESS_MULTI_CONTAINER_DEPLOYMENT_COMPOSITE_API_API"
+        ],
+        "id": "remediate-missing-readiness-probe-r01-readiness-multi-container-deployment-composite-api-api",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "composite-api",
+          "namespace": "r01-readiness-multi-container"
+        },
+        "severity": "Medium"
+      },
+      {
+        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "category": "ReadinessProbes",
+        "evidenceRefs": [
+          "MISSING_READINESS_PROBE_EVIDENCE_R01_READINESS_MULTI_CONTAINER_DEPLOYMENT_COMPOSITE_API_SIDECAR"
+        ],
+        "id": "remediate-missing-readiness-probe-r01-readiness-multi-container-deployment-composite-api-sidecar",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "composite-api",
+          "namespace": "r01-readiness-multi-container"
+        },
+        "severity": "Medium"
+      },
+      {
+        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "category": "ReadinessProbes",
+        "evidenceRefs": [
+          "MISSING_READINESS_PROBE_EVIDENCE_R01_READINESS_STATEFULSET_STATEFULSET_LEDGER_DB_DB"
+        ],
+        "id": "remediate-missing-readiness-probe-r01-readiness-statefulset-statefulset-ledger-db-db",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "StatefulSet",
+          "name": "ledger-db",
+          "namespace": "r01-readiness-statefulset"
+        },
+        "severity": "Medium"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R01_PDB_MAX_ZERO_BILLING_API_BILLING_API"
+        ],
+        "id": "remediate-pdb-blocking-risk-r01-pdb-max-zero-billing-api-deployment-billing-api-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "billing-api",
+          "namespace": "r01-pdb-max-zero"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R01_PDB_MIN_BLOCKING_ORDERS_API_ORDERS_API"
+        ],
+        "id": "remediate-pdb-blocking-risk-r01-pdb-min-blocking-orders-api-deployment-orders-api-minavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "orders-api",
+          "namespace": "r01-pdb-min-blocking"
+        },
+        "severity": "Critical"
+      },
+      {
+        "action": "Consider adding a PodDisruptionBudget for critical workloads before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R01_PDB_MISSING_DEPLOYMENT_SEARCH_API_MISSING"
+        ],
+        "id": "remediate-pdb-blocking-risk-r01-pdb-missing-deployment-search-api-missing",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "search-api",
+          "namespace": "r01-pdb-missing"
+        },
+        "severity": "Low"
+      },
+      {
+        "action": "Fix or remove stale PodDisruptionBudgets before upgrade validation.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R01_PDB_NO_MATCH_STALE_PDB_NO_MATCH"
+        ],
+        "id": "remediate-pdb-blocking-risk-r01-pdb-no-match-stale-pdb-no-match",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "stale-pdb",
+          "namespace": "r01-pdb-no-match"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R01_PDB_PERCENTAGE_REPORT_API_REPORT_API"
+        ],
+        "id": "remediate-pdb-blocking-risk-r01-pdb-percentage-report-api-deployment-report-api-minavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "report-api",
+          "namespace": "r01-pdb-percentage"
+        },
+        "severity": "Critical"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R01_PDB_STATEFUL_MAX_ZERO_ACCOUNTS_DB_ACCOUNTS_DB"
+        ],
+        "id": "remediate-pdb-blocking-risk-r01-pdb-stateful-max-zero-accounts-db-statefulset-accounts-db-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "accounts-db",
+          "namespace": "r01-pdb-stateful-max-zero"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Consider adding a PodDisruptionBudget for critical workloads before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R01_PDB_STATEFUL_MISSING_STATEFULSET_WAREHOUSE_DB_MISSING"
+        ],
+        "id": "remediate-pdb-blocking-risk-r01-pdb-stateful-missing-statefulset-warehouse-db-missing",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "StatefulSet",
+          "name": "warehouse-db",
+          "namespace": "r01-pdb-stateful-missing"
+        },
+        "severity": "Low"
+      },
+      {
+        "action": "Adjust the pod security context or namespace policy before upgrade.",
+        "category": "PolicyRisk",
+        "evidenceRefs": [
+          "POLICY_RISK_EVIDENCE_R01_POLICY_HOSTPATH_DEPLOYMENT_STORAGE_WORKER_WORKER"
+        ],
+        "id": "remediate-policy-risk-r01-policy-hostpath-deployment-storage-worker-allowprivilegeescalation=true-worker",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "storage-worker",
+          "namespace": "r01-policy-hostpath"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Adjust the pod security context or namespace policy before upgrade.",
+        "category": "PolicyRisk",
+        "evidenceRefs": [
+          "POLICY_RISK_EVIDENCE_R01_POLICY_HOSTPATH_DEPLOYMENT_STORAGE_WORKER_HOST_DATA"
+        ],
+        "id": "remediate-policy-risk-r01-policy-hostpath-deployment-storage-worker-hostpath-volume-host-data",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "storage-worker",
+          "namespace": "r01-policy-hostpath"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Validate all workloads in this namespace against the restricted Pod Security profile before upgrade.",
+        "category": "PolicyRisk",
+        "evidenceRefs": [
+          "POLICY_RISK_EVIDENCE_R01_POLICY_HOSTPATH_RESTRICTED"
+        ],
+        "id": "remediate-policy-risk-r01-policy-hostpath-restricted",
+        "resource": {
+          "apiVersion": "v1",
+          "kind": "Namespace",
+          "name": "r01-policy-hostpath"
+        },
+        "severity": "Medium"
+      },
+      {
+        "action": "Adjust the pod security context or namespace policy before upgrade.",
+        "category": "PolicyRisk",
+        "evidenceRefs": [
+          "POLICY_RISK_EVIDENCE_R01_POLICY_MISSING_SC_DEPLOYMENT_UNSAFE_API_API"
+        ],
+        "id": "remediate-policy-risk-r01-policy-missing-sc-deployment-unsafe-api-missing-securitycontext-api",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "unsafe-api",
+          "namespace": "r01-policy-missing-sc"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Validate all workloads in this namespace against the restricted Pod Security profile before upgrade.",
+        "category": "PolicyRisk",
+        "evidenceRefs": [
+          "POLICY_RISK_EVIDENCE_R01_POLICY_MISSING_SC_RESTRICTED"
+        ],
+        "id": "remediate-policy-risk-r01-policy-missing-sc-restricted",
+        "resource": {
+          "apiVersion": "v1",
+          "kind": "Namespace",
+          "name": "r01-policy-missing-sc"
+        },
+        "severity": "Medium"
+      },
+      {
+        "action": "Adjust the pod security context or namespace policy before upgrade.",
+        "category": "PolicyRisk",
+        "evidenceRefs": [
+          "POLICY_RISK_EVIDENCE_R01_POLICY_RESTRICTED_DEPLOYMENT_LEGACY_WORKER_WORKER"
+        ],
+        "id": "remediate-policy-risk-r01-policy-restricted-deployment-legacy-worker-privileged=true-worker",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "legacy-worker",
+          "namespace": "r01-policy-restricted"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Adjust the pod security context or namespace policy before upgrade.",
+        "category": "PolicyRisk",
+        "evidenceRefs": [
+          "POLICY_RISK_EVIDENCE_R01_POLICY_RESTRICTED_DEPLOYMENT_LEGACY_WORKER_WORKER"
+        ],
+        "id": "remediate-policy-risk-r01-policy-restricted-deployment-legacy-worker-runasnonroot-absent-worker",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "legacy-worker",
+          "namespace": "r01-policy-restricted"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Validate all workloads in this namespace against the restricted Pod Security profile before upgrade.",
+        "category": "PolicyRisk",
+        "evidenceRefs": [
+          "POLICY_RISK_EVIDENCE_R01_POLICY_RESTRICTED_RESTRICTED"
+        ],
+        "id": "remediate-policy-risk-r01-policy-restricted-restricted",
+        "resource": {
+          "apiVersion": "v1",
+          "kind": "Namespace",
+          "name": "r01-policy-restricted"
+        },
+        "severity": "Medium"
+      },
+      {
+        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "category": "WorkloadAvailability",
+        "evidenceRefs": [
+          "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_R01_LOW_REPLICAS_DEPLOYMENT_PAYMENT_API"
+        ],
+        "id": "remediate-workload-availability-risk-r01-low-replicas-deployment-payment-api",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "payment-api",
+          "namespace": "r01-low-replicas"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Manage the pod through a controller such as Deployment, StatefulSet, DaemonSet, or Job before upgrade.",
+        "category": "WorkloadAvailability",
+        "evidenceRefs": [
+          "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_R01_STANDALONE_POD_POD_MANUAL_POD"
+        ],
+        "id": "remediate-workload-availability-risk-r01-standalone-pod-pod-manual-pod",
+        "resource": {
+          "apiVersion": "v1",
+          "kind": "Pod",
+          "name": "manual-pod",
+          "namespace": "r01-standalone-pod"
+        },
+        "severity": "Medium"
+      },
+      {
+        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "category": "WorkloadAvailability",
+        "evidenceRefs": [
+          "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_R01_WORKLOAD_STATEFUL_SINGLE_STATEFULSET_CACHE_SINGLETON"
+        ],
+        "id": "remediate-workload-availability-risk-r01-workload-stateful-single-statefulset-cache-singleton",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "StatefulSet",
+          "name": "cache-singleton",
+          "namespace": "r01-workload-stateful-single"
+        },
+        "severity": "High"
+      }
+    ],
+    "riskLevel": "Critical",
+    "score": 343,
+    "summary": {
+      "critical": 7,
+      "high": 13,
+      "low": 2,
+      "medium": 9,
+      "totalFindings": 31
+    }
+  },
+  "status": {
+    "conditions": [
+      {
+        "lastTransitionTime": "2026-06-17T13:28:01Z",
+        "message": "UpgradePlan generated from latest assessment.",
+        "observedGeneration": 1,
+        "reason": "Generated",
+        "status": "True",
+        "type": "PlanGenerated"
+      }
+    ],
+    "generatedAt": "2026-06-17T13:28:08Z",
+    "observedGeneration": 1
+  }
+}

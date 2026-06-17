@@ -1,0 +1,43 @@
+apiVersion: upgrade.guardian.io/v1alpha1
+kind: UpgradeAssessment
+metadata:
+  name: r04-assessment
+  namespace: r04-system
+spec:
+  targetVersion: "1.32"
+  mode: ReadOnly
+  scope:
+    namespaces:
+      include:
+        - r01-low-replicas
+        - r01-missing-readiness
+        - r01-readiness-statefulset
+        - r01-readiness-daemonset
+        - r01-readiness-multi-container
+        - r01-pdb-min-blocking
+        - r01-pdb-max-zero
+        - r01-pdb-no-match
+        - r01-pdb-missing
+        - r01-pdb-stateful-max-zero
+        - r01-pdb-percentage
+        - r01-pdb-stateful-missing
+        - r01-standalone-pod
+        - r01-workload-stateful-single
+        - r01-policy-restricted
+        - r01-policy-missing-sc
+        - r01-policy-hostpath
+        - r01-policy-warn-audit
+        - r01-deprecated-api
+        - r01-modern-api-negative
+        - r01-safe
+      exclude:
+        - kube-system
+  checks:
+    deprecatedApis: true
+    workloadAvailability: false
+    pdb: true
+    readinessProbes: true
+    admissionWebhooks: true
+    policyRisks: true
+    capacity: false
+    observability: false

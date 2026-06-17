@@ -1,0 +1,278 @@
+{
+  "byFamily": {
+    "AdmissionWebhook": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 4
+    },
+    "DeprecatedAPI": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 4
+    },
+    "PDB": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 7
+    },
+    "PolicyRisk": {
+      "f1": 0.0,
+      "falseNegatives": [
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-restricted-namespace-privileged",
+          "messageContains": "enforces Pod Security restricted",
+          "resource": {
+            "apiVersion": "v1",
+            "kind": "Namespace",
+            "name": "r01-policy-restricted"
+          },
+          "severity": "Medium",
+          "type": "POLICY_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-privileged",
+          "messageContains": "privileged=true",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "legacy-worker",
+            "namespace": "r01-policy-restricted"
+          },
+          "severity": "High",
+          "type": "POLICY_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-run-as-non-root-absent",
+          "messageContains": "runAsNonRoot absent",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "legacy-worker",
+            "namespace": "r01-policy-restricted"
+          },
+          "severity": "High",
+          "type": "POLICY_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-restricted-namespace-missing-security-context",
+          "messageContains": "enforces Pod Security restricted",
+          "resource": {
+            "apiVersion": "v1",
+            "kind": "Namespace",
+            "name": "r01-policy-missing-sc"
+          },
+          "severity": "Medium",
+          "type": "POLICY_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-missing-security-context",
+          "messageContains": "missing securityContext",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "unsafe-api",
+            "namespace": "r01-policy-missing-sc"
+          },
+          "severity": "High",
+          "type": "POLICY_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-hostpath-namespace",
+          "messageContains": "enforces Pod Security restricted",
+          "resource": {
+            "apiVersion": "v1",
+            "kind": "Namespace",
+            "name": "r01-policy-hostpath"
+          },
+          "severity": "Medium",
+          "type": "POLICY_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-hostpath-volume",
+          "messageContains": "hostPath volume",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "storage-worker",
+            "namespace": "r01-policy-hostpath"
+          },
+          "severity": "High",
+          "type": "POLICY_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-allow-privilege-escalation",
+          "messageContains": "allowPrivilegeEscalation=true",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "storage-worker",
+            "namespace": "r01-policy-hostpath"
+          },
+          "severity": "High",
+          "type": "POLICY_RISK"
+        }
+      ],
+      "falsePositives": [],
+      "fn": 8,
+      "fp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "tp": 0
+    },
+    "ReadinessProbes": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 5
+    },
+    "WorkloadAvailability": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 3
+    }
+  },
+  "overall": {
+    "f1": 0.8519,
+    "falseNegatives": [
+      {
+        "family": "PolicyRisk",
+        "id": "gt-policy-restricted-namespace-privileged",
+        "messageContains": "enforces Pod Security restricted",
+        "resource": {
+          "apiVersion": "v1",
+          "kind": "Namespace",
+          "name": "r01-policy-restricted"
+        },
+        "severity": "Medium",
+        "type": "POLICY_RISK"
+      },
+      {
+        "family": "PolicyRisk",
+        "id": "gt-policy-privileged",
+        "messageContains": "privileged=true",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "legacy-worker",
+          "namespace": "r01-policy-restricted"
+        },
+        "severity": "High",
+        "type": "POLICY_RISK"
+      },
+      {
+        "family": "PolicyRisk",
+        "id": "gt-policy-run-as-non-root-absent",
+        "messageContains": "runAsNonRoot absent",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "legacy-worker",
+          "namespace": "r01-policy-restricted"
+        },
+        "severity": "High",
+        "type": "POLICY_RISK"
+      },
+      {
+        "family": "PolicyRisk",
+        "id": "gt-policy-restricted-namespace-missing-security-context",
+        "messageContains": "enforces Pod Security restricted",
+        "resource": {
+          "apiVersion": "v1",
+          "kind": "Namespace",
+          "name": "r01-policy-missing-sc"
+        },
+        "severity": "Medium",
+        "type": "POLICY_RISK"
+      },
+      {
+        "family": "PolicyRisk",
+        "id": "gt-policy-missing-security-context",
+        "messageContains": "missing securityContext",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "unsafe-api",
+          "namespace": "r01-policy-missing-sc"
+        },
+        "severity": "High",
+        "type": "POLICY_RISK"
+      },
+      {
+        "family": "PolicyRisk",
+        "id": "gt-policy-hostpath-namespace",
+        "messageContains": "enforces Pod Security restricted",
+        "resource": {
+          "apiVersion": "v1",
+          "kind": "Namespace",
+          "name": "r01-policy-hostpath"
+        },
+        "severity": "Medium",
+        "type": "POLICY_RISK"
+      },
+      {
+        "family": "PolicyRisk",
+        "id": "gt-policy-hostpath-volume",
+        "messageContains": "hostPath volume",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "storage-worker",
+          "namespace": "r01-policy-hostpath"
+        },
+        "severity": "High",
+        "type": "POLICY_RISK"
+      },
+      {
+        "family": "PolicyRisk",
+        "id": "gt-policy-allow-privilege-escalation",
+        "messageContains": "allowPrivilegeEscalation=true",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "storage-worker",
+          "namespace": "r01-policy-hostpath"
+        },
+        "severity": "High",
+        "type": "POLICY_RISK"
+      }
+    ],
+    "falsePositives": [],
+    "fn": 8,
+    "fp": 0,
+    "precision": 1.0,
+    "recall": 0.7419,
+    "tp": 23
+  }
+}

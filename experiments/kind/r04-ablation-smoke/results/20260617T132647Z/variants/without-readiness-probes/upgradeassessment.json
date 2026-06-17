@@ -1,0 +1,717 @@
+{
+  "apiVersion": "upgrade.guardian.io/v1alpha1",
+  "kind": "UpgradeAssessment",
+  "metadata": {
+    "annotations": {
+      "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"upgrade.guardian.io/v1alpha1\",\"kind\":\"UpgradeAssessment\",\"metadata\":{\"annotations\":{},\"name\":\"r04-assessment\",\"namespace\":\"r04-system\"},\"spec\":{\"checks\":{\"admissionWebhooks\":true,\"capacity\":false,\"deprecatedApis\":true,\"observability\":false,\"pdb\":true,\"policyRisks\":true,\"readinessProbes\":false,\"workloadAvailability\":true},\"mode\":\"ReadOnly\",\"scope\":{\"namespaces\":{\"exclude\":[\"kube-system\"],\"include\":[\"r01-low-replicas\",\"r01-missing-readiness\",\"r01-readiness-statefulset\",\"r01-readiness-daemonset\",\"r01-readiness-multi-container\",\"r01-pdb-min-blocking\",\"r01-pdb-max-zero\",\"r01-pdb-no-match\",\"r01-pdb-missing\",\"r01-pdb-stateful-max-zero\",\"r01-pdb-percentage\",\"r01-pdb-stateful-missing\",\"r01-standalone-pod\",\"r01-workload-stateful-single\",\"r01-policy-restricted\",\"r01-policy-missing-sc\",\"r01-policy-hostpath\",\"r01-policy-warn-audit\",\"r01-deprecated-api\",\"r01-modern-api-negative\",\"r01-safe\"]}},\"targetVersion\":\"1.32\"}}\n"
+    },
+    "creationTimestamp": "2026-06-17T13:28:44Z",
+    "generation": 1,
+    "name": "r04-assessment",
+    "namespace": "r04-system",
+    "resourceVersion": "2005",
+    "uid": "64acad0b-efcd-4ccf-bbc4-d1a825467cfe"
+  },
+  "spec": {
+    "checks": {
+      "admissionWebhooks": true,
+      "capacity": false,
+      "deprecatedApis": true,
+      "observability": false,
+      "pdb": true,
+      "policyRisks": true,
+      "readinessProbes": false,
+      "workloadAvailability": true
+    },
+    "mode": "ReadOnly",
+    "scope": {
+      "namespaces": {
+        "exclude": [
+          "kube-system"
+        ],
+        "include": [
+          "r01-low-replicas",
+          "r01-missing-readiness",
+          "r01-readiness-statefulset",
+          "r01-readiness-daemonset",
+          "r01-readiness-multi-container",
+          "r01-pdb-min-blocking",
+          "r01-pdb-max-zero",
+          "r01-pdb-no-match",
+          "r01-pdb-missing",
+          "r01-pdb-stateful-max-zero",
+          "r01-pdb-percentage",
+          "r01-pdb-stateful-missing",
+          "r01-standalone-pod",
+          "r01-workload-stateful-single",
+          "r01-policy-restricted",
+          "r01-policy-missing-sc",
+          "r01-policy-hostpath",
+          "r01-policy-warn-audit",
+          "r01-deprecated-api",
+          "r01-modern-api-negative",
+          "r01-safe"
+        ]
+      }
+    },
+    "targetVersion": "1.32"
+  },
+  "status": {
+    "conditions": [
+      {
+        "lastTransitionTime": "2026-06-17T13:28:46Z",
+        "message": "Assessment is not running.",
+        "observedGeneration": 1,
+        "reason": "Completed",
+        "status": "False",
+        "type": "AssessmentRunning"
+      },
+      {
+        "lastTransitionTime": "2026-06-17T13:28:44Z",
+        "message": "Assessment completed successfully.",
+        "observedGeneration": 1,
+        "reason": "Completed",
+        "status": "True",
+        "type": "AssessmentCompleted"
+      }
+    ],
+    "findings": [
+      {
+        "category": "AdmissionWebhook",
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_R01_MUTATING_FAIL_WEBHOOK_MUTATE_EXAMPLE_COM",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "mutate.example.com"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_R01_MUTATING_FAIL_WEBHOOK_MUTATE_EXAMPLE_COM_FAILUREPOLICY=FAIL",
+        "message": "MutatingWebhookConfiguration r01-mutating-fail-webhook webhook mutate.example.com has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "r01-mutating-fail-webhook"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_R01_RISKY_WEBHOOK_POLICY_EXAMPLE_COM",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "policy.example.com"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_R01_RISKY_WEBHOOK_POLICY_EXAMPLE_COM_FAILUREPOLICY=FAIL",
+        "message": "ValidatingWebhookConfiguration r01-risky-webhook webhook policy.example.com has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "r01-risky-webhook"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_R01_RISKY_WEBHOOK_POLICY_EXAMPLE_COM",
+            "observed": {
+              "reason": "namespaceSelector is absent",
+              "webhookName": "policy.example.com"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_R01_RISKY_WEBHOOK_POLICY_EXAMPLE_COM_NAMESPACESELECTOR_IS_ABSENT",
+        "message": "ValidatingWebhookConfiguration r01-risky-webhook webhook policy.example.com has risk: namespaceSelector is absent.",
+        "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "r01-risky-webhook"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_R01_RISKY_WEBHOOK_POLICY_EXAMPLE_COM",
+            "observed": {
+              "reason": "referenced service is absent",
+              "webhookName": "policy.example.com"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_R01_RISKY_WEBHOOK_POLICY_EXAMPLE_COM_REFERENCED_SERVICE_IS_ABSENT",
+        "message": "ValidatingWebhookConfiguration r01-risky-webhook webhook policy.example.com has risk: referenced service is absent.",
+        "recommendation": "Restore the webhook Service or remove the webhook configuration before upgrade.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "r01-risky-webhook"
+        },
+        "severity": "Critical",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "DeprecatedAPI",
+        "evidence": [
+          {
+            "description": "Deprecated or removed API version observed in last-applied configuration.",
+            "id": "DEPRECATED_OR_REMOVED_API_EVIDENCE_R01_DEPRECATED_API_CRONJOB_LEGACY_CRON",
+            "observed": {
+              "apiVersion": "batch/v1beta1",
+              "kind": "CronJob",
+              "removedIn": "1.25"
+            }
+          }
+        ],
+        "id": "DEPRECATED_OR_REMOVED_API_R01_DEPRECATED_API_CRONJOB_LEGACY_CRON",
+        "message": "CronJob r01-deprecated-api/legacy-cron uses batch/v1beta1 removed in Kubernetes 1.25.",
+        "recommendation": "Migrate this resource to a served API version before upgrading.",
+        "resource": {
+          "apiVersion": "batch/v1beta1",
+          "kind": "CronJob",
+          "name": "legacy-cron",
+          "namespace": "r01-deprecated-api"
+        },
+        "severity": "Critical",
+        "type": "DEPRECATED_OR_REMOVED_API"
+      },
+      {
+        "category": "DeprecatedAPI",
+        "evidence": [
+          {
+            "description": "Deprecated or removed API version observed in last-applied configuration.",
+            "id": "DEPRECATED_OR_REMOVED_API_EVIDENCE_R01_DEPRECATED_API_HORIZONTALPODAUTOSCALER_LEGACY_HPA",
+            "observed": {
+              "apiVersion": "autoscaling/v2beta2",
+              "kind": "HorizontalPodAutoscaler",
+              "removedIn": "1.26"
+            }
+          }
+        ],
+        "id": "DEPRECATED_OR_REMOVED_API_R01_DEPRECATED_API_HORIZONTALPODAUTOSCALER_LEGACY_HPA",
+        "message": "HorizontalPodAutoscaler r01-deprecated-api/legacy-hpa uses autoscaling/v2beta2 removed in Kubernetes 1.26.",
+        "recommendation": "Migrate this resource to a served API version before upgrading.",
+        "resource": {
+          "apiVersion": "autoscaling/v2beta2",
+          "kind": "HorizontalPodAutoscaler",
+          "name": "legacy-hpa",
+          "namespace": "r01-deprecated-api"
+        },
+        "severity": "Critical",
+        "type": "DEPRECATED_OR_REMOVED_API"
+      },
+      {
+        "category": "DeprecatedAPI",
+        "evidence": [
+          {
+            "description": "Deprecated or removed API version observed in last-applied configuration.",
+            "id": "DEPRECATED_OR_REMOVED_API_EVIDENCE_R01_DEPRECATED_API_PODDISRUPTIONBUDGET_LEGACY_PDB",
+            "observed": {
+              "apiVersion": "policy/v1beta1",
+              "kind": "PodDisruptionBudget",
+              "removedIn": "1.25"
+            }
+          }
+        ],
+        "id": "DEPRECATED_OR_REMOVED_API_R01_DEPRECATED_API_PODDISRUPTIONBUDGET_LEGACY_PDB",
+        "message": "PodDisruptionBudget r01-deprecated-api/legacy-pdb uses policy/v1beta1 removed in Kubernetes 1.25.",
+        "recommendation": "Migrate this resource to a served API version before upgrading.",
+        "resource": {
+          "apiVersion": "policy/v1beta1",
+          "kind": "PodDisruptionBudget",
+          "name": "legacy-pdb",
+          "namespace": "r01-deprecated-api"
+        },
+        "severity": "Critical",
+        "type": "DEPRECATED_OR_REMOVED_API"
+      },
+      {
+        "category": "DeprecatedAPI",
+        "evidence": [
+          {
+            "description": "Deprecated or removed API version observed in last-applied configuration.",
+            "id": "DEPRECATED_OR_REMOVED_API_EVIDENCE__PODSECURITYPOLICY_LEGACY_PSP",
+            "observed": {
+              "apiVersion": "policy/v1beta1",
+              "kind": "PodSecurityPolicy",
+              "removedIn": "1.25"
+            }
+          }
+        ],
+        "id": "DEPRECATED_OR_REMOVED_API__PODSECURITYPOLICY_LEGACY_PSP",
+        "message": "PodSecurityPolicy /legacy-psp uses policy/v1beta1 removed in Kubernetes 1.25.",
+        "recommendation": "Migrate this resource to a served API version before upgrading.",
+        "resource": {
+          "apiVersion": "policy/v1beta1",
+          "kind": "PodSecurityPolicy",
+          "name": "legacy-psp"
+        },
+        "severity": "Critical",
+        "type": "DEPRECATED_OR_REMOVED_API"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R01_PDB_MAX_ZERO_BILLING_API_BILLING_API",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "2",
+              "selector": "app=billing-api",
+              "workloadKind": "Deployment",
+              "workloadName": "billing-api"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R01_PDB_MAX_ZERO_BILLING_API_DEPLOYMENT_BILLING_API_MAXUNAVAILABLE",
+        "message": "PDB r01-pdb-max-zero/billing-api may block disruption for Deployment r01-pdb-max-zero/billing-api.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "billing-api",
+          "namespace": "r01-pdb-max-zero"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R01_PDB_MIN_BLOCKING_ORDERS_API_ORDERS_API",
+            "observed": {
+              "minAvailable": "2",
+              "replicas": "2",
+              "selector": "app=orders-api",
+              "workloadKind": "Deployment",
+              "workloadName": "orders-api"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R01_PDB_MIN_BLOCKING_ORDERS_API_DEPLOYMENT_ORDERS_API_MINAVAILABLE",
+        "message": "PDB r01-pdb-min-blocking/orders-api may block disruption for Deployment r01-pdb-min-blocking/orders-api.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "orders-api",
+          "namespace": "r01-pdb-min-blocking"
+        },
+        "severity": "Critical",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "No PDB selector matched this workload.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R01_PDB_MISSING_DEPLOYMENT_SEARCH_API_MISSING",
+            "observed": {
+              "replicas": "3"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R01_PDB_MISSING_DEPLOYMENT_SEARCH_API_MISSING",
+        "message": "Deployment r01-pdb-missing/search-api has no matching PodDisruptionBudget.",
+        "recommendation": "Consider adding a PodDisruptionBudget for critical workloads before upgrade.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "search-api",
+          "namespace": "r01-pdb-missing"
+        },
+        "severity": "Low",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "No workload matched the PDB selector.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R01_PDB_NO_MATCH_STALE_PDB_NO_MATCH",
+            "observed": {
+              "selector": "app=absent"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R01_PDB_NO_MATCH_STALE_PDB_NO_MATCH",
+        "message": "PDB r01-pdb-no-match/stale-pdb does not match any assessed workload.",
+        "recommendation": "Fix or remove stale PodDisruptionBudgets before upgrade validation.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "stale-pdb",
+          "namespace": "r01-pdb-no-match"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R01_PDB_PERCENTAGE_REPORT_API_REPORT_API",
+            "observed": {
+              "minAvailable": "3",
+              "replicas": "3",
+              "selector": "app=report-api",
+              "workloadKind": "Deployment",
+              "workloadName": "report-api"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R01_PDB_PERCENTAGE_REPORT_API_DEPLOYMENT_REPORT_API_MINAVAILABLE",
+        "message": "PDB r01-pdb-percentage/report-api may block disruption for Deployment r01-pdb-percentage/report-api.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "report-api",
+          "namespace": "r01-pdb-percentage"
+        },
+        "severity": "Critical",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R01_PDB_STATEFUL_MAX_ZERO_ACCOUNTS_DB_ACCOUNTS_DB",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "2",
+              "selector": "app=accounts-db",
+              "workloadKind": "StatefulSet",
+              "workloadName": "accounts-db"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R01_PDB_STATEFUL_MAX_ZERO_ACCOUNTS_DB_STATEFULSET_ACCOUNTS_DB_MAXUNAVAILABLE",
+        "message": "PDB r01-pdb-stateful-max-zero/accounts-db may block disruption for StatefulSet r01-pdb-stateful-max-zero/accounts-db.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "accounts-db",
+          "namespace": "r01-pdb-stateful-max-zero"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "No PDB selector matched this workload.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R01_PDB_STATEFUL_MISSING_STATEFULSET_WAREHOUSE_DB_MISSING",
+            "observed": {
+              "replicas": "2"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R01_PDB_STATEFUL_MISSING_STATEFULSET_WAREHOUSE_DB_MISSING",
+        "message": "StatefulSet r01-pdb-stateful-missing/warehouse-db has no matching PodDisruptionBudget.",
+        "recommendation": "Consider adding a PodDisruptionBudget for critical workloads before upgrade.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "StatefulSet",
+          "name": "warehouse-db",
+          "namespace": "r01-pdb-stateful-missing"
+        },
+        "severity": "Low",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PolicyRisk",
+        "evidence": [
+          {
+            "description": "Workload pod template has a restricted policy incompatibility.",
+            "id": "POLICY_RISK_EVIDENCE_R01_POLICY_HOSTPATH_DEPLOYMENT_STORAGE_WORKER_WORKER",
+            "observed": {
+              "reason": "allowPrivilegeEscalation=true",
+              "subject": "worker"
+            }
+          }
+        ],
+        "id": "POLICY_RISK_R01_POLICY_HOSTPATH_DEPLOYMENT_STORAGE_WORKER_ALLOWPRIVILEGEESCALATION=TRUE_WORKER",
+        "message": "Deployment r01-policy-hostpath/storage-worker may violate restricted policy: allowPrivilegeEscalation=true.",
+        "recommendation": "Adjust the pod security context or namespace policy before upgrade.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "storage-worker",
+          "namespace": "r01-policy-hostpath"
+        },
+        "severity": "High",
+        "type": "POLICY_RISK"
+      },
+      {
+        "category": "PolicyRisk",
+        "evidence": [
+          {
+            "description": "Workload pod template has a restricted policy incompatibility.",
+            "id": "POLICY_RISK_EVIDENCE_R01_POLICY_HOSTPATH_DEPLOYMENT_STORAGE_WORKER_HOST_DATA",
+            "observed": {
+              "reason": "hostPath volume",
+              "subject": "host-data"
+            }
+          }
+        ],
+        "id": "POLICY_RISK_R01_POLICY_HOSTPATH_DEPLOYMENT_STORAGE_WORKER_HOSTPATH_VOLUME_HOST_DATA",
+        "message": "Deployment r01-policy-hostpath/storage-worker may violate restricted policy: hostPath volume.",
+        "recommendation": "Adjust the pod security context or namespace policy before upgrade.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "storage-worker",
+          "namespace": "r01-policy-hostpath"
+        },
+        "severity": "High",
+        "type": "POLICY_RISK"
+      },
+      {
+        "category": "PolicyRisk",
+        "evidence": [
+          {
+            "description": "Pod Security Admission namespace label.",
+            "id": "POLICY_RISK_EVIDENCE_R01_POLICY_HOSTPATH_RESTRICTED",
+            "observed": {
+              "pod-security.kubernetes.io/enforce": "restricted"
+            }
+          }
+        ],
+        "id": "POLICY_RISK_R01_POLICY_HOSTPATH_RESTRICTED",
+        "message": "Namespace r01-policy-hostpath enforces Pod Security restricted.",
+        "recommendation": "Validate all workloads in this namespace against the restricted Pod Security profile before upgrade.",
+        "resource": {
+          "apiVersion": "v1",
+          "kind": "Namespace",
+          "name": "r01-policy-hostpath"
+        },
+        "severity": "Medium",
+        "type": "POLICY_RISK"
+      },
+      {
+        "category": "PolicyRisk",
+        "evidence": [
+          {
+            "description": "Workload pod template has a restricted policy incompatibility.",
+            "id": "POLICY_RISK_EVIDENCE_R01_POLICY_MISSING_SC_DEPLOYMENT_UNSAFE_API_API",
+            "observed": {
+              "reason": "missing securityContext",
+              "subject": "api"
+            }
+          }
+        ],
+        "id": "POLICY_RISK_R01_POLICY_MISSING_SC_DEPLOYMENT_UNSAFE_API_MISSING_SECURITYCONTEXT_API",
+        "message": "Deployment r01-policy-missing-sc/unsafe-api may violate restricted policy: missing securityContext.",
+        "recommendation": "Adjust the pod security context or namespace policy before upgrade.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "unsafe-api",
+          "namespace": "r01-policy-missing-sc"
+        },
+        "severity": "High",
+        "type": "POLICY_RISK"
+      },
+      {
+        "category": "PolicyRisk",
+        "evidence": [
+          {
+            "description": "Pod Security Admission namespace label.",
+            "id": "POLICY_RISK_EVIDENCE_R01_POLICY_MISSING_SC_RESTRICTED",
+            "observed": {
+              "pod-security.kubernetes.io/enforce": "restricted"
+            }
+          }
+        ],
+        "id": "POLICY_RISK_R01_POLICY_MISSING_SC_RESTRICTED",
+        "message": "Namespace r01-policy-missing-sc enforces Pod Security restricted.",
+        "recommendation": "Validate all workloads in this namespace against the restricted Pod Security profile before upgrade.",
+        "resource": {
+          "apiVersion": "v1",
+          "kind": "Namespace",
+          "name": "r01-policy-missing-sc"
+        },
+        "severity": "Medium",
+        "type": "POLICY_RISK"
+      },
+      {
+        "category": "PolicyRisk",
+        "evidence": [
+          {
+            "description": "Workload pod template has a restricted policy incompatibility.",
+            "id": "POLICY_RISK_EVIDENCE_R01_POLICY_RESTRICTED_DEPLOYMENT_LEGACY_WORKER_WORKER",
+            "observed": {
+              "reason": "privileged=true",
+              "subject": "worker"
+            }
+          }
+        ],
+        "id": "POLICY_RISK_R01_POLICY_RESTRICTED_DEPLOYMENT_LEGACY_WORKER_PRIVILEGED=TRUE_WORKER",
+        "message": "Deployment r01-policy-restricted/legacy-worker may violate restricted policy: privileged=true.",
+        "recommendation": "Adjust the pod security context or namespace policy before upgrade.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "legacy-worker",
+          "namespace": "r01-policy-restricted"
+        },
+        "severity": "High",
+        "type": "POLICY_RISK"
+      },
+      {
+        "category": "PolicyRisk",
+        "evidence": [
+          {
+            "description": "Workload pod template has a restricted policy incompatibility.",
+            "id": "POLICY_RISK_EVIDENCE_R01_POLICY_RESTRICTED_DEPLOYMENT_LEGACY_WORKER_WORKER",
+            "observed": {
+              "reason": "runAsNonRoot absent",
+              "subject": "worker"
+            }
+          }
+        ],
+        "id": "POLICY_RISK_R01_POLICY_RESTRICTED_DEPLOYMENT_LEGACY_WORKER_RUNASNONROOT_ABSENT_WORKER",
+        "message": "Deployment r01-policy-restricted/legacy-worker may violate restricted policy: runAsNonRoot absent.",
+        "recommendation": "Adjust the pod security context or namespace policy before upgrade.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "legacy-worker",
+          "namespace": "r01-policy-restricted"
+        },
+        "severity": "High",
+        "type": "POLICY_RISK"
+      },
+      {
+        "category": "PolicyRisk",
+        "evidence": [
+          {
+            "description": "Pod Security Admission namespace label.",
+            "id": "POLICY_RISK_EVIDENCE_R01_POLICY_RESTRICTED_RESTRICTED",
+            "observed": {
+              "pod-security.kubernetes.io/enforce": "restricted"
+            }
+          }
+        ],
+        "id": "POLICY_RISK_R01_POLICY_RESTRICTED_RESTRICTED",
+        "message": "Namespace r01-policy-restricted enforces Pod Security restricted.",
+        "recommendation": "Validate all workloads in this namespace against the restricted Pod Security profile before upgrade.",
+        "resource": {
+          "apiVersion": "v1",
+          "kind": "Namespace",
+          "name": "r01-policy-restricted"
+        },
+        "severity": "Medium",
+        "type": "POLICY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_R01_LOW_REPLICAS_DEPLOYMENT_PAYMENT_API",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_R01_LOW_REPLICAS_DEPLOYMENT_PAYMENT_API",
+        "message": "Deployment r01-low-replicas/payment-api has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "payment-api",
+          "namespace": "r01-low-replicas"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "evidence": [
+          {
+            "description": "Pod has no recognized controller owner reference.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_R01_STANDALONE_POD_POD_MANUAL_POD",
+            "observed": {
+              "ownerReferences": "0"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_R01_STANDALONE_POD_POD_MANUAL_POD",
+        "message": "Pod r01-standalone-pod/manual-pod is standalone and may be lost during node disruption.",
+        "recommendation": "Manage the pod through a controller such as Deployment, StatefulSet, DaemonSet, or Job before upgrade.",
+        "resource": {
+          "apiVersion": "v1",
+          "kind": "Pod",
+          "name": "manual-pod",
+          "namespace": "r01-standalone-pod"
+        },
+        "severity": "Medium",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_R01_WORKLOAD_STATEFUL_SINGLE_STATEFULSET_CACHE_SINGLETON",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_R01_WORKLOAD_STATEFUL_SINGLE_STATEFULSET_CACHE_SINGLETON",
+        "message": "StatefulSet r01-workload-stateful-single/cache-singleton has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "StatefulSet",
+          "name": "cache-singleton",
+          "namespace": "r01-workload-stateful-single"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      }
+    ],
+    "generatedPlanRef": {
+      "name": "r04-assessment-plan"
+    },
+    "phase": "Completed",
+    "riskLevel": "Critical",
+    "score": 323,
+    "summary": {
+      "critical": 7,
+      "high": 13,
+      "low": 2,
+      "medium": 4,
+      "totalFindings": 26
+    }
+  }
+}

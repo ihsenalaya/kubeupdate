@@ -1,0 +1,178 @@
+{
+  "byFamily": {
+    "AdmissionWebhook": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 4
+    },
+    "DeprecatedAPI": {
+      "f1": 0.0,
+      "falseNegatives": [
+        {
+          "family": "DeprecatedAPI",
+          "id": "gt-deprecated-pdb",
+          "messageContains": "removed in Kubernetes 1.25",
+          "resource": {
+            "apiVersion": "policy/v1beta1",
+            "kind": "PodDisruptionBudget",
+            "name": "legacy-pdb",
+            "namespace": "r01-deprecated-api"
+          },
+          "severity": "Critical",
+          "type": "DEPRECATED_OR_REMOVED_API"
+        },
+        {
+          "family": "DeprecatedAPI",
+          "id": "gt-deprecated-cronjob",
+          "messageContains": "removed in Kubernetes 1.25",
+          "resource": {
+            "apiVersion": "batch/v1beta1",
+            "kind": "CronJob",
+            "name": "legacy-cron",
+            "namespace": "r01-deprecated-api"
+          },
+          "severity": "Critical",
+          "type": "DEPRECATED_OR_REMOVED_API"
+        },
+        {
+          "family": "DeprecatedAPI",
+          "id": "gt-deprecated-hpa",
+          "messageContains": "removed in Kubernetes 1.26",
+          "resource": {
+            "apiVersion": "autoscaling/v2beta2",
+            "kind": "HorizontalPodAutoscaler",
+            "name": "legacy-hpa",
+            "namespace": "r01-deprecated-api"
+          },
+          "severity": "Critical",
+          "type": "DEPRECATED_OR_REMOVED_API"
+        },
+        {
+          "family": "DeprecatedAPI",
+          "id": "gt-deprecated-psp",
+          "messageContains": "removed in Kubernetes 1.25",
+          "resource": {
+            "apiVersion": "policy/v1beta1",
+            "kind": "PodSecurityPolicy",
+            "name": "legacy-psp"
+          },
+          "severity": "Critical",
+          "type": "DEPRECATED_OR_REMOVED_API"
+        }
+      ],
+      "falsePositives": [],
+      "fn": 4,
+      "fp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "tp": 0
+    },
+    "PDB": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 7
+    },
+    "PolicyRisk": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 8
+    },
+    "ReadinessProbes": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 5
+    },
+    "WorkloadAvailability": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 3
+    }
+  },
+  "overall": {
+    "f1": 0.931,
+    "falseNegatives": [
+      {
+        "family": "DeprecatedAPI",
+        "id": "gt-deprecated-pdb",
+        "messageContains": "removed in Kubernetes 1.25",
+        "resource": {
+          "apiVersion": "policy/v1beta1",
+          "kind": "PodDisruptionBudget",
+          "name": "legacy-pdb",
+          "namespace": "r01-deprecated-api"
+        },
+        "severity": "Critical",
+        "type": "DEPRECATED_OR_REMOVED_API"
+      },
+      {
+        "family": "DeprecatedAPI",
+        "id": "gt-deprecated-cronjob",
+        "messageContains": "removed in Kubernetes 1.25",
+        "resource": {
+          "apiVersion": "batch/v1beta1",
+          "kind": "CronJob",
+          "name": "legacy-cron",
+          "namespace": "r01-deprecated-api"
+        },
+        "severity": "Critical",
+        "type": "DEPRECATED_OR_REMOVED_API"
+      },
+      {
+        "family": "DeprecatedAPI",
+        "id": "gt-deprecated-hpa",
+        "messageContains": "removed in Kubernetes 1.26",
+        "resource": {
+          "apiVersion": "autoscaling/v2beta2",
+          "kind": "HorizontalPodAutoscaler",
+          "name": "legacy-hpa",
+          "namespace": "r01-deprecated-api"
+        },
+        "severity": "Critical",
+        "type": "DEPRECATED_OR_REMOVED_API"
+      },
+      {
+        "family": "DeprecatedAPI",
+        "id": "gt-deprecated-psp",
+        "messageContains": "removed in Kubernetes 1.25",
+        "resource": {
+          "apiVersion": "policy/v1beta1",
+          "kind": "PodSecurityPolicy",
+          "name": "legacy-psp"
+        },
+        "severity": "Critical",
+        "type": "DEPRECATED_OR_REMOVED_API"
+      }
+    ],
+    "falsePositives": [],
+    "fn": 4,
+    "fp": 0,
+    "precision": 1.0,
+    "recall": 0.871,
+    "tp": 27
+  }
+}

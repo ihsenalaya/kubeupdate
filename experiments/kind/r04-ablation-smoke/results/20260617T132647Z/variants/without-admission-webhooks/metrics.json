@@ -1,0 +1,172 @@
+{
+  "byFamily": {
+    "AdmissionWebhook": {
+      "f1": 0.0,
+      "falseNegatives": [
+        {
+          "family": "AdmissionWebhook",
+          "id": "gt-admission-fail-policy",
+          "messageContains": "failurePolicy=Fail",
+          "resource": {
+            "apiVersion": "admissionregistration.k8s.io/v1",
+            "kind": "ValidatingWebhookConfiguration",
+            "name": "r01-risky-webhook"
+          },
+          "severity": "High",
+          "type": "ADMISSION_WEBHOOK_RISK"
+        },
+        {
+          "family": "AdmissionWebhook",
+          "id": "gt-admission-missing-service",
+          "messageContains": "referenced service is absent",
+          "resource": {
+            "apiVersion": "admissionregistration.k8s.io/v1",
+            "kind": "ValidatingWebhookConfiguration",
+            "name": "r01-risky-webhook"
+          },
+          "severity": "Critical",
+          "type": "ADMISSION_WEBHOOK_RISK"
+        },
+        {
+          "family": "AdmissionWebhook",
+          "id": "gt-admission-broad-scope",
+          "messageContains": "namespaceSelector is absent",
+          "resource": {
+            "apiVersion": "admissionregistration.k8s.io/v1",
+            "kind": "ValidatingWebhookConfiguration",
+            "name": "r01-risky-webhook"
+          },
+          "severity": "High",
+          "type": "ADMISSION_WEBHOOK_RISK"
+        },
+        {
+          "family": "AdmissionWebhook",
+          "id": "gt-admission-mutating-fail-policy",
+          "messageContains": "failurePolicy=Fail",
+          "resource": {
+            "apiVersion": "admissionregistration.k8s.io/v1",
+            "kind": "MutatingWebhookConfiguration",
+            "name": "r01-mutating-fail-webhook"
+          },
+          "severity": "High",
+          "type": "ADMISSION_WEBHOOK_RISK"
+        }
+      ],
+      "falsePositives": [],
+      "fn": 4,
+      "fp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "tp": 0
+    },
+    "DeprecatedAPI": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 4
+    },
+    "PDB": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 7
+    },
+    "PolicyRisk": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 8
+    },
+    "ReadinessProbes": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 5
+    },
+    "WorkloadAvailability": {
+      "f1": 1.0,
+      "falseNegatives": [],
+      "falsePositives": [],
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tp": 3
+    }
+  },
+  "overall": {
+    "f1": 0.931,
+    "falseNegatives": [
+      {
+        "family": "AdmissionWebhook",
+        "id": "gt-admission-fail-policy",
+        "messageContains": "failurePolicy=Fail",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "r01-risky-webhook"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "family": "AdmissionWebhook",
+        "id": "gt-admission-missing-service",
+        "messageContains": "referenced service is absent",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "r01-risky-webhook"
+        },
+        "severity": "Critical",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "family": "AdmissionWebhook",
+        "id": "gt-admission-broad-scope",
+        "messageContains": "namespaceSelector is absent",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "r01-risky-webhook"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "family": "AdmissionWebhook",
+        "id": "gt-admission-mutating-fail-policy",
+        "messageContains": "failurePolicy=Fail",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "r01-mutating-fail-webhook"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      }
+    ],
+    "falsePositives": [],
+    "fn": 4,
+    "fp": 0,
+    "precision": 1.0,
+    "recall": 0.871,
+    "tp": 27
+  }
+}
