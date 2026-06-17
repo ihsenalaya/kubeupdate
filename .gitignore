@@ -1,6 +1,12 @@
 .terraform/
 .terraform.lock.hcl.*
+terraform.tfstate
+terraform.tfstate.backup
+terraform.tfstate.*.backup
+tfplan
+tfplan.destroy.check
 *.tfstate
+*.tfplan
 *.tfstate.*
 crash.log
 crash.*.log
@@ -9,9 +15,7 @@ override.tf.json
 *_override.tf
 *_override.tf.json
 .terraform.tfstate.lock.info
-tfplan
 tfplan.*
-*.tfplan
 kubeconfig*
 build/
 article/generated/
