@@ -140,7 +140,7 @@ The model is organized around four concepts.
 \end{figure*}
 
 \subsection{Scoring and Decisions}
-The current artifact uses a deterministic finding sort key, not a calibrated risk model. The weights (Critical: 25, High: 10, Medium: 4, Low: 1, Info: 0) and decision thresholds were chosen to produce a useful ordering of findings for plan generation; they have not been calibrated against production upgrade outcomes or validated by domain experts. The \code{DoNotUpgrade} label should be read as \emph{assessment recommends blocking: at least one critical finding requires resolution before upgrade}, not as an autonomous upgrade veto.
+The current artifact uses a deterministic finding sort key, not a calibrated risk predictor. The weights (Critical: 25, High: 10, Medium: 4, Low: 1, Info: 0) and decision thresholds were chosen to produce a useful ordering of findings for plan generation; they have not been calibrated against production upgrade outcomes or validated by domain experts. The \code{DoNotUpgrade} label should be read as \emph{assessment recommends blocking: at least one critical finding requires resolution before upgrade}, not as an autonomous upgrade veto.
 
 Aggregate risk is low below 11, medium from 11 to 30, high from 31 to 60, and critical above 60. A single critical finding yields a \code{DoNotUpgrade} decision. A score above 30 yields \code{ProceedWithCaution}. A high or critical RBAC assessment gap can yield \code{AssessmentIncomplete} when higher-priority decision rules do not already apply. Otherwise, the decision is \code{Proceed}. The controlled benchmark measures detection consistency and negative-control behavior; it does not calibrate severity weights against production outcomes.
 
@@ -685,7 +685,7 @@ The current fixtures should be extended with ambiguous and near-miss cases: PDB 
 Recruiting platform engineers to rate generated \crd{UpgradePlan} artifacts on correctness, actionability, prioritization quality, evidence usefulness, and remediation safety would provide the human-validation signal currently absent. A structured study with $n \geq 5$ raters and inter-rater agreement measurement is the minimum for a credible actionability claim.
 
 \paragraph{Score calibration.}
-The current severity weights are a deterministic sort key, not a calibrated risk model. Calibration against a corpus of real upgrade incidents---matching pre-upgrade assessment scores to post-upgrade outcomes---would allow the score to make evidence-based predictions rather than heuristic orderings.
+The current severity weights are a deterministic sort key, not a calibrated risk predictor. Calibration against a corpus of real upgrade incidents---matching pre-upgrade assessment scores to post-upgrade outcomes---would allow the score to make evidence-based predictions rather than heuristic orderings.
 
 \paragraph{Extended baseline comparison.}
 Adding kube-score, Polaris, Popeye, and kube-linter to the comparison set would produce a more complete view of the upgrade-readiness tooling landscape and clarify where \tool{} provides complementary coverage.
