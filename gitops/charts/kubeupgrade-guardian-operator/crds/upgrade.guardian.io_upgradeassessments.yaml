@@ -192,6 +192,11 @@ spec:
                         - id
                         type: object
                       type: array
+                    heuristic:
+                      description: "True when this finding comes from a heuristic checker
+                        (capacity, observability) rather than a deterministic rule.
+                        Treat with lower confidence."
+                      type: boolean
                     id:
                       type: string
                     message:

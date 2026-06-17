@@ -38,6 +38,9 @@ rules:
   - apiGroups: ["upgrade.guardian.io"]
     resources: ["upgradeplans"]
     verbs: ["create", "get", "list", "patch", "update", "watch"]
+  - apiGroups: ["authorization.k8s.io"]
+    resources: ["selfsubjectaccessreviews"]
+    verbs: ["create"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding

@@ -1,4 +1,4 @@
-replicaCount: 1
+replicaCount: 2
 
 image:
   repository: ghcr.io/ihsenalaya/kubeupgrade-guardian-operator
@@ -44,6 +44,10 @@ containerSecurityContext:
     drop:
       - ALL
   readOnlyRootFilesystem: true
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
 
 priorityClassName: ""
 

@@ -1,0 +1,232 @@
+## RÈGLES ABSOLUES — LIRE AVANT TOUT
+
+Ces règles s'appliquent à toutes les tâches dans ce dépôt, sans exception.
+
+1. **INTERDIT : Co-auteur dans les commits**
+   Ne jamais ajouter `Co-authored-by:`, `Co-Authored-By:`, ou tout autre tag de co-auteur
+   dans les messages de commit. Les commits appartiennent uniquement à ihsen alaya.
+
+2. **INTERDIT : Inventer des résultats ou des chiffres**
+   Tout chiffre, métrique, score, durée, taux, ou résultat doit provenir des fichiers
+   existants du dépôt (logs, fichiers experiments/, sorties de commandes réelles).
+   Ne jamais interpoler, extrapoler, ou fabriquer une valeur absente.
+
+3. **INTERDIT : Résultats incomplets**
+   Ne jamais écrire un résultat partiel comme s'il était complet. Si une donnée manque,
+   le signaler explicitement dans le texte (ex : "résultat non disponible dans les logs").
+   Ne jamais remplir un tableau ou une figure avec des valeurs de substitution.
+
+4. **INTERDIT : Contournements**
+   Ne jamais contourner une erreur, un test qui échoue, ou une contrainte en masquant
+   le problème (ex : --no-verify, supprimer un test, désactiver une règle de lint).
+   Si un blocage survient, identifier la cause racine et la corriger, ou signaler
+   le blocage clairement à l'utilisateur.
+
+5. **GIT PUSH automatique toutes les 20 minutes**
+   Toutes les 20 minutes pendant une session de travail active, exécuter :
+     git add <fichiers modifiés concernés>
+     git commit -m "<message décrivant l'avancement>"
+     git push origin main
+   Ne pas attendre la fin de la session pour pousser. Chaque push intermédiaire
+   doit représenter un état cohérent du dépôt (pas de travail à moitié).
+
+---
+
+You are working on the KubeUpgrade Guardian repository. This repo contains:
+- A Kubernetes operator (Helm chart under gitops/charts/kubeupgrade-guardian-operator/)
+- A research article (article/kubeupgrade-guardian-readiness.tex)
+- Benchmark experiments (experiments/)
+
+An audit identified the following issues. Fix them all, in priority order.
+
+---
+
+## FIX 1 — CRITICAL: Add PodDisruptionBudget to the operator's own Helm chart
+
+The operator detects workloads without PDBs, but it does not have one itself.
+replicaCount is 1, which means the operator goes down during a node drain.
+
+In gitops/charts/kubeupgrade-guardian-operator/values.yaml, add:
+
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
+
+Create gitops/charts/kubeupgrade-guardian-operator/templates/pdb.yaml with a
+PodDisruptionBudget that is only rendered when podDisruptionBudget.enabled is true,
+using the standard selector labels from _helpers.tpl.
+
+Also change the default replicaCount from 1 to 2 so the PDB is actually useful.
+
+---
+
+## FIX 2 — HIGH: Fix deprecated `policy` API group in RBAC
+
+In gitops/charts/kubeupgrade-guardian-operator/templates/rbac.yaml, the rule for
+poddisruptionbudgets uses:
+
+  - apiGroups: ["policy"]
+    resources: ["poddisruptionbudgets"]
+
+The `policy` group for PDBs was removed in Kubernetes 1.25. The correct group is
+`policy` has been moved to the core policy/v1 group. Fix by listing both API groups
+to support clusters running 1.21-1.24 and 1.25+:
+
+  - apiGroups: ["policy", ""]
+    resources: ["poddisruptionbudgets"]
+
+Actually the correct fix: policy/v1 PDBs use apiGroups: ["policy"] still — but
+the issue is the ClusterRole should also include the `authorization.k8s.io` group
+for SelfSubjectAccessReview so the operator can probe its own RBAC gaps. Add:
+
+  - apiGroups: ["authorization.k8s.io"]
+    resources: ["selfsubjectaccessreviews"]
+    verbs: ["create"]
+
+This allows the RBAC gap checker to use SelfSubjectAccessReview instead of relying
+on catching 403 errors passively.
+
+---
+
+## FIX 3 — HIGH: Add values.schema.json for Helm input validation
+
+Create gitops/charts/kubeupgrade-guardian-operator/values.schema.json with a JSON
+Schema that validates the following required/constrained fields:
+
+- replicaCount: integer, minimum 1
+- image.repository: string, non-empty
+- image.tag: string, non-empty
+- image.pullPolicy: enum [Always, IfNotPresent, Never]
+- resources.requests.cpu: string
+- resources.requests.memory: string
+- resources.limits.cpu: string
+- resources.limits.memory: string
+- leaderElection.enabled: boolean
+- podDisruptionBudget.enabled: boolean
+- podDisruptionBudget.minAvailable: integer, minimum 1 (only required when enabled)
+
+Use additionalProperties: false at each object level where fields are fully known.
+
+---
+
+## FIX 4 — HIGH: Add `confidence` field to the Finding model in the CRD
+
+In gitops/charts/kubeupgrade-guardian-operator/crds/upgrade.guardian.io_upgradeassessments.yaml,
+find the Finding schema inside status.findings[] and add a new optional field:
+
+  heuristic:
+    description: "True when this finding comes from a heuristic checker (capacity,
+      observability) rather than a deterministic rule. Treat with lower confidence."
+    type: boolean
+
+Do the same in upgrade.guardian.io_upgradeplans.yaml inside the requiredActions[].
+
+---
+
+## FIX 5 — MEDIUM: Fix the article — circular validation paragraph
+
+In article/kubeupgrade-guardian-readiness.tex, find the \textbf{Internal validity}
+paragraph inside \section{Threats to Validity} and append the following sentence
+after the existing mitigation list:
+
+  "Because the benchmark ground truth was designed by the same team that implemented
+  the checker logic, the 0-FP/0-FN result should be interpreted as
+  implementation-specification consistency, not as evidence of detection capability
+  on unseen or adversarially constructed cluster configurations."
+
+---
+
+## FIX 6 — MEDIUM: Fix the article — execution time comparison is misleading
+
+In article/kubeupgrade-guardian-readiness.tex, find \subsection{Execution Cost}
+(inside \section{Controlled Benchmark Results}) and append the following clarification
+after the sentence that mentions the 23.219-second wait:
+
+  "The \tool{} assessment wait includes operator pod scheduling, leader election,
+  CRD installation, controller warm-up, and reconciliation polling overhead.
+  Pluto and kubent are stateless CLI tools with no operator lifecycle overhead;
+  wall-clock comparison between operator-mode and CLI-mode tools is not meaningful
+  as a performance benchmark."
+
+---
+
+## FIX 7 — MEDIUM: Fix the article — document the 8 AKS-managed webhook observations
+
+In article/kubeupgrade-guardian-readiness.tex, find the \subsection{Managed AKS Validation}
+section. After the sentence that mentions "8 AKS-managed admission-webhook observations",
+add a footnote or inline note explaining these are provider-managed system webhooks
+(e.g. azure-policy, aad-pod-identity, kube-scheduler-validator type components)
+and that they are not injected test fixtures, hence not counted as false positives
+or true positives in the scenario metrics.
+
+The exact text:
+
+  "The 8 provider-managed observations surfaced by \tool{} refer to AKS system
+  admission webhooks installed by the managed control plane (for example, Azure
+  Policy enforcement webhooks and AKS node management webhooks). These are real
+  cluster observations, not injected benchmark labels; they are reported separately
+  so they are not miscounted as scenario false positives."
+
+---
+
+## FIX 8 — MEDIUM: Fix the article — sensitivity analysis is tautological
+
+In article/kubeupgrade-guardian-readiness.tex, find the paragraph about the
+sensitivity snapshot in \subsection{Scoring and Decisions}. Replace or augment
+the current text to make clear that the stability result is trivially guaranteed
+by the presence of a critical finding, and that the informative range for sensitivity
+analysis is ProceedWithCaution scenarios (score 11-60 with no critical findings).
+
+Replace the paragraph starting "A small sensitivity snapshot was computed..." with:
+
+  "A small sensitivity snapshot was computed over the archived Kind and AKS
+  assessment outputs using three scoring variants: current weights, equal
+  non-informational weights, and blocker-first weights. The decision remained
+  \code{DoNotUpgrade} for both runs because both contain critical findings;
+  a single critical finding forces \code{DoNotUpgrade} regardless of weight
+  distribution, so this particular result does not stress-test the thresholds.
+  Sensitivity analysis is most informative in the \code{ProceedWithCaution} range
+  (score 11--60, no critical findings); no such scenario was included in the
+  current evaluation package. This analysis is therefore reported as a consistency
+  check, not as evidence of threshold robustness."
+
+---
+
+## FIX 9 — LOW: Fix the article — add dry-run tooling to Related Work
+
+In article/kubeupgrade-guardian-readiness.tex, find \subsection{Kubernetes API Deprecation and Upgrade Tooling}
+inside \section{Related Work}. After the last sentence of that subsection, add:
+
+  "Server-side dry-run (\code{kubectl apply --dry-run=server}) and admission
+  simulation tools such as \code{conftest} and \code{kyverno test} can detect
+  admission rejections for proposed manifests before apply. These tools address
+  one slice of upgrade readiness---admission-time object validity---without
+  synthesizing multi-family readiness findings, evidence records, RBAC gap
+  modeling, or a generated non-executing plan. \tool{} differs by aggregating
+  across risk families and materializing findings as Kubernetes-native resources."
+
+---
+
+## FIX 10 — LOW: Fix the article — split the abstract's overloaded metric sentence
+
+In article/kubeupgrade-guardian-readiness.tex, find the last two long sentences
+in the \begin{abstract} block (starting with "In Kind run..." and "The AKS assessment
+wait..."). Split and restructure so that detection results and performance metrics
+are in separate sentences. Ensure the abstract remains under 250 words.
+
+---
+
+## VERIFICATION AFTER ALL FIXES
+
+After completing all fixes:
+
+1. Run `helm lint gitops/charts/kubeupgrade-guardian-operator/` and confirm 0 errors.
+2. Run `helm template test gitops/charts/kubeupgrade-guardian-operator/ | grep -i pdb`
+   and confirm a PodDisruptionBudget is rendered.
+3. Confirm the article .tex file compiles without LaTeX errors (run `pdflatex` or
+   check that the added text does not break any \begin{}/\end{} environments).
+4. Confirm values.schema.json is valid JSON (`python3 -m json.tool values.schema.json`).
+
+Do not change anything outside these specified files unless a change is strictly
+required to make a targeted fix compile or render correctly. Do not add comments
+explaining what you changed — the changes should be self-evident from the diff.
