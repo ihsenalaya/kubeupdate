@@ -1,0 +1,811 @@
+{
+  "apiVersion": "upgrade.guardian.io/v1alpha1",
+  "kind": "UpgradePlan",
+  "metadata": {
+    "creationTimestamp": "2026-06-17T13:09:32Z",
+    "generation": 1,
+    "name": "r02-scale-assessment-plan",
+    "namespace": "r02-scale-system",
+    "ownerReferences": [
+      {
+        "apiVersion": "upgrade.guardian.io/v1alpha1",
+        "blockOwnerDeletion": true,
+        "controller": true,
+        "kind": "UpgradeAssessment",
+        "name": "r02-scale-assessment",
+        "uid": "e58926fd-949c-4203-b6c7-1e3b2ab195f7"
+      }
+    ],
+    "resourceVersion": "3776",
+    "uid": "0ba1db49-0159-4124-abf0-b7ec74f13831"
+  },
+  "spec": {
+    "assessmentRef": {
+      "name": "r02-scale-assessment",
+      "namespace": "r02-scale-system"
+    },
+    "decision": "ProceedWithCaution",
+    "recommendedOrder": [
+      "fix-critical-blockers",
+      "fix-high-risk-workloads",
+      "validate-admission-policies",
+      "validate-observability",
+      "proceed-with-controlled-upgrade"
+    ],
+    "requiredActions": [
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00000_SCALE_APP_00000"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00000-deployment-scale-app-00000-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00000",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00001_SCALE_APP_00001"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00001-deployment-scale-app-00001-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00001",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00002_SCALE_APP_00002"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00002-deployment-scale-app-00002-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00002",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00003_SCALE_APP_00003"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00003-deployment-scale-app-00003-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00003",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00004_SCALE_APP_00004"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00004-deployment-scale-app-00004-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00004",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00005_SCALE_APP_00005"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00005-deployment-scale-app-00005-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00005",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00006_SCALE_APP_00006"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00006-deployment-scale-app-00006-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00006",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00007_SCALE_APP_00007"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00007-deployment-scale-app-00007-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00007",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00008_SCALE_APP_00008"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00008-deployment-scale-app-00008-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00008",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00009_SCALE_APP_00009"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00009-deployment-scale-app-00009-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00009",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00010_SCALE_APP_00010"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00010-deployment-scale-app-00010-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00010",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00011_SCALE_APP_00011"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00011-deployment-scale-app-00011-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00011",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00012_SCALE_APP_00012"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00012-deployment-scale-app-00012-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00012",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00013_SCALE_APP_00013"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00013-deployment-scale-app-00013-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00013",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00014_SCALE_APP_00014"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00014-deployment-scale-app-00014-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00014",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00015_SCALE_APP_00015"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00015-deployment-scale-app-00015-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00015",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00016_SCALE_APP_00016"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00016-deployment-scale-app-00016-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00016",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00017_SCALE_APP_00017"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00017-deployment-scale-app-00017-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00017",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00018_SCALE_APP_00018"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00018-deployment-scale-app-00018-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00018",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00019_SCALE_APP_00019"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00019-deployment-scale-app-00019-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00019",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00020_SCALE_APP_00020"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00020-deployment-scale-app-00020-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00020",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00021_SCALE_APP_00021"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00021-deployment-scale-app-00021-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00021",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00022_SCALE_APP_00022"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00022-deployment-scale-app-00022-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00022",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00023_SCALE_APP_00023"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00023-deployment-scale-app-00023-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00023",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00024_SCALE_APP_00024"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00024-deployment-scale-app-00024-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00024",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00025_SCALE_APP_00025"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00025-deployment-scale-app-00025-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00025",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00026_SCALE_APP_00026"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00026-deployment-scale-app-00026-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00026",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00027_SCALE_APP_00027"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00027-deployment-scale-app-00027-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00027",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00028_SCALE_APP_00028"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00028-deployment-scale-app-00028-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00028",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00029_SCALE_APP_00029"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00029-deployment-scale-app-00029-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00029",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00030_SCALE_APP_00030"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00030-deployment-scale-app-00030-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00030",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00031_SCALE_APP_00031"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00031-deployment-scale-app-00031-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00031",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00032_SCALE_APP_00032"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00032-deployment-scale-app-00032-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00032",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00033_SCALE_APP_00033"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00033-deployment-scale-app-00033-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00033",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00034_SCALE_APP_00034"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00034-deployment-scale-app-00034-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00034",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00035_SCALE_APP_00035"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00035-deployment-scale-app-00035-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00035",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00036_SCALE_APP_00036"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00036-deployment-scale-app-00036-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00036",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00037_SCALE_APP_00037"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00037-deployment-scale-app-00037-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00037",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00038_SCALE_APP_00038"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00038-deployment-scale-app-00038-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00038",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00039_SCALE_APP_00039"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00039-deployment-scale-app-00039-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00039",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00040_SCALE_APP_00040"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00040-deployment-scale-app-00040-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00040",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00041_SCALE_APP_00041"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00041-deployment-scale-app-00041-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00041",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00042_SCALE_APP_00042"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00042-deployment-scale-app-00042-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00042",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00043_SCALE_APP_00043"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00043-deployment-scale-app-00043-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00043",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00044_SCALE_APP_00044"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00044-deployment-scale-app-00044-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00044",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00045_SCALE_APP_00045"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00045-deployment-scale-app-00045-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00045",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00046_SCALE_APP_00046"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00046-deployment-scale-app-00046-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00046",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00047_SCALE_APP_00047"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00047-deployment-scale-app-00047-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00047",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00048_SCALE_APP_00048"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00048-deployment-scale-app-00048-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00048",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R4_SCALE_APP_00049_SCALE_APP_00049"
+        ],
+        "id": "remediate-pdb-blocking-risk-r02-scale-100-r4-scale-app-00049-deployment-scale-app-00049-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00049",
+          "namespace": "r02-scale-100-r4"
+        },
+        "severity": "High"
+      }
+    ],
+    "riskLevel": "Critical",
+    "score": 500,
+    "summary": {
+      "critical": 0,
+      "high": 50,
+      "low": 0,
+      "medium": 0,
+      "totalFindings": 50
+    }
+  },
+  "status": {
+    "conditions": [
+      {
+        "lastTransitionTime": "2026-06-17T13:09:32Z",
+        "message": "UpgradePlan generated from latest assessment.",
+        "observedGeneration": 1,
+        "reason": "Generated",
+        "status": "True",
+        "type": "PlanGenerated"
+      }
+    ],
+    "generatedAt": "2026-06-17T13:09:34Z",
+    "observedGeneration": 1
+  }
+}

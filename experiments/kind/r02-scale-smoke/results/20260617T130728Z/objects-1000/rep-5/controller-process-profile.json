@@ -1,0 +1,8 @@
+{
+  "cpuSecondsDelta": 0.0,
+  "durationSeconds": 3.252,
+  "endCpuSeconds": 5.97,
+  "peakPidCount": 1,
+  "peakRssMiB": 28.066,
+  "startCpuSeconds": 5.97
+}

@@ -1,0 +1,1424 @@
+{
+  "apiVersion": "upgrade.guardian.io/v1alpha1",
+  "kind": "UpgradeAssessment",
+  "metadata": {
+    "annotations": {
+      "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"upgrade.guardian.io/v1alpha1\",\"kind\":\"UpgradeAssessment\",\"metadata\":{\"annotations\":{},\"name\":\"r02-scale-assessment\",\"namespace\":\"r02-scale-system\"},\"spec\":{\"checks\":{\"admissionWebhooks\":false,\"capacity\":false,\"deprecatedApis\":false,\"observability\":false,\"pdb\":true,\"policyRisks\":false,\"readinessProbes\":false,\"workloadAvailability\":false},\"mode\":\"ReadOnly\",\"scope\":{\"namespaces\":{\"exclude\":[\"kube-system\"],\"include\":[\"r02-scale-100-r5\"]}},\"targetVersion\":\"1.32\"}}\n"
+    },
+    "creationTimestamp": "2026-06-17T13:09:51Z",
+    "generation": 1,
+    "name": "r02-scale-assessment",
+    "namespace": "r02-scale-system",
+    "resourceVersion": "4707",
+    "uid": "57cc05ce-36b7-4810-85e3-0bc0a7778bc7"
+  },
+  "spec": {
+    "checks": {
+      "admissionWebhooks": false,
+      "capacity": false,
+      "deprecatedApis": false,
+      "observability": false,
+      "pdb": true,
+      "policyRisks": false,
+      "readinessProbes": false,
+      "workloadAvailability": false
+    },
+    "mode": "ReadOnly",
+    "scope": {
+      "namespaces": {
+        "exclude": [
+          "kube-system"
+        ],
+        "include": [
+          "r02-scale-100-r5"
+        ]
+      }
+    },
+    "targetVersion": "1.32"
+  },
+  "status": {
+    "conditions": [
+      {
+        "lastTransitionTime": "2026-06-17T13:09:53Z",
+        "message": "Assessment is not running.",
+        "observedGeneration": 1,
+        "reason": "Completed",
+        "status": "False",
+        "type": "AssessmentRunning"
+      },
+      {
+        "lastTransitionTime": "2026-06-17T13:09:51Z",
+        "message": "Assessment completed successfully.",
+        "observedGeneration": 1,
+        "reason": "Completed",
+        "status": "True",
+        "type": "AssessmentCompleted"
+      }
+    ],
+    "findings": [
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00000_SCALE_APP_00000",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00000",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00000"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00000_DEPLOYMENT_SCALE_APP_00000_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00000 may block disruption for Deployment r02-scale-100-r5/scale-app-00000.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00000",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00001_SCALE_APP_00001",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00001",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00001"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00001_DEPLOYMENT_SCALE_APP_00001_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00001 may block disruption for Deployment r02-scale-100-r5/scale-app-00001.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00001",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00002_SCALE_APP_00002",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00002",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00002"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00002_DEPLOYMENT_SCALE_APP_00002_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00002 may block disruption for Deployment r02-scale-100-r5/scale-app-00002.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00002",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00003_SCALE_APP_00003",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00003",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00003"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00003_DEPLOYMENT_SCALE_APP_00003_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00003 may block disruption for Deployment r02-scale-100-r5/scale-app-00003.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00003",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00004_SCALE_APP_00004",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00004",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00004"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00004_DEPLOYMENT_SCALE_APP_00004_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00004 may block disruption for Deployment r02-scale-100-r5/scale-app-00004.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00004",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00005_SCALE_APP_00005",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00005",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00005"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00005_DEPLOYMENT_SCALE_APP_00005_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00005 may block disruption for Deployment r02-scale-100-r5/scale-app-00005.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00005",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00006_SCALE_APP_00006",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00006",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00006"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00006_DEPLOYMENT_SCALE_APP_00006_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00006 may block disruption for Deployment r02-scale-100-r5/scale-app-00006.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00006",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00007_SCALE_APP_00007",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00007",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00007"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00007_DEPLOYMENT_SCALE_APP_00007_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00007 may block disruption for Deployment r02-scale-100-r5/scale-app-00007.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00007",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00008_SCALE_APP_00008",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00008",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00008"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00008_DEPLOYMENT_SCALE_APP_00008_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00008 may block disruption for Deployment r02-scale-100-r5/scale-app-00008.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00008",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00009_SCALE_APP_00009",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00009",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00009"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00009_DEPLOYMENT_SCALE_APP_00009_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00009 may block disruption for Deployment r02-scale-100-r5/scale-app-00009.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00009",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00010_SCALE_APP_00010",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00010",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00010"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00010_DEPLOYMENT_SCALE_APP_00010_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00010 may block disruption for Deployment r02-scale-100-r5/scale-app-00010.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00010",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00011_SCALE_APP_00011",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00011",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00011"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00011_DEPLOYMENT_SCALE_APP_00011_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00011 may block disruption for Deployment r02-scale-100-r5/scale-app-00011.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00011",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00012_SCALE_APP_00012",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00012",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00012"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00012_DEPLOYMENT_SCALE_APP_00012_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00012 may block disruption for Deployment r02-scale-100-r5/scale-app-00012.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00012",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00013_SCALE_APP_00013",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00013",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00013"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00013_DEPLOYMENT_SCALE_APP_00013_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00013 may block disruption for Deployment r02-scale-100-r5/scale-app-00013.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00013",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00014_SCALE_APP_00014",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00014",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00014"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00014_DEPLOYMENT_SCALE_APP_00014_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00014 may block disruption for Deployment r02-scale-100-r5/scale-app-00014.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00014",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00015_SCALE_APP_00015",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00015",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00015"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00015_DEPLOYMENT_SCALE_APP_00015_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00015 may block disruption for Deployment r02-scale-100-r5/scale-app-00015.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00015",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00016_SCALE_APP_00016",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00016",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00016"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00016_DEPLOYMENT_SCALE_APP_00016_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00016 may block disruption for Deployment r02-scale-100-r5/scale-app-00016.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00016",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00017_SCALE_APP_00017",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00017",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00017"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00017_DEPLOYMENT_SCALE_APP_00017_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00017 may block disruption for Deployment r02-scale-100-r5/scale-app-00017.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00017",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00018_SCALE_APP_00018",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00018",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00018"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00018_DEPLOYMENT_SCALE_APP_00018_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00018 may block disruption for Deployment r02-scale-100-r5/scale-app-00018.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00018",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00019_SCALE_APP_00019",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00019",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00019"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00019_DEPLOYMENT_SCALE_APP_00019_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00019 may block disruption for Deployment r02-scale-100-r5/scale-app-00019.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00019",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00020_SCALE_APP_00020",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00020",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00020"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00020_DEPLOYMENT_SCALE_APP_00020_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00020 may block disruption for Deployment r02-scale-100-r5/scale-app-00020.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00020",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00021_SCALE_APP_00021",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00021",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00021"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00021_DEPLOYMENT_SCALE_APP_00021_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00021 may block disruption for Deployment r02-scale-100-r5/scale-app-00021.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00021",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00022_SCALE_APP_00022",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00022",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00022"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00022_DEPLOYMENT_SCALE_APP_00022_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00022 may block disruption for Deployment r02-scale-100-r5/scale-app-00022.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00022",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00023_SCALE_APP_00023",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00023",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00023"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00023_DEPLOYMENT_SCALE_APP_00023_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00023 may block disruption for Deployment r02-scale-100-r5/scale-app-00023.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00023",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00024_SCALE_APP_00024",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00024",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00024"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00024_DEPLOYMENT_SCALE_APP_00024_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00024 may block disruption for Deployment r02-scale-100-r5/scale-app-00024.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00024",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00025_SCALE_APP_00025",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00025",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00025"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00025_DEPLOYMENT_SCALE_APP_00025_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00025 may block disruption for Deployment r02-scale-100-r5/scale-app-00025.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00025",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00026_SCALE_APP_00026",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00026",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00026"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00026_DEPLOYMENT_SCALE_APP_00026_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00026 may block disruption for Deployment r02-scale-100-r5/scale-app-00026.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00026",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00027_SCALE_APP_00027",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00027",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00027"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00027_DEPLOYMENT_SCALE_APP_00027_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00027 may block disruption for Deployment r02-scale-100-r5/scale-app-00027.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00027",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00028_SCALE_APP_00028",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00028",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00028"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00028_DEPLOYMENT_SCALE_APP_00028_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00028 may block disruption for Deployment r02-scale-100-r5/scale-app-00028.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00028",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00029_SCALE_APP_00029",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00029",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00029"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00029_DEPLOYMENT_SCALE_APP_00029_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00029 may block disruption for Deployment r02-scale-100-r5/scale-app-00029.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00029",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00030_SCALE_APP_00030",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00030",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00030"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00030_DEPLOYMENT_SCALE_APP_00030_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00030 may block disruption for Deployment r02-scale-100-r5/scale-app-00030.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00030",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00031_SCALE_APP_00031",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00031",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00031"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00031_DEPLOYMENT_SCALE_APP_00031_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00031 may block disruption for Deployment r02-scale-100-r5/scale-app-00031.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00031",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00032_SCALE_APP_00032",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00032",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00032"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00032_DEPLOYMENT_SCALE_APP_00032_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00032 may block disruption for Deployment r02-scale-100-r5/scale-app-00032.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00032",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00033_SCALE_APP_00033",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00033",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00033"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00033_DEPLOYMENT_SCALE_APP_00033_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00033 may block disruption for Deployment r02-scale-100-r5/scale-app-00033.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00033",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00034_SCALE_APP_00034",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00034",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00034"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00034_DEPLOYMENT_SCALE_APP_00034_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00034 may block disruption for Deployment r02-scale-100-r5/scale-app-00034.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00034",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00035_SCALE_APP_00035",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00035",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00035"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00035_DEPLOYMENT_SCALE_APP_00035_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00035 may block disruption for Deployment r02-scale-100-r5/scale-app-00035.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00035",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00036_SCALE_APP_00036",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00036",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00036"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00036_DEPLOYMENT_SCALE_APP_00036_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00036 may block disruption for Deployment r02-scale-100-r5/scale-app-00036.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00036",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00037_SCALE_APP_00037",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00037",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00037"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00037_DEPLOYMENT_SCALE_APP_00037_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00037 may block disruption for Deployment r02-scale-100-r5/scale-app-00037.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00037",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00038_SCALE_APP_00038",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00038",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00038"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00038_DEPLOYMENT_SCALE_APP_00038_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00038 may block disruption for Deployment r02-scale-100-r5/scale-app-00038.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00038",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00039_SCALE_APP_00039",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00039",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00039"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00039_DEPLOYMENT_SCALE_APP_00039_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00039 may block disruption for Deployment r02-scale-100-r5/scale-app-00039.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00039",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00040_SCALE_APP_00040",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00040",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00040"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00040_DEPLOYMENT_SCALE_APP_00040_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00040 may block disruption for Deployment r02-scale-100-r5/scale-app-00040.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00040",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00041_SCALE_APP_00041",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00041",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00041"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00041_DEPLOYMENT_SCALE_APP_00041_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00041 may block disruption for Deployment r02-scale-100-r5/scale-app-00041.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00041",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00042_SCALE_APP_00042",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00042",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00042"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00042_DEPLOYMENT_SCALE_APP_00042_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00042 may block disruption for Deployment r02-scale-100-r5/scale-app-00042.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00042",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00043_SCALE_APP_00043",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00043",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00043"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00043_DEPLOYMENT_SCALE_APP_00043_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00043 may block disruption for Deployment r02-scale-100-r5/scale-app-00043.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00043",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00044_SCALE_APP_00044",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00044",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00044"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00044_DEPLOYMENT_SCALE_APP_00044_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00044 may block disruption for Deployment r02-scale-100-r5/scale-app-00044.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00044",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00045_SCALE_APP_00045",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00045",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00045"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00045_DEPLOYMENT_SCALE_APP_00045_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00045 may block disruption for Deployment r02-scale-100-r5/scale-app-00045.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00045",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00046_SCALE_APP_00046",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00046",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00046"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00046_DEPLOYMENT_SCALE_APP_00046_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00046 may block disruption for Deployment r02-scale-100-r5/scale-app-00046.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00046",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00047_SCALE_APP_00047",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00047",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00047"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00047_DEPLOYMENT_SCALE_APP_00047_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00047 may block disruption for Deployment r02-scale-100-r5/scale-app-00047.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00047",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00048_SCALE_APP_00048",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00048",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00048"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00048_DEPLOYMENT_SCALE_APP_00048_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00048 may block disruption for Deployment r02-scale-100-r5/scale-app-00048.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00048",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      },
+      {
+        "category": "PDB",
+        "evidence": [
+          {
+            "description": "PDB and workload replica relationship.",
+            "id": "PDB_BLOCKING_RISK_EVIDENCE_R02_SCALE_100_R5_SCALE_APP_00049_SCALE_APP_00049",
+            "observed": {
+              "maxUnavailable": "0",
+              "replicas": "0",
+              "selector": "app=scale-app-00049",
+              "workloadKind": "Deployment",
+              "workloadName": "scale-app-00049"
+            }
+          }
+        ],
+        "id": "PDB_BLOCKING_RISK_R02_SCALE_100_R5_SCALE_APP_00049_DEPLOYMENT_SCALE_APP_00049_MAXUNAVAILABLE",
+        "message": "PDB r02-scale-100-r5/scale-app-00049 may block disruption for Deployment r02-scale-100-r5/scale-app-00049.",
+        "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "scale-app-00049",
+          "namespace": "r02-scale-100-r5"
+        },
+        "severity": "High",
+        "type": "PDB_BLOCKING_RISK"
+      }
+    ],
+    "generatedPlanRef": {
+      "name": "r02-scale-assessment-plan"
+    },
+    "phase": "Completed",
+    "riskLevel": "Critical",
+    "score": 500,
+    "summary": {
+      "critical": 0,
+      "high": 50,
+      "low": 0,
+      "medium": 0,
+      "totalFindings": 50
+    }
+  }
+}

@@ -1,0 +1,23 @@
+apiVersion: upgrade.guardian.io/v1alpha1
+kind: UpgradeAssessment
+metadata:
+  name: r02-scale-assessment
+  namespace: r02-scale-system
+spec:
+  targetVersion: "1.32"
+  mode: ReadOnly
+  scope:
+    namespaces:
+      include:
+        - r02-scale-100-r5
+      exclude:
+        - kube-system
+  checks:
+    deprecatedApis: false
+    workloadAvailability: false
+    pdb: true
+    readinessProbes: false
+    admissionWebhooks: false
+    policyRisks: false
+    capacity: false
+    observability: false

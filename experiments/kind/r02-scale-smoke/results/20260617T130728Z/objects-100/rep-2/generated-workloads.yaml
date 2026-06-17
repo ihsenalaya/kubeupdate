@@ -1,0 +1,1559 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r02-scale-100-r2
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r02-scale-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00000
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00000
+  template:
+    metadata:
+      labels:
+        app: scale-app-00000
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00000
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00001
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00001
+  template:
+    metadata:
+      labels:
+        app: scale-app-00001
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00001
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00002
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00002
+  template:
+    metadata:
+      labels:
+        app: scale-app-00002
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00002
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00003
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00003
+  template:
+    metadata:
+      labels:
+        app: scale-app-00003
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00003
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00003
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00004
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00004
+  template:
+    metadata:
+      labels:
+        app: scale-app-00004
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00004
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00004
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00005
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00005
+  template:
+    metadata:
+      labels:
+        app: scale-app-00005
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00005
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00005
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00006
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00006
+  template:
+    metadata:
+      labels:
+        app: scale-app-00006
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00006
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00006
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00007
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00007
+  template:
+    metadata:
+      labels:
+        app: scale-app-00007
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00007
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00007
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00008
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00008
+  template:
+    metadata:
+      labels:
+        app: scale-app-00008
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00008
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00008
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00009
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00009
+  template:
+    metadata:
+      labels:
+        app: scale-app-00009
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00009
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00009
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00010
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00010
+  template:
+    metadata:
+      labels:
+        app: scale-app-00010
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00010
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00010
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00011
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00011
+  template:
+    metadata:
+      labels:
+        app: scale-app-00011
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00011
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00011
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00012
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00012
+  template:
+    metadata:
+      labels:
+        app: scale-app-00012
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00012
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00012
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00013
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00013
+  template:
+    metadata:
+      labels:
+        app: scale-app-00013
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00013
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00013
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00014
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00014
+  template:
+    metadata:
+      labels:
+        app: scale-app-00014
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00014
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00014
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00015
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00015
+  template:
+    metadata:
+      labels:
+        app: scale-app-00015
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00015
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00015
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00016
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00016
+  template:
+    metadata:
+      labels:
+        app: scale-app-00016
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00016
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00016
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00017
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00017
+  template:
+    metadata:
+      labels:
+        app: scale-app-00017
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00017
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00017
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00018
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00018
+  template:
+    metadata:
+      labels:
+        app: scale-app-00018
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00018
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00018
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00019
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00019
+  template:
+    metadata:
+      labels:
+        app: scale-app-00019
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00019
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00019
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00020
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00020
+  template:
+    metadata:
+      labels:
+        app: scale-app-00020
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00020
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00020
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00021
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00021
+  template:
+    metadata:
+      labels:
+        app: scale-app-00021
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00021
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00021
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00022
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00022
+  template:
+    metadata:
+      labels:
+        app: scale-app-00022
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00022
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00022
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00023
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00023
+  template:
+    metadata:
+      labels:
+        app: scale-app-00023
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00023
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00023
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00024
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00024
+  template:
+    metadata:
+      labels:
+        app: scale-app-00024
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00024
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00024
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00025
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00025
+  template:
+    metadata:
+      labels:
+        app: scale-app-00025
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00025
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00025
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00026
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00026
+  template:
+    metadata:
+      labels:
+        app: scale-app-00026
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00026
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00026
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00027
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00027
+  template:
+    metadata:
+      labels:
+        app: scale-app-00027
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00027
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00027
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00028
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00028
+  template:
+    metadata:
+      labels:
+        app: scale-app-00028
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00028
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00028
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00029
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00029
+  template:
+    metadata:
+      labels:
+        app: scale-app-00029
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00029
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00029
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00030
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00030
+  template:
+    metadata:
+      labels:
+        app: scale-app-00030
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00030
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00030
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00031
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00031
+  template:
+    metadata:
+      labels:
+        app: scale-app-00031
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00031
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00031
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00032
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00032
+  template:
+    metadata:
+      labels:
+        app: scale-app-00032
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00032
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00032
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00033
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00033
+  template:
+    metadata:
+      labels:
+        app: scale-app-00033
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00033
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00033
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00034
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00034
+  template:
+    metadata:
+      labels:
+        app: scale-app-00034
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00034
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00034
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00035
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00035
+  template:
+    metadata:
+      labels:
+        app: scale-app-00035
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00035
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00035
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00036
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00036
+  template:
+    metadata:
+      labels:
+        app: scale-app-00036
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00036
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00036
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00037
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00037
+  template:
+    metadata:
+      labels:
+        app: scale-app-00037
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00037
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00037
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00038
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00038
+  template:
+    metadata:
+      labels:
+        app: scale-app-00038
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00038
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00038
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00039
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00039
+  template:
+    metadata:
+      labels:
+        app: scale-app-00039
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00039
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00039
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00040
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00040
+  template:
+    metadata:
+      labels:
+        app: scale-app-00040
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00040
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00040
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00041
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00041
+  template:
+    metadata:
+      labels:
+        app: scale-app-00041
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00041
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00041
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00042
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00042
+  template:
+    metadata:
+      labels:
+        app: scale-app-00042
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00042
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00042
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00043
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00043
+  template:
+    metadata:
+      labels:
+        app: scale-app-00043
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00043
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00043
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00044
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00044
+  template:
+    metadata:
+      labels:
+        app: scale-app-00044
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00044
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00044
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00045
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00045
+  template:
+    metadata:
+      labels:
+        app: scale-app-00045
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00045
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00045
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00046
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00046
+  template:
+    metadata:
+      labels:
+        app: scale-app-00046
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00046
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00046
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00047
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00047
+  template:
+    metadata:
+      labels:
+        app: scale-app-00047
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00047
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00047
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00048
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00048
+  template:
+    metadata:
+      labels:
+        app: scale-app-00048
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00048
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00048
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app-00049
+  namespace: r02-scale-100-r2
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: scale-app-00049
+  template:
+    metadata:
+      labels:
+        app: scale-app-00049
+    spec:
+      containers:
+        -
+          name: app
+          image: "registry.k8s.io/pause:3.9"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scale-app-00049
+  namespace: r02-scale-100-r2
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scale-app-00049
