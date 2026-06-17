@@ -1,0 +1,78 @@
+{
+  "aks": {
+    "agentPoolProfiles": [
+      {
+        "count": 1,
+        "mode": "System",
+        "name": "nodepool1",
+        "osSKU": null,
+        "powerState": "Running",
+        "vmSize": "Standard_B2s"
+      }
+    ],
+    "currentKubernetesVersion": "1.34.8",
+    "kubernetesVersion": "1.34.8",
+    "location": "westeurope",
+    "name": "aks-kug-validation-we",
+    "networkProfile": {
+      "advancedNetworking": null,
+      "dnsServiceIp": "10.0.0.10",
+      "ipFamilies": [
+        "IPv4"
+      ],
+      "kubeProxyConfig": null,
+      "loadBalancerProfile": {
+        "allocatedOutboundPorts": null,
+        "backendPoolType": "nodeIPConfiguration",
+        "clusterServiceLoadBalancerHealthProbeMode": null,
+        "effectiveOutboundIPs": [
+          {
+            "id": "/subscriptions/<subscription-id>/resourceGroups/MC_rg-kug-aks-validation-we_aks-kug-validation-we_westeurope/providers/Microsoft.Network/publicIPAddresses/52649d92-cf4e-4d0b-9044-d01cc88188a8",
+            "resourceGroup": "MC_rg-kug-aks-validation-we_aks-kug-validation-we_westeurope"
+          }
+        ],
+        "enableMultipleStandardLoadBalancers": null,
+        "idleTimeoutInMinutes": null,
+        "managedOutboundIPs": {
+          "count": 1,
+          "countIpv6": null
+        },
+        "outboundIPs": null,
+        "outboundIpPrefixes": null
+      },
+      "loadBalancerSku": "standard",
+      "natGatewayProfile": null,
+      "networkDataplane": "azure",
+      "networkMode": null,
+      "networkPlugin": "azure",
+      "networkPluginMode": "overlay",
+      "networkPolicy": "none",
+      "outboundType": "loadBalancer",
+      "podCidr": "10.244.0.0/16",
+      "podCidrs": [
+        "10.244.0.0/16"
+      ],
+      "podLinkLocalAccess": "IMDS",
+      "serviceCidr": "10.0.0.0/16",
+      "serviceCidrs": [
+        "10.0.0.0/16"
+      ],
+      "staticEgressGatewayProfile": null
+    },
+    "nodeResourceGroup": "MC_rg-kug-aks-validation-we_aks-kug-validation-we_westeurope",
+    "provisioningState": "Succeeded",
+    "resourceGroup": "rg-kug-aks-validation-we"
+  },
+  "azVersion": "{\n  \"azure-cli\": \"2.84.0\",\n  \"azure-cli-core\": \"2.84.0\",\n  \"azure-cli-telemetry\": \"1.1.0\",\n  \"extensions\": {\n    \"aks-preview\": \"19.0.0b22\",\n    \"bastion\": \"1.4.3\",\n    \"containerapp\": \"1.3.0b3\",\n    \"desktopvirtualization\": \"1.0.0\",\n    \"ml\": \"2.43.0\",\n    \"quota\": \"1.0.0\"\n  }\n}",
+  "context": "aks-kug-validation-we-admin",
+  "expectedFindings": 21,
+  "goVersion": "go version go1.25.8 linux/amd64",
+  "kubectlVersion": "{\n  \"clientVersion\": {\n    \"major\": \"1\",\n    \"minor\": \"34\",\n    \"gitVersion\": \"v1.34.1\",\n    \"gitCommit\": \"93248f9ae092f571eb870b7664c534bfc7d00f03\",\n    \"gitTreeState\": \"clean\",\n    \"buildDate\": \"2025-09-09T19:44:50Z\",\n    \"goVersion\": \"go1.24.6\",\n    \"compiler\": \"gc\",\n    \"platform\": \"linux/amd64\"\n  },\n  \"kustomizeVersion\": \"v5.7.1\",\n  \"serverVersion\": {\n    \"major\": \"1\",\n    \"minor\": \"34\",\n    \"emulationMajor\": \"1\",\n    \"emulationMinor\": \"34\",\n    \"minCompatibilityMajor\": \"1\",\n    \"minCompatibilityMinor\": \"33\",\n    \"gitVersion\": \"v1.34.8\",\n    \"gitCommit\": \"1f328c5e9dd683d0c5e69f3d7d58f8371278dec2\",\n    \"gitTreeState\": \"clean\",\n    \"buildDate\": \"2026-05-28T13:18:51Z\",\n    \"goVersion\": \"go1.26.3\",\n    \"compiler\": \"gc\",\n    \"platform\": \"linux/amd64\"\n  }\n}",
+  "kugFindings": 29,
+  "kugNegativeControlObservations": 0,
+  "kugProviderObservations": 8,
+  "kugScenarioFindings": 21,
+  "negativeControls": 5,
+  "runId": "20260617T101556Z",
+  "targetVersion": "1.35"
+}

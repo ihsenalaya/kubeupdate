@@ -1,0 +1,97 @@
+{
+  "global": {
+    "mutatingwebhookconfiguration": 1,
+    "nodes": 1,
+    "validatingwebhookconfiguration": 2
+  },
+  "namespaces": {
+    "aksv-admission": {
+      "daemonset": 0,
+      "deploy": 0,
+      "hpa": 0,
+      "pdb": 0,
+      "pod": 0,
+      "statefulset": 0
+    },
+    "aksv-low-replicas": {
+      "daemonset": 0,
+      "deploy": 1,
+      "hpa": 0,
+      "pdb": 0,
+      "pod": 1,
+      "statefulset": 0
+    },
+    "aksv-modern-api": {
+      "daemonset": 0,
+      "deploy": 1,
+      "hpa": 1,
+      "pdb": 1,
+      "pod": 2,
+      "statefulset": 0
+    },
+    "aksv-pdb": {
+      "daemonset": 0,
+      "deploy": 3,
+      "hpa": 0,
+      "pdb": 4,
+      "pod": 7,
+      "statefulset": 1
+    },
+    "aksv-policy": {
+      "daemonset": 0,
+      "deploy": 3,
+      "hpa": 0,
+      "pdb": 3,
+      "pod": 6,
+      "statefulset": 0
+    },
+    "aksv-policy-warn-audit": {
+      "daemonset": 0,
+      "deploy": 1,
+      "hpa": 0,
+      "pdb": 1,
+      "pod": 2,
+      "statefulset": 0
+    },
+    "aksv-readiness": {
+      "daemonset": 1,
+      "deploy": 2,
+      "hpa": 0,
+      "pdb": 2,
+      "pod": 5,
+      "statefulset": 0
+    },
+    "aksv-safe": {
+      "daemonset": 0,
+      "deploy": 1,
+      "hpa": 0,
+      "pdb": 1,
+      "pod": 3,
+      "statefulset": 0
+    },
+    "aksv-stateful-single": {
+      "daemonset": 0,
+      "deploy": 0,
+      "hpa": 0,
+      "pdb": 0,
+      "pod": 1,
+      "statefulset": 1
+    },
+    "aksv-system": {
+      "daemonset": 0,
+      "deploy": 0,
+      "hpa": 0,
+      "pdb": 0,
+      "pod": 0,
+      "statefulset": 0
+    }
+  },
+  "totals": {
+    "daemonset": 1,
+    "deploy": 12,
+    "hpa": 1,
+    "pdb": 12,
+    "pod": 27,
+    "statefulset": 2
+  }
+}

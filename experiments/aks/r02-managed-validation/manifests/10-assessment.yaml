@@ -1,0 +1,31 @@
+apiVersion: upgrade.guardian.io/v1alpha1
+kind: UpgradeAssessment
+metadata:
+  name: r02-aks-assessment
+  namespace: aksv-system
+spec:
+  targetVersion: "1.35"
+  mode: ReadOnly
+  scope:
+    namespaces:
+      include:
+        - aksv-low-replicas
+        - aksv-readiness
+        - aksv-stateful-single
+        - aksv-pdb
+        - aksv-policy
+        - aksv-policy-warn-audit
+        - aksv-admission
+        - aksv-modern-api
+        - aksv-safe
+      exclude:
+        - kube-system
+  checks:
+    deprecatedApis: true
+    workloadAvailability: true
+    pdb: true
+    readinessProbes: true
+    admissionWebhooks: true
+    policyRisks: true
+    capacity: false
+    observability: false

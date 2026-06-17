@@ -24,3 +24,4 @@ secrets/
 gitops/
 __pycache__/
 *.pyc
+experiments/aks/**/apiserver-metrics-*.txt

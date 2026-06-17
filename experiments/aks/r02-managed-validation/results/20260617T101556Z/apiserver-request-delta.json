@@ -1,0 +1,47 @@
+{
+  "available": true,
+  "deltas": [
+    {
+      "delta": 1.0,
+      "series": "verb=get|resource=daemonsets|subresource=|code=200"
+    },
+    {
+      "delta": 2.0,
+      "series": "verb=get|resource=deployments|subresource=scale|code=200"
+    },
+    {
+      "delta": 1.0,
+      "series": "verb=get|resource=namespaces|subresource=|code=200"
+    },
+    {
+      "delta": 1.0,
+      "series": "verb=list|resource=daemonsets|subresource=|code=200"
+    },
+    {
+      "delta": 1.0,
+      "series": "verb=list|resource=mutatingwebhookconfigurations|subresource=|code=200"
+    },
+    {
+      "delta": 1.0,
+      "series": "verb=list|resource=namespaces|subresource=|code=200"
+    },
+    {
+      "delta": 1.0,
+      "series": "verb=list|resource=pods|subresource=|code=200"
+    },
+    {
+      "delta": 1.0,
+      "series": "verb=list|resource=services|subresource=|code=200"
+    },
+    {
+      "delta": 1.0,
+      "series": "verb=list|resource=validatingwebhookconfigurations|subresource=|code=200"
+    },
+    {
+      "delta": 1.0,
+      "series": "verb=watch|resource=nodes|subresource=|code=200"
+    }
+  ],
+  "note": "Cluster-level API-server request counter delta during the assessment window; includes controller requests and harness polling.",
+  "totalDelta": 11.0
+}

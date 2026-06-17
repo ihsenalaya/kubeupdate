@@ -1,0 +1,678 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aksv-system
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aksv-low-replicas
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aksv-readiness
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aksv-stateful-single
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aksv-pdb
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aksv-policy
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aksv-policy-warn-audit
+  labels:
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aksv-admission
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aksv-modern-api
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aksv-safe
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-api
+  namespace: aksv-low-replicas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-api
+  template:
+    metadata:
+      labels:
+        app: payment-api
+    spec:
+      containers:
+        - name: app
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checkout-api
+  namespace: aksv-readiness
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: checkout-api
+  template:
+    metadata:
+      labels:
+        app: checkout-api
+    spec:
+      containers:
+        - name: app
+          image: registry.k8s.io/pause:3.9
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: checkout-api
+  namespace: aksv-readiness
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: checkout-api
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ledger-db
+  namespace: aksv-stateful-single
+spec:
+  serviceName: ledger-db
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ledger-db
+  template:
+    metadata:
+      labels:
+        app: ledger-db
+    spec:
+      containers:
+        - name: db
+          image: registry.k8s.io/pause:3.9
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-agent
+  namespace: aksv-readiness
+spec:
+  selector:
+    matchLabels:
+      app: node-agent
+  template:
+    metadata:
+      labels:
+        app: node-agent
+    spec:
+      containers:
+        - name: agent
+          image: registry.k8s.io/pause:3.9
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-api
+  namespace: aksv-readiness
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: multi-api
+  template:
+    metadata:
+      labels:
+        app: multi-api
+    spec:
+      containers:
+        - name: app
+          image: registry.k8s.io/pause:3.9
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+        - name: sidecar
+          image: registry.k8s.io/pause:3.9
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: multi-api
+  namespace: aksv-readiness
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: multi-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-api
+  namespace: aksv-pdb
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: orders-api
+  template:
+    metadata:
+      labels:
+        app: orders-api
+    spec:
+      containers:
+        - name: app
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: orders-api
+  namespace: aksv-pdb
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: orders-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: billing-api
+  namespace: aksv-pdb
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: billing-api
+  template:
+    metadata:
+      labels:
+        app: billing-api
+    spec:
+      containers:
+        - name: app
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: billing-api
+  namespace: aksv-pdb
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: billing-api
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: stale-pdb
+  namespace: aksv-pdb
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: does-not-exist
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-api
+  namespace: aksv-pdb
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: search-api
+  template:
+    metadata:
+      labels:
+        app: search-api
+    spec:
+      containers:
+        - name: app
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: accounts-db
+  namespace: aksv-pdb
+spec:
+  serviceName: accounts-db
+  replicas: 2
+  selector:
+    matchLabels:
+      app: accounts-db
+  template:
+    metadata:
+      labels:
+        app: accounts-db
+    spec:
+      containers:
+        - name: db
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: accounts-db
+  namespace: aksv-pdb
+spec:
+  minAvailable: 100%
+  selector:
+    matchLabels:
+      app: accounts-db
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: legacy-worker
+  namespace: aksv-policy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: legacy-worker
+  template:
+    metadata:
+      labels:
+        app: legacy-worker
+    spec:
+      containers:
+        - name: app
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            privileged: true
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: legacy-worker
+  namespace: aksv-policy
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: legacy-worker
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unsafe-api
+  namespace: aksv-policy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: unsafe-api
+  template:
+    metadata:
+      labels:
+        app: unsafe-api
+    spec:
+      containers:
+        - name: app
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: unsafe-api
+  namespace: aksv-policy
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: unsafe-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hostpath-worker
+  namespace: aksv-policy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hostpath-worker
+  template:
+    metadata:
+      labels:
+        app: hostpath-worker
+    spec:
+      volumes:
+        - name: host-data
+          hostPath:
+            path: /tmp
+      containers:
+        - name: app
+          image: registry.k8s.io/pause:3.9
+          volumeMounts:
+            - name: host-data
+              mountPath: /host
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: true
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: hostpath-worker
+  namespace: aksv-policy
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: hostpath-worker
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: warn-only-worker
+  namespace: aksv-policy-warn-audit
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: warn-only-worker
+  template:
+    metadata:
+      labels:
+        app: warn-only-worker
+    spec:
+      containers:
+        - name: app
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: warn-only-worker
+  namespace: aksv-policy-warn-audit
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: warn-only-worker
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: available-webhook
+  namespace: aksv-admission
+spec:
+  ports:
+    - name: https
+      port: 443
+      targetPort: 9443
+  selector:
+    app: available-webhook
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: r02-risky-webhook
+webhooks:
+  - name: policy.example.com
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+    failurePolicy: Fail
+    clientConfig:
+      service:
+        namespace: aksv-admission
+        name: missing-webhook
+        path: /validate
+    rules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["UPDATE"]
+        resources: ["configmaps"]
+        scope: Namespaced
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: r02-mutating-fail-webhook
+webhooks:
+  - name: mutate.example.com
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+    failurePolicy: Fail
+    namespaceSelector:
+      matchLabels:
+        webhook-scope: selected
+    clientConfig:
+      service:
+        namespace: aksv-admission
+        name: available-webhook
+        path: /mutate
+    rules:
+      - apiGroups: ["apps"]
+        apiVersions: ["v1"]
+        operations: ["CREATE"]
+        resources: ["deployments"]
+        scope: Namespaced
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: r02-safe-webhook
+webhooks:
+  - name: safe.example.com
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+    failurePolicy: Ignore
+    namespaceSelector:
+      matchLabels:
+        webhook-scope: selected
+    objectSelector:
+      matchLabels:
+        app: profile-api
+    clientConfig:
+      service:
+        namespace: aksv-admission
+        name: available-webhook
+        path: /validate
+    rules:
+      - apiGroups: ["apps"]
+        apiVersions: ["v1"]
+        operations: ["UPDATE"]
+        resources: ["deployments"]
+        scope: Namespaced
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: modern-hpa-target
+  namespace: aksv-modern-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: modern-hpa-target
+  template:
+    metadata:
+      labels:
+        app: modern-hpa-target
+    spec:
+      containers:
+        - name: app
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          resources:
+            requests:
+              cpu: 10m
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: modern-hpa-target
+  namespace: aksv-modern-api
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: modern-hpa-target
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: modern-hpa
+  namespace: aksv-modern-api
+spec:
+  minReplicas: 2
+  maxReplicas: 4
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: modern-hpa-target
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profile-api
+  namespace: aksv-safe
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: profile-api
+  template:
+    metadata:
+      labels:
+        app: profile-api
+    spec:
+      containers:
+        - name: app
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: profile-api
+  namespace: aksv-safe
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: profile-api

@@ -1,0 +1,738 @@
+{
+  "KubeUpgrade Guardian": [
+    {
+      "family": "AdmissionWebhook",
+      "message": "MutatingWebhookConfiguration aks-node-mutating-webhook webhook aks-node-mutating-webhook.azmk8s.io has risk: failurePolicy=Fail.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "aks-node-mutating-webhook"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "MutatingWebhookConfiguration aks-node-mutating-webhook webhook aks-node-mutating-webhook.azmk8s.io has risk: namespaceSelector is absent.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "aks-node-mutating-webhook"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "MutatingWebhookConfiguration aks-webhook-admission-controller webhook aks-webhook-admission-controller.azmk8s.io has risk: failurePolicy=Fail.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "aks-webhook-admission-controller"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "MutatingWebhookConfiguration aks-webhook-admission-controller webhook aks-webhook-admission-controller.azmk8s.io has risk: namespaceSelector is absent.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "aks-webhook-admission-controller"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "MutatingWebhookConfiguration azure-wi-webhook-mutating-webhook-configuration webhook mutation.azure-workload-identity.io has risk: failurePolicy=Fail.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "azure-wi-webhook-mutating-webhook-configuration"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "MutatingWebhookConfiguration azure-wi-webhook-mutating-webhook-configuration webhook mutation.azure-workload-identity.io has risk: namespaceSelector is absent.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "azure-wi-webhook-mutating-webhook-configuration"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "MutatingWebhookConfiguration r02-mutating-fail-webhook webhook mutate.example.com has risk: failurePolicy=Fail.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "r02-mutating-fail-webhook"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "ValidatingWebhookConfiguration aks-node-validating-webhook webhook aks-node-validating-webhook.azmk8s.io has risk: failurePolicy=Fail.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "aks-node-validating-webhook"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "ValidatingWebhookConfiguration aks-node-validating-webhook webhook aks-node-validating-webhook.azmk8s.io has risk: namespaceSelector is absent.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "aks-node-validating-webhook"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "ValidatingWebhookConfiguration r02-risky-webhook webhook policy.example.com has risk: failurePolicy=Fail.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r02-risky-webhook"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "ValidatingWebhookConfiguration r02-risky-webhook webhook policy.example.com has risk: referenced service is absent.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r02-risky-webhook"
+      },
+      "severity": "Critical",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "ReadinessProbes",
+      "message": "Container agent in DaemonSet aksv-readiness/node-agent has no readinessProbe.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "DaemonSet",
+        "name": "node-agent",
+        "namespace": "aksv-readiness"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "MISSING_READINESS_PROBE"
+    },
+    {
+      "family": "ReadinessProbes",
+      "message": "Container app in Deployment aksv-readiness/checkout-api has no readinessProbe.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "checkout-api",
+        "namespace": "aksv-readiness"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "MISSING_READINESS_PROBE"
+    },
+    {
+      "family": "ReadinessProbes",
+      "message": "Container app in Deployment aksv-readiness/multi-api has no readinessProbe.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "multi-api",
+        "namespace": "aksv-readiness"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "MISSING_READINESS_PROBE"
+    },
+    {
+      "family": "ReadinessProbes",
+      "message": "Container sidecar in Deployment aksv-readiness/multi-api has no readinessProbe.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "multi-api",
+        "namespace": "aksv-readiness"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "MISSING_READINESS_PROBE"
+    },
+    {
+      "family": "ReadinessProbes",
+      "message": "Container db in StatefulSet aksv-stateful-single/ledger-db has no readinessProbe.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "StatefulSet",
+        "name": "ledger-db",
+        "namespace": "aksv-stateful-single"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "MISSING_READINESS_PROBE"
+    },
+    {
+      "family": "PDB",
+      "message": "PDB aksv-pdb/accounts-db may block disruption for StatefulSet aksv-pdb/accounts-db.",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "name": "accounts-db",
+        "namespace": "aksv-pdb"
+      },
+      "severity": "Critical",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PDB",
+      "message": "PDB aksv-pdb/billing-api may block disruption for Deployment aksv-pdb/billing-api.",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "name": "billing-api",
+        "namespace": "aksv-pdb"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PDB",
+      "message": "Deployment aksv-pdb/search-api has no matching PodDisruptionBudget.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "search-api",
+        "namespace": "aksv-pdb"
+      },
+      "severity": "Low",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PDB",
+      "message": "PDB aksv-pdb/orders-api may block disruption for Deployment aksv-pdb/orders-api.",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "name": "orders-api",
+        "namespace": "aksv-pdb"
+      },
+      "severity": "Critical",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PDB",
+      "message": "PDB aksv-pdb/stale-pdb does not match any assessed workload.",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "name": "stale-pdb",
+        "namespace": "aksv-pdb"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Deployment aksv-policy/hostpath-worker may violate restricted policy: allowPrivilegeEscalation=true.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "hostpath-worker",
+        "namespace": "aksv-policy"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Deployment aksv-policy/hostpath-worker may violate restricted policy: hostPath volume.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "hostpath-worker",
+        "namespace": "aksv-policy"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Deployment aksv-policy/legacy-worker may violate restricted policy: privileged=true.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "legacy-worker",
+        "namespace": "aksv-policy"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Deployment aksv-policy/legacy-worker may violate restricted policy: runAsNonRoot absent.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "legacy-worker",
+        "namespace": "aksv-policy"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Deployment aksv-policy/unsafe-api may violate restricted policy: missing securityContext.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "unsafe-api",
+        "namespace": "aksv-policy"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Namespace aksv-policy enforces Pod Security restricted.",
+      "resource": {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "name": "aksv-policy"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "WorkloadAvailability",
+      "message": "Deployment aksv-low-replicas/payment-api has fewer than 2 replicas.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "payment-api",
+        "namespace": "aksv-low-replicas"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "WORKLOAD_AVAILABILITY_RISK"
+    },
+    {
+      "family": "WorkloadAvailability",
+      "message": "StatefulSet aksv-stateful-single/ledger-db has fewer than 2 replicas.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "StatefulSet",
+        "name": "ledger-db",
+        "namespace": "aksv-stateful-single"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "WORKLOAD_AVAILABILITY_RISK"
+    }
+  ],
+  "KubeUpgrade Guardian provider": [
+    {
+      "family": "AdmissionWebhook",
+      "message": "MutatingWebhookConfiguration aks-node-mutating-webhook webhook aks-node-mutating-webhook.azmk8s.io has risk: failurePolicy=Fail.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "aks-node-mutating-webhook"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "MutatingWebhookConfiguration aks-node-mutating-webhook webhook aks-node-mutating-webhook.azmk8s.io has risk: namespaceSelector is absent.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "aks-node-mutating-webhook"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "MutatingWebhookConfiguration aks-webhook-admission-controller webhook aks-webhook-admission-controller.azmk8s.io has risk: failurePolicy=Fail.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "aks-webhook-admission-controller"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "MutatingWebhookConfiguration aks-webhook-admission-controller webhook aks-webhook-admission-controller.azmk8s.io has risk: namespaceSelector is absent.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "aks-webhook-admission-controller"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "MutatingWebhookConfiguration azure-wi-webhook-mutating-webhook-configuration webhook mutation.azure-workload-identity.io has risk: failurePolicy=Fail.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "azure-wi-webhook-mutating-webhook-configuration"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "MutatingWebhookConfiguration azure-wi-webhook-mutating-webhook-configuration webhook mutation.azure-workload-identity.io has risk: namespaceSelector is absent.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "azure-wi-webhook-mutating-webhook-configuration"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "ValidatingWebhookConfiguration aks-node-validating-webhook webhook aks-node-validating-webhook.azmk8s.io has risk: failurePolicy=Fail.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "aks-node-validating-webhook"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "ValidatingWebhookConfiguration aks-node-validating-webhook webhook aks-node-validating-webhook.azmk8s.io has risk: namespaceSelector is absent.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "aks-node-validating-webhook"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    }
+  ],
+  "KubeUpgrade Guardian scenario": [
+    {
+      "family": "AdmissionWebhook",
+      "message": "MutatingWebhookConfiguration r02-mutating-fail-webhook webhook mutate.example.com has risk: failurePolicy=Fail.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "r02-mutating-fail-webhook"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "ValidatingWebhookConfiguration r02-risky-webhook webhook policy.example.com has risk: failurePolicy=Fail.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r02-risky-webhook"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
+      "message": "ValidatingWebhookConfiguration r02-risky-webhook webhook policy.example.com has risk: referenced service is absent.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r02-risky-webhook"
+      },
+      "severity": "Critical",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "ReadinessProbes",
+      "message": "Container agent in DaemonSet aksv-readiness/node-agent has no readinessProbe.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "DaemonSet",
+        "name": "node-agent",
+        "namespace": "aksv-readiness"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "MISSING_READINESS_PROBE"
+    },
+    {
+      "family": "ReadinessProbes",
+      "message": "Container app in Deployment aksv-readiness/checkout-api has no readinessProbe.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "checkout-api",
+        "namespace": "aksv-readiness"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "MISSING_READINESS_PROBE"
+    },
+    {
+      "family": "ReadinessProbes",
+      "message": "Container app in Deployment aksv-readiness/multi-api has no readinessProbe.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "multi-api",
+        "namespace": "aksv-readiness"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "MISSING_READINESS_PROBE"
+    },
+    {
+      "family": "ReadinessProbes",
+      "message": "Container sidecar in Deployment aksv-readiness/multi-api has no readinessProbe.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "multi-api",
+        "namespace": "aksv-readiness"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "MISSING_READINESS_PROBE"
+    },
+    {
+      "family": "ReadinessProbes",
+      "message": "Container db in StatefulSet aksv-stateful-single/ledger-db has no readinessProbe.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "StatefulSet",
+        "name": "ledger-db",
+        "namespace": "aksv-stateful-single"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "MISSING_READINESS_PROBE"
+    },
+    {
+      "family": "PDB",
+      "message": "PDB aksv-pdb/accounts-db may block disruption for StatefulSet aksv-pdb/accounts-db.",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "name": "accounts-db",
+        "namespace": "aksv-pdb"
+      },
+      "severity": "Critical",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PDB",
+      "message": "PDB aksv-pdb/billing-api may block disruption for Deployment aksv-pdb/billing-api.",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "name": "billing-api",
+        "namespace": "aksv-pdb"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PDB",
+      "message": "Deployment aksv-pdb/search-api has no matching PodDisruptionBudget.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "search-api",
+        "namespace": "aksv-pdb"
+      },
+      "severity": "Low",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PDB",
+      "message": "PDB aksv-pdb/orders-api may block disruption for Deployment aksv-pdb/orders-api.",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "name": "orders-api",
+        "namespace": "aksv-pdb"
+      },
+      "severity": "Critical",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PDB",
+      "message": "PDB aksv-pdb/stale-pdb does not match any assessed workload.",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "name": "stale-pdb",
+        "namespace": "aksv-pdb"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Deployment aksv-policy/hostpath-worker may violate restricted policy: allowPrivilegeEscalation=true.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "hostpath-worker",
+        "namespace": "aksv-policy"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Deployment aksv-policy/hostpath-worker may violate restricted policy: hostPath volume.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "hostpath-worker",
+        "namespace": "aksv-policy"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Deployment aksv-policy/legacy-worker may violate restricted policy: privileged=true.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "legacy-worker",
+        "namespace": "aksv-policy"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Deployment aksv-policy/legacy-worker may violate restricted policy: runAsNonRoot absent.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "legacy-worker",
+        "namespace": "aksv-policy"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Deployment aksv-policy/unsafe-api may violate restricted policy: missing securityContext.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "unsafe-api",
+        "namespace": "aksv-policy"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Namespace aksv-policy enforces Pod Security restricted.",
+      "resource": {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "name": "aksv-policy"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "WorkloadAvailability",
+      "message": "Deployment aksv-low-replicas/payment-api has fewer than 2 replicas.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "payment-api",
+        "namespace": "aksv-low-replicas"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "WORKLOAD_AVAILABILITY_RISK"
+    },
+    {
+      "family": "WorkloadAvailability",
+      "message": "StatefulSet aksv-stateful-single/ledger-db has fewer than 2 replicas.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "StatefulSet",
+        "name": "ledger-db",
+        "namespace": "aksv-stateful-single"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "WORKLOAD_AVAILABILITY_RISK"
+    }
+  ]
+}

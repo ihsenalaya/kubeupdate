@@ -1,0 +1,325 @@
+{
+  "targetVersion": "1.35",
+  "scope": "Managed AKS validation on a Kubernetes 1.34 cluster with Kubernetes-modern manifests. Deprecated API fixtures are intentionally excluded because the managed API server rejects removed API versions.",
+  "negativeControls": [
+    {
+      "id": "neg-safe-deployment",
+      "description": "Deployment with three replicas, readinessProbe, restricted-compatible security context, and matching PDB.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "aksv-safe",
+        "name": "profile-api"
+      }
+    },
+    {
+      "id": "neg-safe-webhook",
+      "description": "Webhook with failurePolicy=Ignore, existing service, namespaceSelector, and objectSelector.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r02-safe-webhook"
+      }
+    },
+    {
+      "id": "neg-policy-warn-audit-only",
+      "description": "Namespace uses Pod Security warn/audit labels without enforce; current checker should not treat it as an enforced policy blocker.",
+      "resource": {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "name": "aksv-policy-warn-audit"
+      }
+    },
+    {
+      "id": "neg-modern-hpa",
+      "description": "Modern autoscaling/v2 HPA should not be reported by the deprecated API checker.",
+      "resource": {
+        "apiVersion": "autoscaling/v2",
+        "kind": "HorizontalPodAutoscaler",
+        "namespace": "aksv-modern-api",
+        "name": "modern-hpa"
+      }
+    },
+    {
+      "id": "neg-modern-pdb",
+      "description": "Modern policy/v1 PDB should not be reported by the deprecated API checker or PDB checker when it permits one unavailable pod.",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "namespace": "aksv-modern-api",
+        "name": "modern-hpa-target"
+      }
+    }
+  ],
+  "expectedFindings": [
+    {
+      "id": "gt-workload-low-replicas",
+      "family": "WorkloadAvailability",
+      "type": "WORKLOAD_AVAILABILITY_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "aksv-low-replicas",
+        "name": "payment-api"
+      },
+      "messageContains": "fewer than 2 replicas"
+    },
+    {
+      "id": "gt-workload-stateful-single",
+      "family": "WorkloadAvailability",
+      "type": "WORKLOAD_AVAILABILITY_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "StatefulSet",
+        "namespace": "aksv-stateful-single",
+        "name": "ledger-db"
+      },
+      "messageContains": "fewer than 2 replicas"
+    },
+    {
+      "id": "gt-readiness-missing-deployment",
+      "family": "ReadinessProbes",
+      "type": "MISSING_READINESS_PROBE",
+      "severity": "Medium",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "aksv-readiness",
+        "name": "checkout-api"
+      },
+      "messageContains": "Container app"
+    },
+    {
+      "id": "gt-readiness-missing-statefulset",
+      "family": "ReadinessProbes",
+      "type": "MISSING_READINESS_PROBE",
+      "severity": "Medium",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "StatefulSet",
+        "namespace": "aksv-stateful-single",
+        "name": "ledger-db"
+      },
+      "messageContains": "Container db"
+    },
+    {
+      "id": "gt-readiness-missing-daemonset",
+      "family": "ReadinessProbes",
+      "type": "MISSING_READINESS_PROBE",
+      "severity": "Medium",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "DaemonSet",
+        "namespace": "aksv-readiness",
+        "name": "node-agent"
+      },
+      "messageContains": "Container agent"
+    },
+    {
+      "id": "gt-readiness-multi-app",
+      "family": "ReadinessProbes",
+      "type": "MISSING_READINESS_PROBE",
+      "severity": "Medium",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "aksv-readiness",
+        "name": "multi-api"
+      },
+      "messageContains": "Container app"
+    },
+    {
+      "id": "gt-readiness-multi-sidecar",
+      "family": "ReadinessProbes",
+      "type": "MISSING_READINESS_PROBE",
+      "severity": "Medium",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "aksv-readiness",
+        "name": "multi-api"
+      },
+      "messageContains": "Container sidecar"
+    },
+    {
+      "id": "gt-pdb-min-available-blocking",
+      "family": "PDB",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "Critical",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "namespace": "aksv-pdb",
+        "name": "orders-api"
+      },
+      "messageContains": "may block disruption"
+    },
+    {
+      "id": "gt-pdb-max-unavailable-zero",
+      "family": "PDB",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "namespace": "aksv-pdb",
+        "name": "billing-api"
+      },
+      "messageContains": "may block disruption"
+    },
+    {
+      "id": "gt-pdb-stale-selector",
+      "family": "PDB",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "namespace": "aksv-pdb",
+        "name": "stale-pdb"
+      },
+      "messageContains": "does not match any assessed workload"
+    },
+    {
+      "id": "gt-pdb-missing",
+      "family": "PDB",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "Low",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "aksv-pdb",
+        "name": "search-api"
+      },
+      "messageContains": "has no matching PodDisruptionBudget"
+    },
+    {
+      "id": "gt-pdb-stateful-percentage",
+      "family": "PDB",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "Critical",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "namespace": "aksv-pdb",
+        "name": "accounts-db"
+      },
+      "messageContains": "may block disruption"
+    },
+    {
+      "id": "gt-admission-fail-policy",
+      "family": "AdmissionWebhook",
+      "type": "ADMISSION_WEBHOOK_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r02-risky-webhook"
+      },
+      "messageContains": "failurePolicy=Fail"
+    },
+    {
+      "id": "gt-admission-missing-service",
+      "family": "AdmissionWebhook",
+      "type": "ADMISSION_WEBHOOK_RISK",
+      "severity": "Critical",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r02-risky-webhook"
+      },
+      "messageContains": "referenced service is absent"
+    },
+    {
+      "id": "gt-admission-mutating-fail-policy",
+      "family": "AdmissionWebhook",
+      "type": "ADMISSION_WEBHOOK_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "r02-mutating-fail-webhook"
+      },
+      "messageContains": "failurePolicy=Fail"
+    },
+    {
+      "id": "gt-policy-restricted-namespace",
+      "family": "PolicyRisk",
+      "type": "POLICY_RISK",
+      "severity": "Medium",
+      "resource": {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "name": "aksv-policy"
+      },
+      "messageContains": "enforces Pod Security restricted"
+    },
+    {
+      "id": "gt-policy-privileged",
+      "family": "PolicyRisk",
+      "type": "POLICY_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "aksv-policy",
+        "name": "legacy-worker"
+      },
+      "messageContains": "privileged=true"
+    },
+    {
+      "id": "gt-policy-run-as-non-root-absent",
+      "family": "PolicyRisk",
+      "type": "POLICY_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "aksv-policy",
+        "name": "legacy-worker"
+      },
+      "messageContains": "runAsNonRoot absent"
+    },
+    {
+      "id": "gt-policy-missing-security-context",
+      "family": "PolicyRisk",
+      "type": "POLICY_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "aksv-policy",
+        "name": "unsafe-api"
+      },
+      "messageContains": "missing securityContext"
+    },
+    {
+      "id": "gt-policy-hostpath",
+      "family": "PolicyRisk",
+      "type": "POLICY_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "aksv-policy",
+        "name": "hostpath-worker"
+      },
+      "messageContains": "hostPath volume"
+    },
+    {
+      "id": "gt-policy-allow-privilege-escalation",
+      "family": "PolicyRisk",
+      "type": "POLICY_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "aksv-policy",
+        "name": "hostpath-worker"
+      },
+      "messageContains": "allowPrivilegeEscalation=true"
+    }
+  ]
+}

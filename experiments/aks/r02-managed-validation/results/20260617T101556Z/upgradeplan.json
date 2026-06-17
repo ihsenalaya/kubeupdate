@@ -1,0 +1,484 @@
+{
+  "apiVersion": "upgrade.guardian.io/v1alpha1",
+  "kind": "UpgradePlan",
+  "metadata": {
+    "creationTimestamp": "2026-06-17T10:16:58Z",
+    "generation": 1,
+    "name": "r02-aks-assessment-plan",
+    "namespace": "aksv-system",
+    "ownerReferences": [
+      {
+        "apiVersion": "upgrade.guardian.io/v1alpha1",
+        "blockOwnerDeletion": true,
+        "controller": true,
+        "kind": "UpgradeAssessment",
+        "name": "r02-aks-assessment",
+        "uid": "f8bc48a5-fd87-4d1a-a491-f9457d5416cf"
+      }
+    ],
+    "resourceVersion": "5928",
+    "uid": "28757e4d-1a25-4dc6-8530-d605dad24393"
+  },
+  "spec": {
+    "assessmentRef": {
+      "name": "r02-aks-assessment",
+      "namespace": "aksv-system"
+    },
+    "decision": "DoNotUpgrade",
+    "recommendedOrder": [
+      "fix-critical-blockers",
+      "fix-high-risk-workloads",
+      "validate-admission-policies",
+      "validate-observability",
+      "proceed-with-controlled-upgrade"
+    ],
+    "requiredActions": [
+      {
+        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "category": "AdmissionWebhook",
+        "evidenceRefs": [
+          "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_NODE_MUTATING_WEBHOOK_AKS_NODE_MUTATING_WEBHOOK_AZMK8S_IO"
+        ],
+        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-aks-node-mutating-webhook-aks-node-mutating-webhook-azmk8s-io-failurepolicy=fail",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "aks-node-mutating-webhook"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "category": "AdmissionWebhook",
+        "evidenceRefs": [
+          "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_NODE_MUTATING_WEBHOOK_AKS_NODE_MUTATING_WEBHOOK_AZMK8S_IO"
+        ],
+        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-aks-node-mutating-webhook-aks-node-mutating-webhook-azmk8s-io-namespaceselector-is-absent",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "aks-node-mutating-webhook"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "category": "AdmissionWebhook",
+        "evidenceRefs": [
+          "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_WEBHOOK_ADMISSION_CONTROLLER_AKS_WEBHOOK_ADMISSION_CONTROLLER_AZMK8S_IO"
+        ],
+        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-aks-webhook-admission-controller-aks-webhook-admission-controller-azmk8s-io-failurepolicy=fail",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "aks-webhook-admission-controller"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "category": "AdmissionWebhook",
+        "evidenceRefs": [
+          "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_WEBHOOK_ADMISSION_CONTROLLER_AKS_WEBHOOK_ADMISSION_CONTROLLER_AZMK8S_IO"
+        ],
+        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-aks-webhook-admission-controller-aks-webhook-admission-controller-azmk8s-io-namespaceselector-is-absent",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "aks-webhook-admission-controller"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "category": "AdmissionWebhook",
+        "evidenceRefs": [
+          "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AZURE_WI_WEBHOOK_MUTATING_WEBHOOK_CONFIGURATION_MUTATION_AZURE_WORKLOAD_IDENTITY_IO"
+        ],
+        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-azure-wi-webhook-mutating-webhook-configuration-mutation-azure-workload-identity-io-failurepolicy=fail",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "azure-wi-webhook-mutating-webhook-configuration"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "category": "AdmissionWebhook",
+        "evidenceRefs": [
+          "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AZURE_WI_WEBHOOK_MUTATING_WEBHOOK_CONFIGURATION_MUTATION_AZURE_WORKLOAD_IDENTITY_IO"
+        ],
+        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-azure-wi-webhook-mutating-webhook-configuration-mutation-azure-workload-identity-io-namespaceselector-is-absent",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "azure-wi-webhook-mutating-webhook-configuration"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "category": "AdmissionWebhook",
+        "evidenceRefs": [
+          "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_R02_MUTATING_FAIL_WEBHOOK_MUTATE_EXAMPLE_COM"
+        ],
+        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-r02-mutating-fail-webhook-mutate-example-com-failurepolicy=fail",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "r02-mutating-fail-webhook"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "category": "AdmissionWebhook",
+        "evidenceRefs": [
+          "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_AKS_NODE_VALIDATING_WEBHOOK_AKS_NODE_VALIDATING_WEBHOOK_AZMK8S_IO"
+        ],
+        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-aks-node-validating-webhook-aks-node-validating-webhook-azmk8s-io-failurepolicy=fail",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "aks-node-validating-webhook"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "category": "AdmissionWebhook",
+        "evidenceRefs": [
+          "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_AKS_NODE_VALIDATING_WEBHOOK_AKS_NODE_VALIDATING_WEBHOOK_AZMK8S_IO"
+        ],
+        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-aks-node-validating-webhook-aks-node-validating-webhook-azmk8s-io-namespaceselector-is-absent",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "aks-node-validating-webhook"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "category": "AdmissionWebhook",
+        "evidenceRefs": [
+          "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_R02_RISKY_WEBHOOK_POLICY_EXAMPLE_COM"
+        ],
+        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-r02-risky-webhook-policy-example-com-failurepolicy=fail",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "r02-risky-webhook"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Restore the webhook Service or remove the webhook configuration before upgrade.",
+        "category": "AdmissionWebhook",
+        "evidenceRefs": [
+          "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_R02_RISKY_WEBHOOK_POLICY_EXAMPLE_COM"
+        ],
+        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-r02-risky-webhook-policy-example-com-referenced-service-is-absent",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "r02-risky-webhook"
+        },
+        "severity": "Critical"
+      },
+      {
+        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "category": "ReadinessProbes",
+        "evidenceRefs": [
+          "MISSING_READINESS_PROBE_EVIDENCE_AKSV_READINESS_DAEMONSET_NODE_AGENT_AGENT"
+        ],
+        "id": "remediate-missing-readiness-probe-aksv-readiness-daemonset-node-agent-agent",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "DaemonSet",
+          "name": "node-agent",
+          "namespace": "aksv-readiness"
+        },
+        "severity": "Medium"
+      },
+      {
+        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "category": "ReadinessProbes",
+        "evidenceRefs": [
+          "MISSING_READINESS_PROBE_EVIDENCE_AKSV_READINESS_DEPLOYMENT_CHECKOUT_API_APP"
+        ],
+        "id": "remediate-missing-readiness-probe-aksv-readiness-deployment-checkout-api-app",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "checkout-api",
+          "namespace": "aksv-readiness"
+        },
+        "severity": "Medium"
+      },
+      {
+        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "category": "ReadinessProbes",
+        "evidenceRefs": [
+          "MISSING_READINESS_PROBE_EVIDENCE_AKSV_READINESS_DEPLOYMENT_MULTI_API_APP"
+        ],
+        "id": "remediate-missing-readiness-probe-aksv-readiness-deployment-multi-api-app",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "multi-api",
+          "namespace": "aksv-readiness"
+        },
+        "severity": "Medium"
+      },
+      {
+        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "category": "ReadinessProbes",
+        "evidenceRefs": [
+          "MISSING_READINESS_PROBE_EVIDENCE_AKSV_READINESS_DEPLOYMENT_MULTI_API_SIDECAR"
+        ],
+        "id": "remediate-missing-readiness-probe-aksv-readiness-deployment-multi-api-sidecar",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "multi-api",
+          "namespace": "aksv-readiness"
+        },
+        "severity": "Medium"
+      },
+      {
+        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "category": "ReadinessProbes",
+        "evidenceRefs": [
+          "MISSING_READINESS_PROBE_EVIDENCE_AKSV_STATEFUL_SINGLE_STATEFULSET_LEDGER_DB_DB"
+        ],
+        "id": "remediate-missing-readiness-probe-aksv-stateful-single-statefulset-ledger-db-db",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "StatefulSet",
+          "name": "ledger-db",
+          "namespace": "aksv-stateful-single"
+        },
+        "severity": "Medium"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_AKSV_PDB_ACCOUNTS_DB_ACCOUNTS_DB"
+        ],
+        "id": "remediate-pdb-blocking-risk-aksv-pdb-accounts-db-statefulset-accounts-db-minavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "accounts-db",
+          "namespace": "aksv-pdb"
+        },
+        "severity": "Critical"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_AKSV_PDB_BILLING_API_BILLING_API"
+        ],
+        "id": "remediate-pdb-blocking-risk-aksv-pdb-billing-api-deployment-billing-api-maxunavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "billing-api",
+          "namespace": "aksv-pdb"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Consider adding a PodDisruptionBudget for critical workloads before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_AKSV_PDB_DEPLOYMENT_SEARCH_API_MISSING"
+        ],
+        "id": "remediate-pdb-blocking-risk-aksv-pdb-deployment-search-api-missing",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "search-api",
+          "namespace": "aksv-pdb"
+        },
+        "severity": "Low"
+      },
+      {
+        "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_AKSV_PDB_ORDERS_API_ORDERS_API"
+        ],
+        "id": "remediate-pdb-blocking-risk-aksv-pdb-orders-api-deployment-orders-api-minavailable",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "orders-api",
+          "namespace": "aksv-pdb"
+        },
+        "severity": "Critical"
+      },
+      {
+        "action": "Fix or remove stale PodDisruptionBudgets before upgrade validation.",
+        "category": "PDB",
+        "evidenceRefs": [
+          "PDB_BLOCKING_RISK_EVIDENCE_AKSV_PDB_STALE_PDB_NO_MATCH"
+        ],
+        "id": "remediate-pdb-blocking-risk-aksv-pdb-stale-pdb-no-match",
+        "resource": {
+          "apiVersion": "policy/v1",
+          "kind": "PodDisruptionBudget",
+          "name": "stale-pdb",
+          "namespace": "aksv-pdb"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Adjust the pod security context or namespace policy before upgrade.",
+        "category": "PolicyRisk",
+        "evidenceRefs": [
+          "POLICY_RISK_EVIDENCE_AKSV_POLICY_DEPLOYMENT_HOSTPATH_WORKER_APP"
+        ],
+        "id": "remediate-policy-risk-aksv-policy-deployment-hostpath-worker-allowprivilegeescalation=true-app",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "hostpath-worker",
+          "namespace": "aksv-policy"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Adjust the pod security context or namespace policy before upgrade.",
+        "category": "PolicyRisk",
+        "evidenceRefs": [
+          "POLICY_RISK_EVIDENCE_AKSV_POLICY_DEPLOYMENT_HOSTPATH_WORKER_HOST_DATA"
+        ],
+        "id": "remediate-policy-risk-aksv-policy-deployment-hostpath-worker-hostpath-volume-host-data",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "hostpath-worker",
+          "namespace": "aksv-policy"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Adjust the pod security context or namespace policy before upgrade.",
+        "category": "PolicyRisk",
+        "evidenceRefs": [
+          "POLICY_RISK_EVIDENCE_AKSV_POLICY_DEPLOYMENT_LEGACY_WORKER_APP"
+        ],
+        "id": "remediate-policy-risk-aksv-policy-deployment-legacy-worker-privileged=true-app",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "legacy-worker",
+          "namespace": "aksv-policy"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Adjust the pod security context or namespace policy before upgrade.",
+        "category": "PolicyRisk",
+        "evidenceRefs": [
+          "POLICY_RISK_EVIDENCE_AKSV_POLICY_DEPLOYMENT_LEGACY_WORKER_APP"
+        ],
+        "id": "remediate-policy-risk-aksv-policy-deployment-legacy-worker-runasnonroot-absent-app",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "legacy-worker",
+          "namespace": "aksv-policy"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Adjust the pod security context or namespace policy before upgrade.",
+        "category": "PolicyRisk",
+        "evidenceRefs": [
+          "POLICY_RISK_EVIDENCE_AKSV_POLICY_DEPLOYMENT_UNSAFE_API_APP"
+        ],
+        "id": "remediate-policy-risk-aksv-policy-deployment-unsafe-api-missing-securitycontext-app",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "unsafe-api",
+          "namespace": "aksv-policy"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Validate all workloads in this namespace against the restricted Pod Security profile before upgrade.",
+        "category": "PolicyRisk",
+        "evidenceRefs": [
+          "POLICY_RISK_EVIDENCE_AKSV_POLICY_RESTRICTED"
+        ],
+        "id": "remediate-policy-risk-aksv-policy-restricted",
+        "resource": {
+          "apiVersion": "v1",
+          "kind": "Namespace",
+          "name": "aksv-policy"
+        },
+        "severity": "Medium"
+      },
+      {
+        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "category": "WorkloadAvailability",
+        "evidenceRefs": [
+          "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_AKSV_LOW_REPLICAS_DEPLOYMENT_PAYMENT_API"
+        ],
+        "id": "remediate-workload-availability-risk-aksv-low-replicas-deployment-payment-api",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "payment-api",
+          "namespace": "aksv-low-replicas"
+        },
+        "severity": "High"
+      },
+      {
+        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "category": "WorkloadAvailability",
+        "evidenceRefs": [
+          "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_AKSV_STATEFUL_SINGLE_STATEFULSET_LEDGER_DB"
+        ],
+        "id": "remediate-workload-availability-risk-aksv-stateful-single-statefulset-ledger-db",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "StatefulSet",
+          "name": "ledger-db",
+          "namespace": "aksv-stateful-single"
+        },
+        "severity": "High"
+      }
+    ],
+    "riskLevel": "Critical",
+    "score": 290,
+    "summary": {
+      "critical": 3,
+      "high": 19,
+      "low": 1,
+      "medium": 6,
+      "totalFindings": 29
+    }
+  },
+  "status": {
+    "conditions": [
+      {
+        "lastTransitionTime": "2026-06-17T10:16:59Z",
+        "message": "UpgradePlan generated from latest assessment.",
+        "observedGeneration": 1,
+        "reason": "Generated",
+        "status": "True",
+        "type": "PlanGenerated"
+      }
+    ],
+    "generatedAt": "2026-06-17T10:17:01Z",
+    "observedGeneration": 1
+  }
+}

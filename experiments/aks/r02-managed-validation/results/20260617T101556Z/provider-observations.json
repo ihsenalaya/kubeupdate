@@ -1,0 +1,98 @@
+[
+  {
+    "family": "AdmissionWebhook",
+    "message": "MutatingWebhookConfiguration aks-node-mutating-webhook webhook aks-node-mutating-webhook.azmk8s.io has risk: failurePolicy=Fail.",
+    "resource": {
+      "apiVersion": "admissionregistration.k8s.io/v1",
+      "kind": "MutatingWebhookConfiguration",
+      "name": "aks-node-mutating-webhook"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "ADMISSION_WEBHOOK_RISK"
+  },
+  {
+    "family": "AdmissionWebhook",
+    "message": "MutatingWebhookConfiguration aks-node-mutating-webhook webhook aks-node-mutating-webhook.azmk8s.io has risk: namespaceSelector is absent.",
+    "resource": {
+      "apiVersion": "admissionregistration.k8s.io/v1",
+      "kind": "MutatingWebhookConfiguration",
+      "name": "aks-node-mutating-webhook"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "ADMISSION_WEBHOOK_RISK"
+  },
+  {
+    "family": "AdmissionWebhook",
+    "message": "MutatingWebhookConfiguration aks-webhook-admission-controller webhook aks-webhook-admission-controller.azmk8s.io has risk: failurePolicy=Fail.",
+    "resource": {
+      "apiVersion": "admissionregistration.k8s.io/v1",
+      "kind": "MutatingWebhookConfiguration",
+      "name": "aks-webhook-admission-controller"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "ADMISSION_WEBHOOK_RISK"
+  },
+  {
+    "family": "AdmissionWebhook",
+    "message": "MutatingWebhookConfiguration aks-webhook-admission-controller webhook aks-webhook-admission-controller.azmk8s.io has risk: namespaceSelector is absent.",
+    "resource": {
+      "apiVersion": "admissionregistration.k8s.io/v1",
+      "kind": "MutatingWebhookConfiguration",
+      "name": "aks-webhook-admission-controller"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "ADMISSION_WEBHOOK_RISK"
+  },
+  {
+    "family": "AdmissionWebhook",
+    "message": "MutatingWebhookConfiguration azure-wi-webhook-mutating-webhook-configuration webhook mutation.azure-workload-identity.io has risk: failurePolicy=Fail.",
+    "resource": {
+      "apiVersion": "admissionregistration.k8s.io/v1",
+      "kind": "MutatingWebhookConfiguration",
+      "name": "azure-wi-webhook-mutating-webhook-configuration"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "ADMISSION_WEBHOOK_RISK"
+  },
+  {
+    "family": "AdmissionWebhook",
+    "message": "MutatingWebhookConfiguration azure-wi-webhook-mutating-webhook-configuration webhook mutation.azure-workload-identity.io has risk: namespaceSelector is absent.",
+    "resource": {
+      "apiVersion": "admissionregistration.k8s.io/v1",
+      "kind": "MutatingWebhookConfiguration",
+      "name": "azure-wi-webhook-mutating-webhook-configuration"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "ADMISSION_WEBHOOK_RISK"
+  },
+  {
+    "family": "AdmissionWebhook",
+    "message": "ValidatingWebhookConfiguration aks-node-validating-webhook webhook aks-node-validating-webhook.azmk8s.io has risk: failurePolicy=Fail.",
+    "resource": {
+      "apiVersion": "admissionregistration.k8s.io/v1",
+      "kind": "ValidatingWebhookConfiguration",
+      "name": "aks-node-validating-webhook"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "ADMISSION_WEBHOOK_RISK"
+  },
+  {
+    "family": "AdmissionWebhook",
+    "message": "ValidatingWebhookConfiguration aks-node-validating-webhook webhook aks-node-validating-webhook.azmk8s.io has risk: namespaceSelector is absent.",
+    "resource": {
+      "apiVersion": "admissionregistration.k8s.io/v1",
+      "kind": "ValidatingWebhookConfiguration",
+      "name": "aks-node-validating-webhook"
+    },
+    "severity": "High",
+    "source": "KubeUpgrade Guardian",
+    "type": "ADMISSION_WEBHOOK_RISK"
+  }
+]

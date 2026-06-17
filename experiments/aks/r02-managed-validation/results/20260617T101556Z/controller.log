@@ -1,0 +1,82 @@
+2026-06-17T12:16:08+02:00	INFO	setup	starting manager
+2026-06-17T12:16:08+02:00	INFO	controller-runtime.metrics	Starting metrics server
+2026-06-17T12:16:08+02:00	INFO	starting server	{"kind": "health probe", "addr": "[::]:18083"}
+2026-06-17T12:16:08+02:00	INFO	Starting EventSource	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "source": "kind source: *v1alpha1.UpgradeAssessment"}
+2026-06-17T12:16:08+02:00	INFO	Starting EventSource	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "source": "kind source: *v1alpha1.UpgradePlan"}
+2026-06-17T12:16:08+02:00	INFO	Starting Controller	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment"}
+2026-06-17T12:16:08+02:00	INFO	controller-runtime.metrics	Serving metrics server	{"bindAddress": ":18082", "secure": false}
+2026-06-17T12:16:09+02:00	INFO	Starting workers	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "worker count": 1}
+2026-06-17T12:17:00+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r02-aks-assessment","namespace":"aksv-system"}, "namespace": "aksv-system", "name": "r02-aks-assessment", "reconcileID": "26a74098-0019-44c3-b478-10aa5a8fc5fd", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r02-aks-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T12:17:02+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r02-aks-assessment","namespace":"aksv-system"}, "namespace": "aksv-system", "name": "r02-aks-assessment", "reconcileID": "3113ac3f-24de-43f5-a9f7-41a2f1bcc6dc", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r02-aks-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T12:17:03+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r02-aks-assessment","namespace":"aksv-system"}, "namespace": "aksv-system", "name": "r02-aks-assessment", "reconcileID": "e3b3d9d7-8d25-4e73-8ea8-c631c382df23", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r02-aks-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T12:17:06+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r02-aks-assessment","namespace":"aksv-system"}, "namespace": "aksv-system", "name": "r02-aks-assessment", "reconcileID": "fa932769-8831-449a-87e3-898459387ada", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r02-aks-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T12:17:08+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r02-aks-assessment","namespace":"aksv-system"}, "namespace": "aksv-system", "name": "r02-aks-assessment", "reconcileID": "6cdd801f-5c97-4ce1-af32-0c5ef170ddc7", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r02-aks-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T12:17:11+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r02-aks-assessment","namespace":"aksv-system"}, "namespace": "aksv-system", "name": "r02-aks-assessment", "reconcileID": "bb2e82c2-6a4d-4ab2-ab48-30fad72cb646", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r02-aks-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T12:17:13+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r02-aks-assessment","namespace":"aksv-system"}, "namespace": "aksv-system", "name": "r02-aks-assessment", "reconcileID": "c41f7f82-2ddf-4262-92cc-6cf149b76aeb", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r02-aks-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T12:17:14+02:00	INFO	Stopping and waiting for non leader election runnables
+2026-06-17T12:17:14+02:00	INFO	Stopping and waiting for leader election runnables
+2026-06-17T12:17:14+02:00	INFO	Shutdown signal received, waiting for all workers to finish	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment"}
+2026-06-17T12:17:14+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r02-aks-assessment","namespace":"aksv-system"}, "namespace": "aksv-system", "name": "r02-aks-assessment", "reconcileID": "475e0926-0b51-46d6-a108-9c39cc889793", "error": "client rate limiter Wait returned an error: context canceled"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T12:17:14+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r02-aks-assessment","namespace":"aksv-system"}, "namespace": "aksv-system", "name": "r02-aks-assessment", "reconcileID": "2485428b-f2ad-4f76-a0f9-e6889a65aa0c", "error": "client rate limiter Wait returned an error: context canceled"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T12:17:14+02:00	INFO	All workers finished	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment"}
+2026-06-17T12:17:14+02:00	INFO	Stopping and waiting for caches
+W0617 12:17:14.392822   15139 reflector.go:462] pkg/mod/k8s.io/client-go@v0.29.0/tools/cache/reflector.go:229: watch of *v1.ValidatingWebhookConfiguration ended with: an error on the server ("unable to decode an event from the watch stream: context canceled") has prevented the request from succeeding
+2026-06-17T12:17:14+02:00	INFO	Stopping and waiting for webhooks
+2026-06-17T12:17:14+02:00	INFO	Stopping and waiting for HTTP servers
+2026-06-17T12:17:14+02:00	INFO	controller-runtime.metrics	Shutting down metrics server with timeout of 1 minute
+2026-06-17T12:17:14+02:00	INFO	shutting down server	{"kind": "health probe", "addr": "[::]:18083"}
+2026-06-17T12:17:14+02:00	INFO	Wait completed, proceeding to shutdown the manager

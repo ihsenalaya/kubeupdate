@@ -1,0 +1,65 @@
+[
+  {
+    "description": "Deployment with three replicas, readinessProbe, restricted-compatible security context, and matching PDB.",
+    "id": "neg-safe-deployment",
+    "observations": {
+      "KubeUpgrade Guardian": []
+    },
+    "resource": {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "name": "profile-api",
+      "namespace": "aksv-safe"
+    }
+  },
+  {
+    "description": "Webhook with failurePolicy=Ignore, existing service, namespaceSelector, and objectSelector.",
+    "id": "neg-safe-webhook",
+    "observations": {
+      "KubeUpgrade Guardian": []
+    },
+    "resource": {
+      "apiVersion": "admissionregistration.k8s.io/v1",
+      "kind": "ValidatingWebhookConfiguration",
+      "name": "r02-safe-webhook"
+    }
+  },
+  {
+    "description": "Namespace uses Pod Security warn/audit labels without enforce; current checker should not treat it as an enforced policy blocker.",
+    "id": "neg-policy-warn-audit-only",
+    "observations": {
+      "KubeUpgrade Guardian": []
+    },
+    "resource": {
+      "apiVersion": "v1",
+      "kind": "Namespace",
+      "name": "aksv-policy-warn-audit"
+    }
+  },
+  {
+    "description": "Modern autoscaling/v2 HPA should not be reported by the deprecated API checker.",
+    "id": "neg-modern-hpa",
+    "observations": {
+      "KubeUpgrade Guardian": []
+    },
+    "resource": {
+      "apiVersion": "autoscaling/v2",
+      "kind": "HorizontalPodAutoscaler",
+      "name": "modern-hpa",
+      "namespace": "aksv-modern-api"
+    }
+  },
+  {
+    "description": "Modern policy/v1 PDB should not be reported by the deprecated API checker or PDB checker when it permits one unavailable pod.",
+    "id": "neg-modern-pdb",
+    "observations": {
+      "KubeUpgrade Guardian": []
+    },
+    "resource": {
+      "apiVersion": "policy/v1",
+      "kind": "PodDisruptionBudget",
+      "name": "modern-hpa-target",
+      "namespace": "aksv-modern-api"
+    }
+  }
+]
