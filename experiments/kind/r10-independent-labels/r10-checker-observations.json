@@ -1,0 +1,720 @@
+{
+  "findings": [
+    {
+      "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_R10_RESTRICTIVE_WEBHOOK_RESTRICTIVE_R10_EXAMPLE_COM_FAILUREPOLICY=FAIL",
+      "type": "ADMISSION_WEBHOOK_RISK",
+      "severity": "High",
+      "category": "AdmissionWebhook",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r10-restrictive-webhook"
+      },
+      "message": "ValidatingWebhookConfiguration r10-restrictive-webhook webhook restrictive.r10.example.com has risk: failurePolicy=Fail.",
+      "evidence": [
+        {
+          "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_R10_RESTRICTIVE_WEBHOOK_RESTRICTIVE_R10_EXAMPLE_COM",
+          "description": "Admission webhook configuration risk.",
+          "observed": {
+            "reason": "failurePolicy=Fail",
+            "webhookName": "restrictive.r10.example.com"
+          }
+        }
+      ],
+      "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical."
+    },
+    {
+      "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_R10_RESTRICTIVE_WEBHOOK_RESTRICTIVE_R10_EXAMPLE_COM_NAMESPACESELECTOR_IS_ABSENT",
+      "type": "ADMISSION_WEBHOOK_RISK",
+      "severity": "High",
+      "category": "AdmissionWebhook",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r10-restrictive-webhook"
+      },
+      "message": "ValidatingWebhookConfiguration r10-restrictive-webhook webhook restrictive.r10.example.com has risk: namespaceSelector is absent.",
+      "evidence": [
+        {
+          "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_R10_RESTRICTIVE_WEBHOOK_RESTRICTIVE_R10_EXAMPLE_COM",
+          "description": "Admission webhook configuration risk.",
+          "observed": {
+            "reason": "namespaceSelector is absent",
+            "webhookName": "restrictive.r10.example.com"
+          }
+        }
+      ],
+      "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible."
+    },
+    {
+      "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_R10_RESTRICTIVE_WEBHOOK_RESTRICTIVE_R10_EXAMPLE_COM_REFERENCED_SERVICE_IS_ABSENT",
+      "type": "ADMISSION_WEBHOOK_RISK",
+      "severity": "Critical",
+      "category": "AdmissionWebhook",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r10-restrictive-webhook"
+      },
+      "message": "ValidatingWebhookConfiguration r10-restrictive-webhook webhook restrictive.r10.example.com has risk: referenced service is absent.",
+      "evidence": [
+        {
+          "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_R10_RESTRICTIVE_WEBHOOK_RESTRICTIVE_R10_EXAMPLE_COM",
+          "description": "Admission webhook configuration risk.",
+          "observed": {
+            "reason": "referenced service is absent",
+            "webhookName": "restrictive.r10.example.com"
+          }
+        }
+      ],
+      "recommendation": "Restore the webhook Service or remove the webhook configuration before upgrade."
+    },
+    {
+      "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_R10_WEBHOOK_EMPTY_CABUNDLE_CABUNDLE_R10_EXAMPLE_COM_FAILUREPOLICY=FAIL",
+      "type": "ADMISSION_WEBHOOK_RISK",
+      "severity": "High",
+      "category": "AdmissionWebhook",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r10-webhook-empty-cabundle"
+      },
+      "message": "ValidatingWebhookConfiguration r10-webhook-empty-cabundle webhook cabundle.r10.example.com has risk: failurePolicy=Fail.",
+      "evidence": [
+        {
+          "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_R10_WEBHOOK_EMPTY_CABUNDLE_CABUNDLE_R10_EXAMPLE_COM",
+          "description": "Admission webhook configuration risk.",
+          "observed": {
+            "reason": "failurePolicy=Fail",
+            "webhookName": "cabundle.r10.example.com"
+          }
+        }
+      ],
+      "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical."
+    },
+    {
+      "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_R10_WEBHOOK_EMPTY_CABUNDLE_CABUNDLE_R10_EXAMPLE_COM_NAMESPACESELECTOR_IS_ABSENT",
+      "type": "ADMISSION_WEBHOOK_RISK",
+      "severity": "High",
+      "category": "AdmissionWebhook",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r10-webhook-empty-cabundle"
+      },
+      "message": "ValidatingWebhookConfiguration r10-webhook-empty-cabundle webhook cabundle.r10.example.com has risk: namespaceSelector is absent.",
+      "evidence": [
+        {
+          "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_R10_WEBHOOK_EMPTY_CABUNDLE_CABUNDLE_R10_EXAMPLE_COM",
+          "description": "Admission webhook configuration risk.",
+          "observed": {
+            "reason": "namespaceSelector is absent",
+            "webhookName": "cabundle.r10.example.com"
+          }
+        }
+      ],
+      "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible."
+    },
+    {
+      "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_R10_WEBHOOK_MISSING_SERVICE_MISSING_R10_EXAMPLE_COM_FAILUREPOLICY=FAIL",
+      "type": "ADMISSION_WEBHOOK_RISK",
+      "severity": "High",
+      "category": "AdmissionWebhook",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r10-webhook-missing-service"
+      },
+      "message": "ValidatingWebhookConfiguration r10-webhook-missing-service webhook missing.r10.example.com has risk: failurePolicy=Fail.",
+      "evidence": [
+        {
+          "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_R10_WEBHOOK_MISSING_SERVICE_MISSING_R10_EXAMPLE_COM",
+          "description": "Admission webhook configuration risk.",
+          "observed": {
+            "reason": "failurePolicy=Fail",
+            "webhookName": "missing.r10.example.com"
+          }
+        }
+      ],
+      "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical."
+    },
+    {
+      "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_R10_WEBHOOK_MISSING_SERVICE_MISSING_R10_EXAMPLE_COM_NAMESPACESELECTOR_IS_ABSENT",
+      "type": "ADMISSION_WEBHOOK_RISK",
+      "severity": "High",
+      "category": "AdmissionWebhook",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r10-webhook-missing-service"
+      },
+      "message": "ValidatingWebhookConfiguration r10-webhook-missing-service webhook missing.r10.example.com has risk: namespaceSelector is absent.",
+      "evidence": [
+        {
+          "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_R10_WEBHOOK_MISSING_SERVICE_MISSING_R10_EXAMPLE_COM",
+          "description": "Admission webhook configuration risk.",
+          "observed": {
+            "reason": "namespaceSelector is absent",
+            "webhookName": "missing.r10.example.com"
+          }
+        }
+      ],
+      "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible."
+    },
+    {
+      "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_R10_WEBHOOK_MISSING_SERVICE_MISSING_R10_EXAMPLE_COM_REFERENCED_SERVICE_IS_ABSENT",
+      "type": "ADMISSION_WEBHOOK_RISK",
+      "severity": "Critical",
+      "category": "AdmissionWebhook",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r10-webhook-missing-service"
+      },
+      "message": "ValidatingWebhookConfiguration r10-webhook-missing-service webhook missing.r10.example.com has risk: referenced service is absent.",
+      "evidence": [
+        {
+          "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_R10_WEBHOOK_MISSING_SERVICE_MISSING_R10_EXAMPLE_COM",
+          "description": "Admission webhook configuration risk.",
+          "observed": {
+            "reason": "referenced service is absent",
+            "webhookName": "missing.r10.example.com"
+          }
+        }
+      ],
+      "recommendation": "Restore the webhook Service or remove the webhook configuration before upgrade."
+    },
+    {
+      "id": "CAPACITY_DRAIN_RISK_ONE_NODE_LOSS",
+      "type": "CAPACITY_DRAIN_RISK",
+      "severity": "High",
+      "category": "Capacity",
+      "message": "Cluster may not have enough requested capacity headroom to tolerate one worker node loss.",
+      "evidence": [
+        {
+          "id": "CAPACITY_DRAIN_RISK_EVIDENCE_ONE_NODE_LOSS",
+          "description": "Conservative capacity estimate using node allocatable minus the largest node.",
+          "observed": {
+            "remainingCPU": "4000m",
+            "remainingMemory": "8Gi",
+            "requestedCPU": "7000m",
+            "requestedMemory": "6656Mi",
+            "totalCPU": "6000m",
+            "totalMemory": "12Gi"
+          }
+        }
+      ],
+      "recommendation": "Add capacity or reduce requests before upgrade. Estimated remaining capacity after one-node loss: 4000m CPU."
+    },
+    {
+      "id": "DEPRECATED_OR_REMOVED_API_DEFAULT_CRONJOB_LEGACY_CRONJOB",
+      "type": "DEPRECATED_OR_REMOVED_API",
+      "severity": "Critical",
+      "category": "DeprecatedAPI",
+      "resource": {
+        "apiVersion": "batch/v1beta1",
+        "kind": "CronJob",
+        "namespace": "default",
+        "name": "legacy-cronjob"
+      },
+      "message": "CronJob default/legacy-cronjob uses batch/v1beta1 removed in Kubernetes 1.25.",
+      "evidence": [
+        {
+          "id": "DEPRECATED_OR_REMOVED_API_EVIDENCE_DEFAULT_CRONJOB_LEGACY_CRONJOB",
+          "description": "Deprecated or removed API version observed in last-applied configuration.",
+          "observed": {
+            "apiVersion": "batch/v1beta1",
+            "kind": "CronJob",
+            "removedIn": "1.25"
+          }
+        }
+      ],
+      "recommendation": "Migrate this resource to a served API version before upgrading."
+    },
+    {
+      "id": "OBSERVABILITY_GAP_NAMESPACE",
+      "type": "OBSERVABILITY_GAP",
+      "severity": "Medium",
+      "category": "Observability",
+      "message": "No monitoring, prometheus, or observability namespace found.",
+      "recommendation": "Install or validate monitoring coverage before upgrade."
+    },
+    {
+      "id": "OBSERVABILITY_GAP_PROMETHEUS_CRD",
+      "type": "OBSERVABILITY_GAP",
+      "severity": "Low",
+      "category": "Observability",
+      "message": "Prometheus CRD not detected; upgrade observability validation may be incomplete.",
+      "recommendation": "Install or validate monitoring coverage before upgrade."
+    },
+    {
+      "id": "PDB_BLOCKING_RISK_R10_CAPACITY_DEPLOYMENT_PACKED_API_MISSING",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "Low",
+      "category": "PDB",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r10-capacity",
+        "name": "packed-api"
+      },
+      "message": "Deployment r10-capacity/packed-api has no matching PodDisruptionBudget.",
+      "evidence": [
+        {
+          "id": "PDB_BLOCKING_RISK_EVIDENCE_R10_CAPACITY_DEPLOYMENT_PACKED_API_MISSING",
+          "description": "No PDB selector matched this workload.",
+          "observed": {
+            "replicas": "3"
+          }
+        }
+      ],
+      "recommendation": "Consider adding a PodDisruptionBudget for critical workloads before upgrade."
+    },
+    {
+      "id": "PDB_BLOCKING_RISK_R10_NO_READINESS_DEPLOYMENT_NO_READINESS_MISSING",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "Low",
+      "category": "PDB",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r10-no-readiness",
+        "name": "no-readiness"
+      },
+      "message": "Deployment r10-no-readiness/no-readiness has no matching PodDisruptionBudget.",
+      "evidence": [
+        {
+          "id": "PDB_BLOCKING_RISK_EVIDENCE_R10_NO_READINESS_DEPLOYMENT_NO_READINESS_MISSING",
+          "description": "No PDB selector matched this workload.",
+          "observed": {
+            "replicas": "2"
+          }
+        }
+      ],
+      "recommendation": "Consider adding a PodDisruptionBudget for critical workloads before upgrade."
+    },
+    {
+      "id": "PDB_BLOCKING_RISK_R10_OBSERVABILITY_GAP_DEPLOYMENT_OPAQUE_API_MISSING",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "Low",
+      "category": "PDB",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r10-observability-gap",
+        "name": "opaque-api"
+      },
+      "message": "Deployment r10-observability-gap/opaque-api has no matching PodDisruptionBudget.",
+      "evidence": [
+        {
+          "id": "PDB_BLOCKING_RISK_EVIDENCE_R10_OBSERVABILITY_GAP_DEPLOYMENT_OPAQUE_API_MISSING",
+          "description": "No PDB selector matched this workload.",
+          "observed": {
+            "replicas": "2"
+          }
+        }
+      ],
+      "recommendation": "Consider adding a PodDisruptionBudget for critical workloads before upgrade."
+    },
+    {
+      "id": "PDB_BLOCKING_RISK_R10_PDB_ZERO_DEPLOYMENT_API_MISSING",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "Low",
+      "category": "PDB",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r10-pdb-zero",
+        "name": "api"
+      },
+      "message": "Deployment r10-pdb-zero/api has no matching PodDisruptionBudget.",
+      "evidence": [
+        {
+          "id": "PDB_BLOCKING_RISK_EVIDENCE_R10_PDB_ZERO_DEPLOYMENT_API_MISSING",
+          "description": "No PDB selector matched this workload.",
+          "observed": {
+            "replicas": "2"
+          }
+        }
+      ],
+      "recommendation": "Consider adding a PodDisruptionBudget for critical workloads before upgrade."
+    },
+    {
+      "id": "PDB_BLOCKING_RISK_R10_PSA_ENFORCE_DEPLOYMENT_PRIVILEGED_APP_MISSING",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "Low",
+      "category": "PDB",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r10-psa-enforce",
+        "name": "privileged-app"
+      },
+      "message": "Deployment r10-psa-enforce/privileged-app has no matching PodDisruptionBudget.",
+      "evidence": [
+        {
+          "id": "PDB_BLOCKING_RISK_EVIDENCE_R10_PSA_ENFORCE_DEPLOYMENT_PRIVILEGED_APP_MISSING",
+          "description": "No PDB selector matched this workload.",
+          "observed": {
+            "replicas": "2"
+          }
+        }
+      ],
+      "recommendation": "Consider adding a PodDisruptionBudget for critical workloads before upgrade."
+    },
+    {
+      "id": "PDB_BLOCKING_RISK_R10_PSA_WARN_DEPLOYMENT_WARN_ONLY_MISSING",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "Low",
+      "category": "PDB",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r10-psa-warn",
+        "name": "warn-only"
+      },
+      "message": "Deployment r10-psa-warn/warn-only has no matching PodDisruptionBudget.",
+      "evidence": [
+        {
+          "id": "PDB_BLOCKING_RISK_EVIDENCE_R10_PSA_WARN_DEPLOYMENT_WARN_ONLY_MISSING",
+          "description": "No PDB selector matched this workload.",
+          "observed": {
+            "replicas": "2"
+          }
+        }
+      ],
+      "recommendation": "Consider adding a PodDisruptionBudget for critical workloads before upgrade."
+    },
+    {
+      "id": "PDB_BLOCKING_RISK_R10_WITH_READINESS_DEPLOYMENT_WITH_READINESS_MISSING",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "Low",
+      "category": "PDB",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r10-with-readiness",
+        "name": "with-readiness"
+      },
+      "message": "Deployment r10-with-readiness/with-readiness has no matching PodDisruptionBudget.",
+      "evidence": [
+        {
+          "id": "PDB_BLOCKING_RISK_EVIDENCE_R10_WITH_READINESS_DEPLOYMENT_WITH_READINESS_MISSING",
+          "description": "No PDB selector matched this workload.",
+          "observed": {
+            "replicas": "2"
+          }
+        }
+      ],
+      "recommendation": "Consider adding a PodDisruptionBudget for critical workloads before upgrade."
+    },
+    {
+      "id": "PDB_BLOCKING_RISK_R10_HPA_PDB_AUTOSCALED_API_DEPLOYMENT_AUTOSCALED_API_MINAVAILABLE",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "Critical",
+      "category": "PDB",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "namespace": "r10-hpa-pdb",
+        "name": "autoscaled-api"
+      },
+      "message": "PDB r10-hpa-pdb/autoscaled-api may block disruption for Deployment r10-hpa-pdb/autoscaled-api.",
+      "evidence": [
+        {
+          "id": "PDB_BLOCKING_RISK_EVIDENCE_R10_HPA_PDB_AUTOSCALED_API_AUTOSCALED_API",
+          "description": "PDB and workload replica relationship.",
+          "observed": {
+            "minAvailable": "2",
+            "replicas": "2",
+            "selector": "app=autoscaled-api",
+            "workloadKind": "Deployment",
+            "workloadName": "autoscaled-api"
+          }
+        }
+      ],
+      "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade."
+    },
+    {
+      "id": "PDB_BLOCKING_RISK_R10_PDB_AMBIGUOUS_SINGLETON_DEPLOYMENT_SINGLETON_MAXUNAVAILABLE",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "High",
+      "category": "PDB",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "namespace": "r10-pdb-ambiguous",
+        "name": "singleton"
+      },
+      "message": "PDB r10-pdb-ambiguous/singleton may block disruption for Deployment r10-pdb-ambiguous/singleton.",
+      "evidence": [
+        {
+          "id": "PDB_BLOCKING_RISK_EVIDENCE_R10_PDB_AMBIGUOUS_SINGLETON_SINGLETON",
+          "description": "PDB and workload replica relationship.",
+          "observed": {
+            "maxUnavailable": "0",
+            "replicas": "1",
+            "selector": "app=singleton",
+            "workloadKind": "Deployment",
+            "workloadName": "singleton"
+          }
+        }
+      ],
+      "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade."
+    },
+    {
+      "id": "PDB_BLOCKING_RISK_R10_PDB_ZERO_STALE_PDB_NO_MATCH",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "High",
+      "category": "PDB",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "namespace": "r10-pdb-zero",
+        "name": "stale-pdb"
+      },
+      "message": "PDB r10-pdb-zero/stale-pdb does not match any assessed workload.",
+      "evidence": [
+        {
+          "id": "PDB_BLOCKING_RISK_EVIDENCE_R10_PDB_ZERO_STALE_PDB_NO_MATCH",
+          "description": "No workload matched the PDB selector.",
+          "observed": {
+            "selector": "app=absent"
+          }
+        }
+      ],
+      "recommendation": "Fix or remove stale PodDisruptionBudgets before upgrade validation."
+    },
+    {
+      "id": "PDB_BLOCKING_RISK_R10_PVC_NO_STORAGECLASS_STATEFULSET_DB_MISSING",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "Low",
+      "category": "PDB",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "StatefulSet",
+        "namespace": "r10-pvc-no-storageclass",
+        "name": "db"
+      },
+      "message": "StatefulSet r10-pvc-no-storageclass/db has no matching PodDisruptionBudget.",
+      "evidence": [
+        {
+          "id": "PDB_BLOCKING_RISK_EVIDENCE_R10_PVC_NO_STORAGECLASS_STATEFULSET_DB_MISSING",
+          "description": "No PDB selector matched this workload.",
+          "observed": {
+            "replicas": "2"
+          }
+        }
+      ],
+      "recommendation": "Consider adding a PodDisruptionBudget for critical workloads before upgrade."
+    },
+    {
+      "id": "POLICY_RISK_R10_PSA_ENFORCE_DEPLOYMENT_PRIVILEGED_APP_PRIVILEGED=TRUE_APP",
+      "type": "POLICY_RISK",
+      "severity": "High",
+      "category": "PolicyRisk",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r10-psa-enforce",
+        "name": "privileged-app"
+      },
+      "message": "Deployment r10-psa-enforce/privileged-app may violate restricted policy: privileged=true.",
+      "evidence": [
+        {
+          "id": "POLICY_RISK_EVIDENCE_R10_PSA_ENFORCE_DEPLOYMENT_PRIVILEGED_APP_APP",
+          "description": "Workload pod template has a restricted policy incompatibility.",
+          "observed": {
+            "reason": "privileged=true",
+            "subject": "app"
+          }
+        }
+      ],
+      "recommendation": "Adjust the pod security context or namespace policy before upgrade."
+    },
+    {
+      "id": "POLICY_RISK_R10_PSA_ENFORCE_DEPLOYMENT_PRIVILEGED_APP_RUNASNONROOT_ABSENT_APP",
+      "type": "POLICY_RISK",
+      "severity": "High",
+      "category": "PolicyRisk",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r10-psa-enforce",
+        "name": "privileged-app"
+      },
+      "message": "Deployment r10-psa-enforce/privileged-app may violate restricted policy: runAsNonRoot absent.",
+      "evidence": [
+        {
+          "id": "POLICY_RISK_EVIDENCE_R10_PSA_ENFORCE_DEPLOYMENT_PRIVILEGED_APP_APP",
+          "description": "Workload pod template has a restricted policy incompatibility.",
+          "observed": {
+            "reason": "runAsNonRoot absent",
+            "subject": "app"
+          }
+        }
+      ],
+      "recommendation": "Adjust the pod security context or namespace policy before upgrade."
+    },
+    {
+      "id": "POLICY_RISK_R10_PSA_ENFORCE_RESTRICTED",
+      "type": "POLICY_RISK",
+      "severity": "Medium",
+      "category": "PolicyRisk",
+      "resource": {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "name": "r10-psa-enforce"
+      },
+      "message": "Namespace r10-psa-enforce enforces Pod Security restricted.",
+      "evidence": [
+        {
+          "id": "POLICY_RISK_EVIDENCE_R10_PSA_ENFORCE_RESTRICTED",
+          "description": "Pod Security Admission namespace label.",
+          "observed": {
+            "pod-security.kubernetes.io/enforce": "restricted"
+          }
+        }
+      ],
+      "recommendation": "Validate all workloads in this namespace against the restricted Pod Security profile before upgrade."
+    },
+    {
+      "id": "MISSING_READINESS_PROBE_R10_NO_READINESS_DEPLOYMENT_NO_READINESS_API",
+      "type": "MISSING_READINESS_PROBE",
+      "severity": "Medium",
+      "category": "ReadinessProbes",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r10-no-readiness",
+        "name": "no-readiness"
+      },
+      "message": "Container api in Deployment r10-no-readiness/no-readiness has no readinessProbe.",
+      "evidence": [
+        {
+          "id": "MISSING_READINESS_PROBE_EVIDENCE_R10_NO_READINESS_DEPLOYMENT_NO_READINESS_API",
+          "description": "Container readinessProbe is absent.",
+          "observed": {
+            "containerName": "api"
+          }
+        }
+      ],
+      "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic."
+    },
+    {
+      "id": "MISSING_READINESS_PROBE_R10_OBSERVABILITY_GAP_DEPLOYMENT_OPAQUE_API_API",
+      "type": "MISSING_READINESS_PROBE",
+      "severity": "Medium",
+      "category": "ReadinessProbes",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r10-observability-gap",
+        "name": "opaque-api"
+      },
+      "message": "Container api in Deployment r10-observability-gap/opaque-api has no readinessProbe.",
+      "evidence": [
+        {
+          "id": "MISSING_READINESS_PROBE_EVIDENCE_R10_OBSERVABILITY_GAP_DEPLOYMENT_OPAQUE_API_API",
+          "description": "Container readinessProbe is absent.",
+          "observed": {
+            "containerName": "api"
+          }
+        }
+      ],
+      "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic."
+    },
+    {
+      "id": "MISSING_READINESS_PROBE_R10_PSA_ENFORCE_DEPLOYMENT_PRIVILEGED_APP_APP",
+      "type": "MISSING_READINESS_PROBE",
+      "severity": "Medium",
+      "category": "ReadinessProbes",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r10-psa-enforce",
+        "name": "privileged-app"
+      },
+      "message": "Container app in Deployment r10-psa-enforce/privileged-app has no readinessProbe.",
+      "evidence": [
+        {
+          "id": "MISSING_READINESS_PROBE_EVIDENCE_R10_PSA_ENFORCE_DEPLOYMENT_PRIVILEGED_APP_APP",
+          "description": "Container readinessProbe is absent.",
+          "observed": {
+            "containerName": "app"
+          }
+        }
+      ],
+      "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic."
+    },
+    {
+      "id": "MISSING_READINESS_PROBE_R10_PSA_WARN_DEPLOYMENT_WARN_ONLY_APP",
+      "type": "MISSING_READINESS_PROBE",
+      "severity": "Medium",
+      "category": "ReadinessProbes",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r10-psa-warn",
+        "name": "warn-only"
+      },
+      "message": "Container app in Deployment r10-psa-warn/warn-only has no readinessProbe.",
+      "evidence": [
+        {
+          "id": "MISSING_READINESS_PROBE_EVIDENCE_R10_PSA_WARN_DEPLOYMENT_WARN_ONLY_APP",
+          "description": "Container readinessProbe is absent.",
+          "observed": {
+            "containerName": "app"
+          }
+        }
+      ],
+      "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic."
+    },
+    {
+      "id": "WORKLOAD_AVAILABILITY_RISK_R10_PDB_AMBIGUOUS_DEPLOYMENT_SINGLETON",
+      "type": "WORKLOAD_AVAILABILITY_RISK",
+      "severity": "High",
+      "category": "WorkloadAvailability",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r10-pdb-ambiguous",
+        "name": "singleton"
+      },
+      "message": "Deployment r10-pdb-ambiguous/singleton has fewer than 2 replicas.",
+      "evidence": [
+        {
+          "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_R10_PDB_AMBIGUOUS_DEPLOYMENT_SINGLETON",
+          "description": "Replica count observed on the workload spec.",
+          "observed": {
+            "replicas": "1"
+          }
+        }
+      ],
+      "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption."
+    },
+    {
+      "id": "WORKLOAD_AVAILABILITY_RISK_R10_SINGLETON_NO_PDB_DEPLOYMENT_SINGLETON_API",
+      "type": "WORKLOAD_AVAILABILITY_RISK",
+      "severity": "High",
+      "category": "WorkloadAvailability",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r10-singleton-no-pdb",
+        "name": "singleton-api"
+      },
+      "message": "Deployment r10-singleton-no-pdb/singleton-api has fewer than 2 replicas.",
+      "evidence": [
+        {
+          "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_R10_SINGLETON_NO_PDB_DEPLOYMENT_SINGLETON_API",
+          "description": "Replica count observed on the workload spec.",
+          "observed": {
+            "replicas": "1"
+          }
+        }
+      ],
+      "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption."
+    }
+  ]
+}

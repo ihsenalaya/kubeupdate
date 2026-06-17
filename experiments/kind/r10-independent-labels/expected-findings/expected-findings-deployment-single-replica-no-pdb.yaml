@@ -1,0 +1,15 @@
+fixture: "deployment-single-replica-no-pdb.yaml"
+labeled_by: "Codex-authored-control-labels"
+labeled_at: "2026-06-17"
+negative_control: false
+findings:
+  - family: "WorkloadAvailability"
+    type: "WORKLOAD_AVAILABILITY_RISK"
+    severity: "High"
+    confidence: "certain"
+    resource:
+      apiVersion: "apps/v1"
+      kind: "Deployment"
+      namespace: "r10-singleton-no-pdb"
+      name: "singleton-api"
+    message_contains: "fewer than 2 replicas"

@@ -1,0 +1,1 @@
+kubeupgrade-guardian-system   kubeupgrade-guardian-kubeupgrade-guardian-operator-55b76b9hjlsg   1m    10Mi

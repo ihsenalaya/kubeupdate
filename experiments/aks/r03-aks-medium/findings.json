@@ -1,0 +1,768 @@
+{
+    "apiVersion": "upgrade.guardian.io/v1alpha1",
+    "kind": "UpgradeAssessment",
+    "metadata": {
+        "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"upgrade.guardian.io/v1alpha1\",\"kind\":\"UpgradeAssessment\",\"metadata\":{\"annotations\":{},\"name\":\"r03-aks-medium-assessment\",\"namespace\":\"kug-assessment\"},\"spec\":{\"checks\":{\"admissionWebhooks\":true,\"capacity\":true,\"deprecatedApis\":true,\"observability\":true,\"pdb\":true,\"policyRisks\":true,\"readinessProbes\":true,\"workloadAvailability\":true},\"mode\":\"ReadOnly\",\"scope\":{\"namespaces\":{\"exclude\":[\"kube-system\"],\"include\":[\"ingress-nginx\",\"cert-manager\",\"monitoring\",\"kug-real-workloads\"]}},\"targetVersion\":\"1.35\"}}\n"
+        },
+        "creationTimestamp": "2026-06-17T17:37:21Z",
+        "generation": 1,
+        "name": "r03-aks-medium-assessment",
+        "namespace": "kug-assessment",
+        "resourceVersion": "20928",
+        "uid": "6d1aaee1-7b41-42d1-aea1-ad12a7c9ef2c"
+    },
+    "spec": {
+        "checks": {
+            "admissionWebhooks": true,
+            "capacity": true,
+            "deprecatedApis": true,
+            "observability": true,
+            "pdb": true,
+            "policyRisks": true,
+            "readinessProbes": true,
+            "workloadAvailability": true
+        },
+        "mode": "ReadOnly",
+        "scope": {
+            "namespaces": {
+                "exclude": [
+                    "kube-system"
+                ],
+                "include": [
+                    "ingress-nginx",
+                    "cert-manager",
+                    "monitoring",
+                    "kug-real-workloads"
+                ]
+            }
+        },
+        "targetVersion": "1.35"
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastTransitionTime": "2026-06-17T17:37:22Z",
+                "message": "Assessment is not running.",
+                "observedGeneration": 1,
+                "reason": "Completed",
+                "status": "False",
+                "type": "AssessmentRunning"
+            },
+            {
+                "lastTransitionTime": "2026-06-17T17:37:22Z",
+                "message": "Assessment completed successfully.",
+                "observedGeneration": 1,
+                "reason": "Completed",
+                "status": "True",
+                "type": "AssessmentCompleted"
+            }
+        ],
+        "findings": [
+            {
+                "category": "AdmissionWebhook",
+                "evidence": [
+                    {
+                        "description": "Admission webhook configuration risk.",
+                        "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_NODE_MUTATING_WEBHOOK_AKS_NODE_MUTATING_WEBHOOK_AZMK8S_IO",
+                        "observed": {
+                            "reason": "failurePolicy=Fail",
+                            "webhookName": "aks-node-mutating-webhook.azmk8s.io"
+                        }
+                    }
+                ],
+                "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_AKS_NODE_MUTATING_WEBHOOK_AKS_NODE_MUTATING_WEBHOOK_AZMK8S_IO_FAILUREPOLICY=FAIL",
+                "message": "MutatingWebhookConfiguration aks-node-mutating-webhook webhook aks-node-mutating-webhook.azmk8s.io has risk: failurePolicy=Fail.",
+                "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                "resource": {
+                    "apiVersion": "admissionregistration.k8s.io/v1",
+                    "kind": "MutatingWebhookConfiguration",
+                    "name": "aks-node-mutating-webhook"
+                },
+                "severity": "High",
+                "type": "ADMISSION_WEBHOOK_RISK"
+            },
+            {
+                "category": "AdmissionWebhook",
+                "evidence": [
+                    {
+                        "description": "Admission webhook configuration risk.",
+                        "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_NODE_MUTATING_WEBHOOK_AKS_NODE_MUTATING_WEBHOOK_AZMK8S_IO",
+                        "observed": {
+                            "reason": "namespaceSelector is absent",
+                            "webhookName": "aks-node-mutating-webhook.azmk8s.io"
+                        }
+                    }
+                ],
+                "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_AKS_NODE_MUTATING_WEBHOOK_AKS_NODE_MUTATING_WEBHOOK_AZMK8S_IO_NAMESPACESELECTOR_IS_ABSENT",
+                "message": "MutatingWebhookConfiguration aks-node-mutating-webhook webhook aks-node-mutating-webhook.azmk8s.io has risk: namespaceSelector is absent.",
+                "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+                "resource": {
+                    "apiVersion": "admissionregistration.k8s.io/v1",
+                    "kind": "MutatingWebhookConfiguration",
+                    "name": "aks-node-mutating-webhook"
+                },
+                "severity": "High",
+                "type": "ADMISSION_WEBHOOK_RISK"
+            },
+            {
+                "category": "AdmissionWebhook",
+                "evidence": [
+                    {
+                        "description": "Admission webhook configuration risk.",
+                        "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_WEBHOOK_ADMISSION_CONTROLLER_AKS_WEBHOOK_ADMISSION_CONTROLLER_AZMK8S_IO",
+                        "observed": {
+                            "reason": "failurePolicy=Fail",
+                            "webhookName": "aks-webhook-admission-controller.azmk8s.io"
+                        }
+                    }
+                ],
+                "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_AKS_WEBHOOK_ADMISSION_CONTROLLER_AKS_WEBHOOK_ADMISSION_CONTROLLER_AZMK8S_IO_FAILUREPOLICY=FAIL",
+                "message": "MutatingWebhookConfiguration aks-webhook-admission-controller webhook aks-webhook-admission-controller.azmk8s.io has risk: failurePolicy=Fail.",
+                "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                "resource": {
+                    "apiVersion": "admissionregistration.k8s.io/v1",
+                    "kind": "MutatingWebhookConfiguration",
+                    "name": "aks-webhook-admission-controller"
+                },
+                "severity": "High",
+                "type": "ADMISSION_WEBHOOK_RISK"
+            },
+            {
+                "category": "AdmissionWebhook",
+                "evidence": [
+                    {
+                        "description": "Admission webhook configuration risk.",
+                        "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_WEBHOOK_ADMISSION_CONTROLLER_AKS_WEBHOOK_ADMISSION_CONTROLLER_AZMK8S_IO",
+                        "observed": {
+                            "reason": "namespaceSelector is absent",
+                            "webhookName": "aks-webhook-admission-controller.azmk8s.io"
+                        }
+                    }
+                ],
+                "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_AKS_WEBHOOK_ADMISSION_CONTROLLER_AKS_WEBHOOK_ADMISSION_CONTROLLER_AZMK8S_IO_NAMESPACESELECTOR_IS_ABSENT",
+                "message": "MutatingWebhookConfiguration aks-webhook-admission-controller webhook aks-webhook-admission-controller.azmk8s.io has risk: namespaceSelector is absent.",
+                "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+                "resource": {
+                    "apiVersion": "admissionregistration.k8s.io/v1",
+                    "kind": "MutatingWebhookConfiguration",
+                    "name": "aks-webhook-admission-controller"
+                },
+                "severity": "High",
+                "type": "ADMISSION_WEBHOOK_RISK"
+            },
+            {
+                "category": "AdmissionWebhook",
+                "evidence": [
+                    {
+                        "description": "Admission webhook configuration risk.",
+                        "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AZURE_WI_WEBHOOK_MUTATING_WEBHOOK_CONFIGURATION_MUTATION_AZURE_WORKLOAD_IDENTITY_IO",
+                        "observed": {
+                            "reason": "failurePolicy=Fail",
+                            "webhookName": "mutation.azure-workload-identity.io"
+                        }
+                    }
+                ],
+                "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_AZURE_WI_WEBHOOK_MUTATING_WEBHOOK_CONFIGURATION_MUTATION_AZURE_WORKLOAD_IDENTITY_IO_FAILUREPOLICY=FAIL",
+                "message": "MutatingWebhookConfiguration azure-wi-webhook-mutating-webhook-configuration webhook mutation.azure-workload-identity.io has risk: failurePolicy=Fail.",
+                "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                "resource": {
+                    "apiVersion": "admissionregistration.k8s.io/v1",
+                    "kind": "MutatingWebhookConfiguration",
+                    "name": "azure-wi-webhook-mutating-webhook-configuration"
+                },
+                "severity": "High",
+                "type": "ADMISSION_WEBHOOK_RISK"
+            },
+            {
+                "category": "AdmissionWebhook",
+                "evidence": [
+                    {
+                        "description": "Admission webhook configuration risk.",
+                        "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AZURE_WI_WEBHOOK_MUTATING_WEBHOOK_CONFIGURATION_MUTATION_AZURE_WORKLOAD_IDENTITY_IO",
+                        "observed": {
+                            "reason": "namespaceSelector is absent",
+                            "webhookName": "mutation.azure-workload-identity.io"
+                        }
+                    }
+                ],
+                "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_AZURE_WI_WEBHOOK_MUTATING_WEBHOOK_CONFIGURATION_MUTATION_AZURE_WORKLOAD_IDENTITY_IO_NAMESPACESELECTOR_IS_ABSENT",
+                "message": "MutatingWebhookConfiguration azure-wi-webhook-mutating-webhook-configuration webhook mutation.azure-workload-identity.io has risk: namespaceSelector is absent.",
+                "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+                "resource": {
+                    "apiVersion": "admissionregistration.k8s.io/v1",
+                    "kind": "MutatingWebhookConfiguration",
+                    "name": "azure-wi-webhook-mutating-webhook-configuration"
+                },
+                "severity": "High",
+                "type": "ADMISSION_WEBHOOK_RISK"
+            },
+            {
+                "category": "AdmissionWebhook",
+                "evidence": [
+                    {
+                        "description": "Admission webhook configuration risk.",
+                        "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_CERT_MANAGER_WEBHOOK_WEBHOOK_CERT_MANAGER_IO",
+                        "observed": {
+                            "reason": "failurePolicy=Fail",
+                            "webhookName": "webhook.cert-manager.io"
+                        }
+                    }
+                ],
+                "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_CERT_MANAGER_WEBHOOK_WEBHOOK_CERT_MANAGER_IO_FAILUREPOLICY=FAIL",
+                "message": "MutatingWebhookConfiguration cert-manager-webhook webhook webhook.cert-manager.io has risk: failurePolicy=Fail.",
+                "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                "resource": {
+                    "apiVersion": "admissionregistration.k8s.io/v1",
+                    "kind": "MutatingWebhookConfiguration",
+                    "name": "cert-manager-webhook"
+                },
+                "severity": "High",
+                "type": "ADMISSION_WEBHOOK_RISK"
+            },
+            {
+                "category": "AdmissionWebhook",
+                "evidence": [
+                    {
+                        "description": "Admission webhook configuration risk.",
+                        "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_AKS_NODE_VALIDATING_WEBHOOK_AKS_NODE_VALIDATING_WEBHOOK_AZMK8S_IO",
+                        "observed": {
+                            "reason": "failurePolicy=Fail",
+                            "webhookName": "aks-node-validating-webhook.azmk8s.io"
+                        }
+                    }
+                ],
+                "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_AKS_NODE_VALIDATING_WEBHOOK_AKS_NODE_VALIDATING_WEBHOOK_AZMK8S_IO_FAILUREPOLICY=FAIL",
+                "message": "ValidatingWebhookConfiguration aks-node-validating-webhook webhook aks-node-validating-webhook.azmk8s.io has risk: failurePolicy=Fail.",
+                "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                "resource": {
+                    "apiVersion": "admissionregistration.k8s.io/v1",
+                    "kind": "ValidatingWebhookConfiguration",
+                    "name": "aks-node-validating-webhook"
+                },
+                "severity": "High",
+                "type": "ADMISSION_WEBHOOK_RISK"
+            },
+            {
+                "category": "AdmissionWebhook",
+                "evidence": [
+                    {
+                        "description": "Admission webhook configuration risk.",
+                        "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_AKS_NODE_VALIDATING_WEBHOOK_AKS_NODE_VALIDATING_WEBHOOK_AZMK8S_IO",
+                        "observed": {
+                            "reason": "namespaceSelector is absent",
+                            "webhookName": "aks-node-validating-webhook.azmk8s.io"
+                        }
+                    }
+                ],
+                "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_AKS_NODE_VALIDATING_WEBHOOK_AKS_NODE_VALIDATING_WEBHOOK_AZMK8S_IO_NAMESPACESELECTOR_IS_ABSENT",
+                "message": "ValidatingWebhookConfiguration aks-node-validating-webhook webhook aks-node-validating-webhook.azmk8s.io has risk: namespaceSelector is absent.",
+                "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+                "resource": {
+                    "apiVersion": "admissionregistration.k8s.io/v1",
+                    "kind": "ValidatingWebhookConfiguration",
+                    "name": "aks-node-validating-webhook"
+                },
+                "severity": "High",
+                "type": "ADMISSION_WEBHOOK_RISK"
+            },
+            {
+                "category": "AdmissionWebhook",
+                "evidence": [
+                    {
+                        "description": "Admission webhook configuration risk.",
+                        "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_CERT_MANAGER_WEBHOOK_WEBHOOK_CERT_MANAGER_IO",
+                        "observed": {
+                            "reason": "failurePolicy=Fail",
+                            "webhookName": "webhook.cert-manager.io"
+                        }
+                    }
+                ],
+                "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_CERT_MANAGER_WEBHOOK_WEBHOOK_CERT_MANAGER_IO_FAILUREPOLICY=FAIL",
+                "message": "ValidatingWebhookConfiguration cert-manager-webhook webhook webhook.cert-manager.io has risk: failurePolicy=Fail.",
+                "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                "resource": {
+                    "apiVersion": "admissionregistration.k8s.io/v1",
+                    "kind": "ValidatingWebhookConfiguration",
+                    "name": "cert-manager-webhook"
+                },
+                "severity": "High",
+                "type": "ADMISSION_WEBHOOK_RISK"
+            },
+            {
+                "category": "AdmissionWebhook",
+                "evidence": [
+                    {
+                        "description": "Admission webhook configuration risk.",
+                        "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_INGRESS_NGINX_ADMISSION_VALIDATE_NGINX_INGRESS_KUBERNETES_IO",
+                        "observed": {
+                            "reason": "failurePolicy=Fail",
+                            "webhookName": "validate.nginx.ingress.kubernetes.io"
+                        }
+                    }
+                ],
+                "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_INGRESS_NGINX_ADMISSION_VALIDATE_NGINX_INGRESS_KUBERNETES_IO_FAILUREPOLICY=FAIL",
+                "message": "ValidatingWebhookConfiguration ingress-nginx-admission webhook validate.nginx.ingress.kubernetes.io has risk: failurePolicy=Fail.",
+                "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                "resource": {
+                    "apiVersion": "admissionregistration.k8s.io/v1",
+                    "kind": "ValidatingWebhookConfiguration",
+                    "name": "ingress-nginx-admission"
+                },
+                "severity": "High",
+                "type": "ADMISSION_WEBHOOK_RISK"
+            },
+            {
+                "category": "ReadinessProbes",
+                "evidence": [
+                    {
+                        "description": "Container readinessProbe is absent.",
+                        "id": "MISSING_READINESS_PROBE_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CAINJECTOR_CERT_MANAGER_CAINJECTOR",
+                        "observed": {
+                            "containerName": "cert-manager-cainjector"
+                        }
+                    }
+                ],
+                "id": "MISSING_READINESS_PROBE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CAINJECTOR_CERT_MANAGER_CAINJECTOR",
+                "message": "Container cert-manager-cainjector in Deployment cert-manager/cert-manager-cainjector has no readinessProbe.",
+                "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "cert-manager-cainjector",
+                    "namespace": "cert-manager"
+                },
+                "severity": "Medium",
+                "type": "MISSING_READINESS_PROBE"
+            },
+            {
+                "category": "ReadinessProbes",
+                "evidence": [
+                    {
+                        "description": "Container readinessProbe is absent.",
+                        "id": "MISSING_READINESS_PROBE_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CERT_MANAGER_CONTROLLER",
+                        "observed": {
+                            "containerName": "cert-manager-controller"
+                        }
+                    }
+                ],
+                "id": "MISSING_READINESS_PROBE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CERT_MANAGER_CONTROLLER",
+                "message": "Container cert-manager-controller in Deployment cert-manager/cert-manager has no readinessProbe.",
+                "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "cert-manager",
+                    "namespace": "cert-manager"
+                },
+                "severity": "Medium",
+                "type": "MISSING_READINESS_PROBE"
+            },
+            {
+                "category": "ReadinessProbes",
+                "evidence": [
+                    {
+                        "description": "Container readinessProbe is absent.",
+                        "id": "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA_GRAFANA_SC_DASHBOARD",
+                        "observed": {
+                            "containerName": "grafana-sc-dashboard"
+                        }
+                    }
+                ],
+                "id": "MISSING_READINESS_PROBE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA_GRAFANA_SC_DASHBOARD",
+                "message": "Container grafana-sc-dashboard in Deployment monitoring/kube-prometheus-stack-grafana has no readinessProbe.",
+                "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "kube-prometheus-stack-grafana",
+                    "namespace": "monitoring"
+                },
+                "severity": "Medium",
+                "type": "MISSING_READINESS_PROBE"
+            },
+            {
+                "category": "ReadinessProbes",
+                "evidence": [
+                    {
+                        "description": "Container readinessProbe is absent.",
+                        "id": "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA_GRAFANA_SC_DATASOURCES",
+                        "observed": {
+                            "containerName": "grafana-sc-datasources"
+                        }
+                    }
+                ],
+                "id": "MISSING_READINESS_PROBE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA_GRAFANA_SC_DATASOURCES",
+                "message": "Container grafana-sc-datasources in Deployment monitoring/kube-prometheus-stack-grafana has no readinessProbe.",
+                "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "kube-prometheus-stack-grafana",
+                    "namespace": "monitoring"
+                },
+                "severity": "Medium",
+                "type": "MISSING_READINESS_PROBE"
+            },
+            {
+                "category": "ReadinessProbes",
+                "evidence": [
+                    {
+                        "description": "Container readinessProbe is absent.",
+                        "id": "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_OPERATOR_KUBE_PROMETHEUS_STACK",
+                        "observed": {
+                            "containerName": "kube-prometheus-stack"
+                        }
+                    }
+                ],
+                "id": "MISSING_READINESS_PROBE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_OPERATOR_KUBE_PROMETHEUS_STACK",
+                "message": "Container kube-prometheus-stack in Deployment monitoring/kube-prometheus-stack-operator has no readinessProbe.",
+                "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "kube-prometheus-stack-operator",
+                    "namespace": "monitoring"
+                },
+                "severity": "Medium",
+                "type": "MISSING_READINESS_PROBE"
+            },
+            {
+                "category": "ReadinessProbes",
+                "evidence": [
+                    {
+                        "description": "Container readinessProbe is absent.",
+                        "id": "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_STATEFULSET_ALERTMANAGER_KUBE_PROMETHEUS_STACK_ALERTMANAGER_CONFIG_RELOADER",
+                        "observed": {
+                            "containerName": "config-reloader"
+                        }
+                    }
+                ],
+                "id": "MISSING_READINESS_PROBE_MONITORING_STATEFULSET_ALERTMANAGER_KUBE_PROMETHEUS_STACK_ALERTMANAGER_CONFIG_RELOADER",
+                "message": "Container config-reloader in StatefulSet monitoring/alertmanager-kube-prometheus-stack-alertmanager has no readinessProbe.",
+                "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "StatefulSet",
+                    "name": "alertmanager-kube-prometheus-stack-alertmanager",
+                    "namespace": "monitoring"
+                },
+                "severity": "Medium",
+                "type": "MISSING_READINESS_PROBE"
+            },
+            {
+                "category": "ReadinessProbes",
+                "evidence": [
+                    {
+                        "description": "Container readinessProbe is absent.",
+                        "id": "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_STATEFULSET_PROMETHEUS_KUBE_PROMETHEUS_STACK_PROMETHEUS_CONFIG_RELOADER",
+                        "observed": {
+                            "containerName": "config-reloader"
+                        }
+                    }
+                ],
+                "id": "MISSING_READINESS_PROBE_MONITORING_STATEFULSET_PROMETHEUS_KUBE_PROMETHEUS_STACK_PROMETHEUS_CONFIG_RELOADER",
+                "message": "Container config-reloader in StatefulSet monitoring/prometheus-kube-prometheus-stack-prometheus has no readinessProbe.",
+                "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "StatefulSet",
+                    "name": "prometheus-kube-prometheus-stack-prometheus",
+                    "namespace": "monitoring"
+                },
+                "severity": "Medium",
+                "type": "MISSING_READINESS_PROBE"
+            },
+            {
+                "category": "Observability",
+                "evidence": [
+                    {
+                        "description": "Monitoring capability CRD exists.",
+                        "id": "OBSERVABILITY_CAPABILITY_DETECTED_EVIDENCE_PODMONITORS_MONITORING_COREOS_COM",
+                        "observed": {
+                            "category": "podmonitors",
+                            "crd": "podmonitors.monitoring.coreos.com"
+                        }
+                    }
+                ],
+                "id": "OBSERVABILITY_CAPABILITY_DETECTED_PODMONITORS_MONITORING_COREOS_COM",
+                "message": "Observability CRD detected: podmonitors.monitoring.coreos.com",
+                "recommendation": "Use existing observability to validate workload health before and after upgrade.",
+                "resource": {
+                    "apiVersion": "apiextensions.k8s.io/v1",
+                    "kind": "CustomResourceDefinition",
+                    "name": "podmonitors.monitoring.coreos.com"
+                },
+                "severity": "Info",
+                "type": "OBSERVABILITY_CAPABILITY_DETECTED"
+            },
+            {
+                "category": "Observability",
+                "evidence": [
+                    {
+                        "description": "Monitoring capability CRD exists.",
+                        "id": "OBSERVABILITY_CAPABILITY_DETECTED_EVIDENCE_PROMETHEUSES_MONITORING_COREOS_COM",
+                        "observed": {
+                            "category": "prometheuses",
+                            "crd": "prometheuses.monitoring.coreos.com"
+                        }
+                    }
+                ],
+                "id": "OBSERVABILITY_CAPABILITY_DETECTED_PROMETHEUSES_MONITORING_COREOS_COM",
+                "message": "Observability CRD detected: prometheuses.monitoring.coreos.com",
+                "recommendation": "Use existing observability to validate workload health before and after upgrade.",
+                "resource": {
+                    "apiVersion": "apiextensions.k8s.io/v1",
+                    "kind": "CustomResourceDefinition",
+                    "name": "prometheuses.monitoring.coreos.com"
+                },
+                "severity": "Info",
+                "type": "OBSERVABILITY_CAPABILITY_DETECTED"
+            },
+            {
+                "category": "Observability",
+                "evidence": [
+                    {
+                        "description": "Monitoring capability CRD exists.",
+                        "id": "OBSERVABILITY_CAPABILITY_DETECTED_EVIDENCE_SERVICEMONITORS_MONITORING_COREOS_COM",
+                        "observed": {
+                            "category": "servicemonitors",
+                            "crd": "servicemonitors.monitoring.coreos.com"
+                        }
+                    }
+                ],
+                "id": "OBSERVABILITY_CAPABILITY_DETECTED_SERVICEMONITORS_MONITORING_COREOS_COM",
+                "message": "Observability CRD detected: servicemonitors.monitoring.coreos.com",
+                "recommendation": "Use existing observability to validate workload health before and after upgrade.",
+                "resource": {
+                    "apiVersion": "apiextensions.k8s.io/v1",
+                    "kind": "CustomResourceDefinition",
+                    "name": "servicemonitors.monitoring.coreos.com"
+                },
+                "severity": "Info",
+                "type": "OBSERVABILITY_CAPABILITY_DETECTED"
+            },
+            {
+                "category": "WorkloadAvailability",
+                "evidence": [
+                    {
+                        "description": "Replica count observed on the workload spec.",
+                        "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER",
+                        "observed": {
+                            "replicas": "1"
+                        }
+                    }
+                ],
+                "id": "WORKLOAD_AVAILABILITY_RISK_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER",
+                "message": "Deployment cert-manager/cert-manager has fewer than 2 replicas.",
+                "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "cert-manager",
+                    "namespace": "cert-manager"
+                },
+                "severity": "High",
+                "type": "WORKLOAD_AVAILABILITY_RISK"
+            },
+            {
+                "category": "WorkloadAvailability",
+                "evidence": [
+                    {
+                        "description": "Replica count observed on the workload spec.",
+                        "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CAINJECTOR",
+                        "observed": {
+                            "replicas": "1"
+                        }
+                    }
+                ],
+                "id": "WORKLOAD_AVAILABILITY_RISK_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CAINJECTOR",
+                "message": "Deployment cert-manager/cert-manager-cainjector has fewer than 2 replicas.",
+                "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "cert-manager-cainjector",
+                    "namespace": "cert-manager"
+                },
+                "severity": "High",
+                "type": "WORKLOAD_AVAILABILITY_RISK"
+            },
+            {
+                "category": "WorkloadAvailability",
+                "evidence": [
+                    {
+                        "description": "Replica count observed on the workload spec.",
+                        "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_WEBHOOK",
+                        "observed": {
+                            "replicas": "1"
+                        }
+                    }
+                ],
+                "id": "WORKLOAD_AVAILABILITY_RISK_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_WEBHOOK",
+                "message": "Deployment cert-manager/cert-manager-webhook has fewer than 2 replicas.",
+                "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "cert-manager-webhook",
+                    "namespace": "cert-manager"
+                },
+                "severity": "High",
+                "type": "WORKLOAD_AVAILABILITY_RISK"
+            },
+            {
+                "category": "WorkloadAvailability",
+                "evidence": [
+                    {
+                        "description": "Replica count observed on the workload spec.",
+                        "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_INGRESS_NGINX_DEPLOYMENT_INGRESS_NGINX_CONTROLLER",
+                        "observed": {
+                            "replicas": "1"
+                        }
+                    }
+                ],
+                "id": "WORKLOAD_AVAILABILITY_RISK_INGRESS_NGINX_DEPLOYMENT_INGRESS_NGINX_CONTROLLER",
+                "message": "Deployment ingress-nginx/ingress-nginx-controller has fewer than 2 replicas.",
+                "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "ingress-nginx-controller",
+                    "namespace": "ingress-nginx"
+                },
+                "severity": "High",
+                "type": "WORKLOAD_AVAILABILITY_RISK"
+            },
+            {
+                "category": "WorkloadAvailability",
+                "evidence": [
+                    {
+                        "description": "Replica count observed on the workload spec.",
+                        "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA",
+                        "observed": {
+                            "replicas": "1"
+                        }
+                    }
+                ],
+                "id": "WORKLOAD_AVAILABILITY_RISK_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA",
+                "message": "Deployment monitoring/kube-prometheus-stack-grafana has fewer than 2 replicas.",
+                "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "kube-prometheus-stack-grafana",
+                    "namespace": "monitoring"
+                },
+                "severity": "High",
+                "type": "WORKLOAD_AVAILABILITY_RISK"
+            },
+            {
+                "category": "WorkloadAvailability",
+                "evidence": [
+                    {
+                        "description": "Replica count observed on the workload spec.",
+                        "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_KUBE_STATE_METRICS",
+                        "observed": {
+                            "replicas": "1"
+                        }
+                    }
+                ],
+                "id": "WORKLOAD_AVAILABILITY_RISK_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_KUBE_STATE_METRICS",
+                "message": "Deployment monitoring/kube-prometheus-stack-kube-state-metrics has fewer than 2 replicas.",
+                "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "kube-prometheus-stack-kube-state-metrics",
+                    "namespace": "monitoring"
+                },
+                "severity": "High",
+                "type": "WORKLOAD_AVAILABILITY_RISK"
+            },
+            {
+                "category": "WorkloadAvailability",
+                "evidence": [
+                    {
+                        "description": "Replica count observed on the workload spec.",
+                        "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_OPERATOR",
+                        "observed": {
+                            "replicas": "1"
+                        }
+                    }
+                ],
+                "id": "WORKLOAD_AVAILABILITY_RISK_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_OPERATOR",
+                "message": "Deployment monitoring/kube-prometheus-stack-operator has fewer than 2 replicas.",
+                "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "kube-prometheus-stack-operator",
+                    "namespace": "monitoring"
+                },
+                "severity": "High",
+                "type": "WORKLOAD_AVAILABILITY_RISK"
+            },
+            {
+                "category": "WorkloadAvailability",
+                "evidence": [
+                    {
+                        "description": "Replica count observed on the workload spec.",
+                        "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_STATEFULSET_ALERTMANAGER_KUBE_PROMETHEUS_STACK_ALERTMANAGER",
+                        "observed": {
+                            "replicas": "1"
+                        }
+                    }
+                ],
+                "id": "WORKLOAD_AVAILABILITY_RISK_MONITORING_STATEFULSET_ALERTMANAGER_KUBE_PROMETHEUS_STACK_ALERTMANAGER",
+                "message": "StatefulSet monitoring/alertmanager-kube-prometheus-stack-alertmanager has fewer than 2 replicas.",
+                "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "StatefulSet",
+                    "name": "alertmanager-kube-prometheus-stack-alertmanager",
+                    "namespace": "monitoring"
+                },
+                "severity": "High",
+                "type": "WORKLOAD_AVAILABILITY_RISK"
+            },
+            {
+                "category": "WorkloadAvailability",
+                "evidence": [
+                    {
+                        "description": "Replica count observed on the workload spec.",
+                        "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_STATEFULSET_PROMETHEUS_KUBE_PROMETHEUS_STACK_PROMETHEUS",
+                        "observed": {
+                            "replicas": "1"
+                        }
+                    }
+                ],
+                "id": "WORKLOAD_AVAILABILITY_RISK_MONITORING_STATEFULSET_PROMETHEUS_KUBE_PROMETHEUS_STACK_PROMETHEUS",
+                "message": "StatefulSet monitoring/prometheus-kube-prometheus-stack-prometheus has fewer than 2 replicas.",
+                "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "StatefulSet",
+                    "name": "prometheus-kube-prometheus-stack-prometheus",
+                    "namespace": "monitoring"
+                },
+                "severity": "High",
+                "type": "WORKLOAD_AVAILABILITY_RISK"
+            }
+        ],
+        "generatedPlanRef": {
+            "name": "r03-aks-medium-assessment-plan"
+        },
+        "phase": "Completed",
+        "riskLevel": "Critical",
+        "score": 228,
+        "summary": {
+            "critical": 0,
+            "high": 20,
+            "info": 3,
+            "low": 0,
+            "medium": 7,
+            "totalFindings": 30
+        }
+    }
+}

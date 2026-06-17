@@ -1,0 +1,25 @@
+fixture: "pdb-maxunavailable-ambiguous.yaml"
+labeled_by: "Codex-authored-control-labels"
+labeled_at: "2026-06-17"
+negative_control: false
+findings:
+  - family: "WorkloadAvailability"
+    type: "WORKLOAD_AVAILABILITY_RISK"
+    severity: "High"
+    confidence: "certain"
+    resource:
+      apiVersion: "apps/v1"
+      kind: "Deployment"
+      namespace: "r10-pdb-ambiguous"
+      name: "singleton"
+    message_contains: "fewer than 2 replicas"
+  - family: "PDB"
+    type: "PDB_BLOCKING_RISK"
+    severity: "High"
+    confidence: "likely"
+    resource:
+      apiVersion: "policy/v1"
+      kind: "PodDisruptionBudget"
+      namespace: "r10-pdb-ambiguous"
+      name: "singleton"
+    message_contains: "may block disruption"

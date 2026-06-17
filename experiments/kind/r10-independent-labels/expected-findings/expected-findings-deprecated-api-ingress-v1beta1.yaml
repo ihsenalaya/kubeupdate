@@ -1,0 +1,15 @@
+fixture: "deprecated-api-ingress-v1beta1.yaml"
+labeled_by: "Codex-authored-control-labels"
+labeled_at: "2026-06-17"
+negative_control: false
+findings:
+  - family: "DeprecatedAPI"
+    type: "DEPRECATED_OR_REMOVED_API"
+    severity: "Critical"
+    confidence: "certain"
+    resource:
+      apiVersion: "networking.k8s.io/v1beta1"
+      kind: "Ingress"
+      namespace: "default"
+      name: "legacy-ingress"
+    message_contains: "networking.k8s.io/v1beta1"

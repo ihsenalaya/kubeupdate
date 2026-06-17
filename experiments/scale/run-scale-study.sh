@@ -11,7 +11,7 @@ OPERATOR_SELECTOR="${OPERATOR_SELECTOR:-app.kubernetes.io/name=kubeupgrade-guard
 CONTROLLER_METRICS_URL="${CONTROLLER_METRICS_URL:-}"
 
 rss_mib() {
-  kubectl top pod -A -l "${OPERATOR_SELECTOR}" --no-headers 2>/dev/null | awk '
+  { kubectl top pod -A -l "${OPERATOR_SELECTOR}" --no-headers 2>/dev/null || true; } | awk '
     function to_mib(v) {
       if (v ~ /Gi$/) { sub(/Gi$/, "", v); return v * 1024 }
       if (v ~ /Mi$/) { sub(/Mi$/, "", v); return v + 0 }

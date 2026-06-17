@@ -1,0 +1,11 @@
+{
+  "size": 10000,
+  "run": 1,
+  "timestamp_start": "2026-06-17T19:12:17Z",
+  "timestamp_end": "2026-06-17T19:22:18Z",
+  "duration_s": 601,
+  "rss_mib": 0.000,
+  "api_requests_delta": 33,
+  "completed": false,
+  "errors": ["generate-load failed", "assessment did not complete"]
+}

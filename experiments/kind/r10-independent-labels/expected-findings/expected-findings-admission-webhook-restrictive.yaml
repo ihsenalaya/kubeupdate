@@ -1,0 +1,32 @@
+fixture: "admission-webhook-restrictive.yaml"
+labeled_by: "Codex-authored-control-labels"
+labeled_at: "2026-06-17"
+negative_control: false
+findings:
+  - family: "AdmissionWebhook"
+    type: "ADMISSION_WEBHOOK_RISK"
+    severity: "High"
+    confidence: "certain"
+    resource:
+      apiVersion: "admissionregistration.k8s.io/v1"
+      kind: "ValidatingWebhookConfiguration"
+      name: "r10-restrictive-webhook"
+    message_contains: "failurePolicy=Fail"
+  - family: "AdmissionWebhook"
+    type: "ADMISSION_WEBHOOK_RISK"
+    severity: "High"
+    confidence: "certain"
+    resource:
+      apiVersion: "admissionregistration.k8s.io/v1"
+      kind: "ValidatingWebhookConfiguration"
+      name: "r10-restrictive-webhook"
+    message_contains: "namespaceSelector is absent"
+  - family: "AdmissionWebhook"
+    type: "ADMISSION_WEBHOOK_RISK"
+    severity: "Critical"
+    confidence: "certain"
+    resource:
+      apiVersion: "admissionregistration.k8s.io/v1"
+      kind: "ValidatingWebhookConfiguration"
+      name: "r10-restrictive-webhook"
+    message_contains: "referenced service is absent"

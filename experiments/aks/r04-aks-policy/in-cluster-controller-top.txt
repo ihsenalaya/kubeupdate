@@ -1,0 +1,2 @@
+kubeupgrade-guardian-system   kubeupgrade-guardian-kubeupgrade-guardian-operator-55b76b967tnn   1m     10Mi
+kubeupgrade-guardian-system   kubeupgrade-guardian-kubeupgrade-guardian-operator-55b76b9b64n2   142m   61Mi

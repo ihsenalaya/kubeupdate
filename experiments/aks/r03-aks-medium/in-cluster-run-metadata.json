@@ -1,0 +1,10 @@
+{
+  "cluster": "aks-medium",
+  "targetVersion": "1.35",
+  "assessmentName": "r03-aks-medium-assessment",
+  "assessmentNamespace": "kug-assessment",
+  "phase": "Completed",
+  "duration_s": 13,
+  "controller_rss_mib": 10.000,
+  "timestamp": "20260617T172550Z"
+}

@@ -1,0 +1,10 @@
+{
+  "cluster": "aks-policy",
+  "targetVersion": "1.35",
+  "assessmentName": "r04-aks-policy-assessment",
+  "assessmentNamespace": "kug-assessment",
+  "phase": "Completed",
+  "duration_s": 171,
+  "controller_rss_mib": 71.000,
+  "timestamp": "20260617T172133Z"
+}

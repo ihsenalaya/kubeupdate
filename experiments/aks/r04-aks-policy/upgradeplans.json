@@ -1,0 +1,868 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "upgrade.guardian.io/v1alpha1",
+            "kind": "UpgradePlan",
+            "metadata": {
+                "creationTimestamp": "2026-06-17T17:38:13Z",
+                "generation": 1,
+                "name": "r04-aks-policy-assessment-plan",
+                "namespace": "kug-assessment",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "upgrade.guardian.io/v1alpha1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "UpgradeAssessment",
+                        "name": "r04-aks-policy-assessment",
+                        "uid": "eae03381-d769-4721-a44b-8c02177fa64e"
+                    }
+                ],
+                "resourceVersion": "21645",
+                "uid": "79fa5732-e86f-4dfe-9090-139ba34446cb"
+            },
+            "spec": {
+                "assessmentRef": {
+                    "name": "r04-aks-policy-assessment",
+                    "namespace": "kug-assessment"
+                },
+                "decision": "ProceedWithCaution",
+                "recommendedOrder": [
+                    "fix-critical-blockers",
+                    "fix-high-risk-workloads",
+                    "validate-admission-policies",
+                    "validate-observability",
+                    "proceed-with-controlled-upgrade"
+                ],
+                "requiredActions": [
+                    {
+                        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_NODE_MUTATING_WEBHOOK_AKS_NODE_MUTATING_WEBHOOK_AZMK8S_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-aks-node-mutating-webhook-aks-node-mutating-webhook-azmk8s-io-failurepolicy=fail",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "MutatingWebhookConfiguration",
+                            "name": "aks-node-mutating-webhook"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_NODE_MUTATING_WEBHOOK_AKS_NODE_MUTATING_WEBHOOK_AZMK8S_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-aks-node-mutating-webhook-aks-node-mutating-webhook-azmk8s-io-namespaceselector-is-absent",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "MutatingWebhookConfiguration",
+                            "name": "aks-node-mutating-webhook"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_WEBHOOK_ADMISSION_CONTROLLER_AKS_WEBHOOK_ADMISSION_CONTROLLER_AZMK8S_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-aks-webhook-admission-controller-aks-webhook-admission-controller-azmk8s-io-failurepolicy=fail",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "MutatingWebhookConfiguration",
+                            "name": "aks-webhook-admission-controller"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_WEBHOOK_ADMISSION_CONTROLLER_AKS_WEBHOOK_ADMISSION_CONTROLLER_AZMK8S_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-aks-webhook-admission-controller-aks-webhook-admission-controller-azmk8s-io-namespaceselector-is-absent",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "MutatingWebhookConfiguration",
+                            "name": "aks-webhook-admission-controller"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AZURE_WI_WEBHOOK_MUTATING_WEBHOOK_CONFIGURATION_MUTATION_AZURE_WORKLOAD_IDENTITY_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-azure-wi-webhook-mutating-webhook-configuration-mutation-azure-workload-identity-io-failurepolicy=fail",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "MutatingWebhookConfiguration",
+                            "name": "azure-wi-webhook-mutating-webhook-configuration"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AZURE_WI_WEBHOOK_MUTATING_WEBHOOK_CONFIGURATION_MUTATION_AZURE_WORKLOAD_IDENTITY_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-azure-wi-webhook-mutating-webhook-configuration-mutation-azure-workload-identity-io-namespaceselector-is-absent",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "MutatingWebhookConfiguration",
+                            "name": "azure-wi-webhook-mutating-webhook-configuration"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_CERT_MANAGER_WEBHOOK_WEBHOOK_CERT_MANAGER_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-cert-manager-webhook-webhook-cert-manager-io-failurepolicy=fail",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "MutatingWebhookConfiguration",
+                            "name": "cert-manager-webhook"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_AKS_NODE_VALIDATING_WEBHOOK_AKS_NODE_VALIDATING_WEBHOOK_AZMK8S_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-aks-node-validating-webhook-aks-node-validating-webhook-azmk8s-io-failurepolicy=fail",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "ValidatingWebhookConfiguration",
+                            "name": "aks-node-validating-webhook"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_AKS_NODE_VALIDATING_WEBHOOK_AKS_NODE_VALIDATING_WEBHOOK_AZMK8S_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-aks-node-validating-webhook-aks-node-validating-webhook-azmk8s-io-namespaceselector-is-absent",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "ValidatingWebhookConfiguration",
+                            "name": "aks-node-validating-webhook"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_AZURE_POLICY_VALIDATING_WEBHOOK_CONFIGURATION_BYOVALIDATION_POLICY_AZURE_COM"
+                        ],
+                        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-azure-policy-validating-webhook-configuration-byovalidation-policy-azure-com-namespaceselector-is-absent",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "ValidatingWebhookConfiguration",
+                            "name": "azure-policy-validating-webhook-configuration"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_AZURE_POLICY_VALIDATING_WEBHOOK_CONFIGURATION_VALIDATEPOLICYRESOURCES_POLICY_AZURE_COM"
+                        ],
+                        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-azure-policy-validating-webhook-configuration-validatepolicyresources-policy-azure-com-namespaceselector-is-absent",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "ValidatingWebhookConfiguration",
+                            "name": "azure-policy-validating-webhook-configuration"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_CERT_MANAGER_WEBHOOK_WEBHOOK_CERT_MANAGER_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-cert-manager-webhook-webhook-cert-manager-io-failurepolicy=fail",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "ValidatingWebhookConfiguration",
+                            "name": "cert-manager-webhook"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_INGRESS_NGINX_ADMISSION_VALIDATE_NGINX_INGRESS_KUBERNETES_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-ingress-nginx-admission-validate-nginx-ingress-kubernetes-io-failurepolicy=fail",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "ValidatingWebhookConfiguration",
+                            "name": "ingress-nginx-admission"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CAINJECTOR_CERT_MANAGER_CAINJECTOR"
+                        ],
+                        "id": "remediate-missing-readiness-probe-cert-manager-deployment-cert-manager-cainjector-cert-manager-cainjector",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "cert-manager-cainjector",
+                            "namespace": "cert-manager"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CERT_MANAGER_CONTROLLER"
+                        ],
+                        "id": "remediate-missing-readiness-probe-cert-manager-deployment-cert-manager-cert-manager-controller",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "cert-manager",
+                            "namespace": "cert-manager"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_AZURE_IP_MASQ_AGENT_AZURE_IP_MASQ_AGENT"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-azure-ip-masq-agent-azure-ip-masq-agent",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "azure-ip-masq-agent",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_AZURE_NPM_AZURE_NPM"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-azure-npm-azure-npm",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "azure-npm",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_CLOUD_NODE_MANAGER_CLOUD_NODE_MANAGER"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-cloud-node-manager-cloud-node-manager",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "cloud-node-manager",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_CLOUD_NODE_MANAGER_WINDOWS_CLOUD_NODE_MANAGER"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-cloud-node-manager-windows-cloud-node-manager",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "cloud-node-manager-windows",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_CSI_AZUREDISK_NODE_AZUREDISK"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-csi-azuredisk-node-azuredisk",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "csi-azuredisk-node",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_CSI_AZUREDISK_NODE_LIVENESS_PROBE"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-csi-azuredisk-node-liveness-probe",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "csi-azuredisk-node",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_CSI_AZUREDISK_NODE_NODE_DRIVER_REGISTRAR"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-csi-azuredisk-node-node-driver-registrar",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "csi-azuredisk-node",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_CSI_AZUREDISK_NODE_WIN_AZUREDISK"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-csi-azuredisk-node-win-azuredisk",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "csi-azuredisk-node-win",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_CSI_AZUREDISK_NODE_WIN_NODE_DRIVER_REGISTRAR"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-csi-azuredisk-node-win-node-driver-registrar",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "csi-azuredisk-node-win",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_CSI_AZUREFILE_NODE_AZFILESREFRESH"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-csi-azurefile-node-azfilesrefresh",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "csi-azurefile-node",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_CSI_AZUREFILE_NODE_AZUREFILE"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-csi-azurefile-node-azurefile",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "csi-azurefile-node",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_CSI_AZUREFILE_NODE_LIVENESS_PROBE"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-csi-azurefile-node-liveness-probe",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "csi-azurefile-node",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_CSI_AZUREFILE_NODE_NODE_DRIVER_REGISTRAR"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-csi-azurefile-node-node-driver-registrar",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "csi-azurefile-node",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_CSI_AZUREFILE_NODE_WIN_AZUREFILE"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-csi-azurefile-node-win-azurefile",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "csi-azurefile-node-win",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_CSI_AZUREFILE_NODE_WIN_NODE_DRIVER_REGISTRAR"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-csi-azurefile-node-win-node-driver-registrar",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "csi-azurefile-node-win",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_KUBE_PROXY_KUBE_PROXY"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-kube-proxy-kube-proxy",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "kube-proxy",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DAEMONSET_WINDOWS_KUBE_PROXY_INITIALIZER_PAUSE"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-daemonset-windows-kube-proxy-initializer-pause",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "DaemonSet",
+                            "name": "windows-kube-proxy-initializer",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DEPLOYMENT_COREDNS_AUTOSCALER_AUTOSCALER"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-deployment-coredns-autoscaler-autoscaler",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "coredns-autoscaler",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DEPLOYMENT_KONNECTIVITY_AGENT_AUTOSCALER_AUTOSCALER"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-deployment-konnectivity-agent-autoscaler-autoscaler",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "konnectivity-agent-autoscaler",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_KUBE_SYSTEM_DEPLOYMENT_METRICS_SERVER_METRICS_SERVER_VPA"
+                        ],
+                        "id": "remediate-missing-readiness-probe-kube-system-deployment-metrics-server-metrics-server-vpa",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "metrics-server",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA_GRAFANA_SC_DASHBOARD"
+                        ],
+                        "id": "remediate-missing-readiness-probe-monitoring-deployment-kube-prometheus-stack-grafana-grafana-sc-dashboard",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "kube-prometheus-stack-grafana",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA_GRAFANA_SC_DATASOURCES"
+                        ],
+                        "id": "remediate-missing-readiness-probe-monitoring-deployment-kube-prometheus-stack-grafana-grafana-sc-datasources",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "kube-prometheus-stack-grafana",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_OPERATOR_KUBE_PROMETHEUS_STACK"
+                        ],
+                        "id": "remediate-missing-readiness-probe-monitoring-deployment-kube-prometheus-stack-operator-kube-prometheus-stack",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "kube-prometheus-stack-operator",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_STATEFULSET_ALERTMANAGER_KUBE_PROMETHEUS_STACK_ALERTMANAGER_CONFIG_RELOADER"
+                        ],
+                        "id": "remediate-missing-readiness-probe-monitoring-statefulset-alertmanager-kube-prometheus-stack-alertmanager-config-reloader",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "StatefulSet",
+                            "name": "alertmanager-kube-prometheus-stack-alertmanager",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_STATEFULSET_PROMETHEUS_KUBE_PROMETHEUS_STACK_PROMETHEUS_CONFIG_RELOADER"
+                        ],
+                        "id": "remediate-missing-readiness-probe-monitoring-statefulset-prometheus-kube-prometheus-stack-prometheus-config-reloader",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "StatefulSet",
+                            "name": "prometheus-kube-prometheus-stack-prometheus",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER"
+                        ],
+                        "id": "remediate-workload-availability-risk-cert-manager-deployment-cert-manager",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "cert-manager",
+                            "namespace": "cert-manager"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CAINJECTOR"
+                        ],
+                        "id": "remediate-workload-availability-risk-cert-manager-deployment-cert-manager-cainjector",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "cert-manager-cainjector",
+                            "namespace": "cert-manager"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_WEBHOOK"
+                        ],
+                        "id": "remediate-workload-availability-risk-cert-manager-deployment-cert-manager-webhook",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "cert-manager-webhook",
+                            "namespace": "cert-manager"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_GATEKEEPER_SYSTEM_DEPLOYMENT_GATEKEEPER_AUDIT"
+                        ],
+                        "id": "remediate-workload-availability-risk-gatekeeper-system-deployment-gatekeeper-audit",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "gatekeeper-audit",
+                            "namespace": "gatekeeper-system"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_INGRESS_NGINX_DEPLOYMENT_INGRESS_NGINX_CONTROLLER"
+                        ],
+                        "id": "remediate-workload-availability-risk-ingress-nginx-deployment-ingress-nginx-controller",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "ingress-nginx-controller",
+                            "namespace": "ingress-nginx"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_KUBE_SYSTEM_DEPLOYMENT_AZURE_POLICY"
+                        ],
+                        "id": "remediate-workload-availability-risk-kube-system-deployment-azure-policy",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "azure-policy",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_KUBE_SYSTEM_DEPLOYMENT_AZURE_POLICY_WEBHOOK"
+                        ],
+                        "id": "remediate-workload-availability-risk-kube-system-deployment-azure-policy-webhook",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "azure-policy-webhook",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_KUBE_SYSTEM_DEPLOYMENT_COREDNS_AUTOSCALER"
+                        ],
+                        "id": "remediate-workload-availability-risk-kube-system-deployment-coredns-autoscaler",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "coredns-autoscaler",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_KUBE_SYSTEM_DEPLOYMENT_KONNECTIVITY_AGENT_AUTOSCALER"
+                        ],
+                        "id": "remediate-workload-availability-risk-kube-system-deployment-konnectivity-agent-autoscaler",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "konnectivity-agent-autoscaler",
+                            "namespace": "kube-system"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA"
+                        ],
+                        "id": "remediate-workload-availability-risk-monitoring-deployment-kube-prometheus-stack-grafana",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "kube-prometheus-stack-grafana",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_KUBE_STATE_METRICS"
+                        ],
+                        "id": "remediate-workload-availability-risk-monitoring-deployment-kube-prometheus-stack-kube-state-metrics",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "kube-prometheus-stack-kube-state-metrics",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_OPERATOR"
+                        ],
+                        "id": "remediate-workload-availability-risk-monitoring-deployment-kube-prometheus-stack-operator",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "kube-prometheus-stack-operator",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_STATEFULSET_ALERTMANAGER_KUBE_PROMETHEUS_STACK_ALERTMANAGER"
+                        ],
+                        "id": "remediate-workload-availability-risk-monitoring-statefulset-alertmanager-kube-prometheus-stack-alertmanager",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "StatefulSet",
+                            "name": "alertmanager-kube-prometheus-stack-alertmanager",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_STATEFULSET_PROMETHEUS_KUBE_PROMETHEUS_STACK_PROMETHEUS"
+                        ],
+                        "id": "remediate-workload-availability-risk-monitoring-statefulset-prometheus-kube-prometheus-stack-prometheus",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "StatefulSet",
+                            "name": "prometheus-kube-prometheus-stack-prometheus",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "High"
+                    }
+                ],
+                "riskLevel": "Critical",
+                "score": 378,
+                "summary": {
+                    "critical": 0,
+                    "high": 27,
+                    "info": 4,
+                    "low": 0,
+                    "medium": 27,
+                    "totalFindings": 58
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-06-17T17:38:14Z",
+                        "message": "UpgradePlan generated from latest assessment.",
+                        "observedGeneration": 1,
+                        "reason": "Generated",
+                        "status": "True",
+                        "type": "PlanGenerated"
+                    }
+                ],
+                "generatedAt": "2026-06-17T17:38:14Z",
+                "observedGeneration": 1
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

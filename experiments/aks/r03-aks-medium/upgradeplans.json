@@ -1,0 +1,465 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "upgrade.guardian.io/v1alpha1",
+            "kind": "UpgradePlan",
+            "metadata": {
+                "creationTimestamp": "2026-06-17T17:37:22Z",
+                "generation": 1,
+                "name": "r03-aks-medium-assessment-plan",
+                "namespace": "kug-assessment",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "upgrade.guardian.io/v1alpha1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "UpgradeAssessment",
+                        "name": "r03-aks-medium-assessment",
+                        "uid": "6d1aaee1-7b41-42d1-aea1-ad12a7c9ef2c"
+                    }
+                ],
+                "resourceVersion": "20935",
+                "uid": "ad1a4a07-5acf-4e85-a13b-6a405153986e"
+            },
+            "spec": {
+                "assessmentRef": {
+                    "name": "r03-aks-medium-assessment",
+                    "namespace": "kug-assessment"
+                },
+                "decision": "ProceedWithCaution",
+                "recommendedOrder": [
+                    "fix-critical-blockers",
+                    "fix-high-risk-workloads",
+                    "validate-admission-policies",
+                    "validate-observability",
+                    "proceed-with-controlled-upgrade"
+                ],
+                "requiredActions": [
+                    {
+                        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_NODE_MUTATING_WEBHOOK_AKS_NODE_MUTATING_WEBHOOK_AZMK8S_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-aks-node-mutating-webhook-aks-node-mutating-webhook-azmk8s-io-failurepolicy=fail",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "MutatingWebhookConfiguration",
+                            "name": "aks-node-mutating-webhook"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_NODE_MUTATING_WEBHOOK_AKS_NODE_MUTATING_WEBHOOK_AZMK8S_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-aks-node-mutating-webhook-aks-node-mutating-webhook-azmk8s-io-namespaceselector-is-absent",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "MutatingWebhookConfiguration",
+                            "name": "aks-node-mutating-webhook"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_WEBHOOK_ADMISSION_CONTROLLER_AKS_WEBHOOK_ADMISSION_CONTROLLER_AZMK8S_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-aks-webhook-admission-controller-aks-webhook-admission-controller-azmk8s-io-failurepolicy=fail",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "MutatingWebhookConfiguration",
+                            "name": "aks-webhook-admission-controller"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_WEBHOOK_ADMISSION_CONTROLLER_AKS_WEBHOOK_ADMISSION_CONTROLLER_AZMK8S_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-aks-webhook-admission-controller-aks-webhook-admission-controller-azmk8s-io-namespaceselector-is-absent",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "MutatingWebhookConfiguration",
+                            "name": "aks-webhook-admission-controller"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AZURE_WI_WEBHOOK_MUTATING_WEBHOOK_CONFIGURATION_MUTATION_AZURE_WORKLOAD_IDENTITY_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-azure-wi-webhook-mutating-webhook-configuration-mutation-azure-workload-identity-io-failurepolicy=fail",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "MutatingWebhookConfiguration",
+                            "name": "azure-wi-webhook-mutating-webhook-configuration"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AZURE_WI_WEBHOOK_MUTATING_WEBHOOK_CONFIGURATION_MUTATION_AZURE_WORKLOAD_IDENTITY_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-azure-wi-webhook-mutating-webhook-configuration-mutation-azure-workload-identity-io-namespaceselector-is-absent",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "MutatingWebhookConfiguration",
+                            "name": "azure-wi-webhook-mutating-webhook-configuration"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_CERT_MANAGER_WEBHOOK_WEBHOOK_CERT_MANAGER_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-mutatingwebhookconfiguration-cert-manager-webhook-webhook-cert-manager-io-failurepolicy=fail",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "MutatingWebhookConfiguration",
+                            "name": "cert-manager-webhook"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_AKS_NODE_VALIDATING_WEBHOOK_AKS_NODE_VALIDATING_WEBHOOK_AZMK8S_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-aks-node-validating-webhook-aks-node-validating-webhook-azmk8s-io-failurepolicy=fail",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "ValidatingWebhookConfiguration",
+                            "name": "aks-node-validating-webhook"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_AKS_NODE_VALIDATING_WEBHOOK_AKS_NODE_VALIDATING_WEBHOOK_AZMK8S_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-aks-node-validating-webhook-aks-node-validating-webhook-azmk8s-io-namespaceselector-is-absent",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "ValidatingWebhookConfiguration",
+                            "name": "aks-node-validating-webhook"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_CERT_MANAGER_WEBHOOK_WEBHOOK_CERT_MANAGER_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-cert-manager-webhook-webhook-cert-manager-io-failurepolicy=fail",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "ValidatingWebhookConfiguration",
+                            "name": "cert-manager-webhook"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+                        "category": "AdmissionWebhook",
+                        "evidenceRefs": [
+                            "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_INGRESS_NGINX_ADMISSION_VALIDATE_NGINX_INGRESS_KUBERNETES_IO"
+                        ],
+                        "id": "remediate-admission-webhook-risk-validatingwebhookconfiguration-ingress-nginx-admission-validate-nginx-ingress-kubernetes-io-failurepolicy=fail",
+                        "resource": {
+                            "apiVersion": "admissionregistration.k8s.io/v1",
+                            "kind": "ValidatingWebhookConfiguration",
+                            "name": "ingress-nginx-admission"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CAINJECTOR_CERT_MANAGER_CAINJECTOR"
+                        ],
+                        "id": "remediate-missing-readiness-probe-cert-manager-deployment-cert-manager-cainjector-cert-manager-cainjector",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "cert-manager-cainjector",
+                            "namespace": "cert-manager"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CERT_MANAGER_CONTROLLER"
+                        ],
+                        "id": "remediate-missing-readiness-probe-cert-manager-deployment-cert-manager-cert-manager-controller",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "cert-manager",
+                            "namespace": "cert-manager"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA_GRAFANA_SC_DASHBOARD"
+                        ],
+                        "id": "remediate-missing-readiness-probe-monitoring-deployment-kube-prometheus-stack-grafana-grafana-sc-dashboard",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "kube-prometheus-stack-grafana",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA_GRAFANA_SC_DATASOURCES"
+                        ],
+                        "id": "remediate-missing-readiness-probe-monitoring-deployment-kube-prometheus-stack-grafana-grafana-sc-datasources",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "kube-prometheus-stack-grafana",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_OPERATOR_KUBE_PROMETHEUS_STACK"
+                        ],
+                        "id": "remediate-missing-readiness-probe-monitoring-deployment-kube-prometheus-stack-operator-kube-prometheus-stack",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "kube-prometheus-stack-operator",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_STATEFULSET_ALERTMANAGER_KUBE_PROMETHEUS_STACK_ALERTMANAGER_CONFIG_RELOADER"
+                        ],
+                        "id": "remediate-missing-readiness-probe-monitoring-statefulset-alertmanager-kube-prometheus-stack-alertmanager-config-reloader",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "StatefulSet",
+                            "name": "alertmanager-kube-prometheus-stack-alertmanager",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                        "category": "ReadinessProbes",
+                        "evidenceRefs": [
+                            "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_STATEFULSET_PROMETHEUS_KUBE_PROMETHEUS_STACK_PROMETHEUS_CONFIG_RELOADER"
+                        ],
+                        "id": "remediate-missing-readiness-probe-monitoring-statefulset-prometheus-kube-prometheus-stack-prometheus-config-reloader",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "StatefulSet",
+                            "name": "prometheus-kube-prometheus-stack-prometheus",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "Medium"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER"
+                        ],
+                        "id": "remediate-workload-availability-risk-cert-manager-deployment-cert-manager",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "cert-manager",
+                            "namespace": "cert-manager"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CAINJECTOR"
+                        ],
+                        "id": "remediate-workload-availability-risk-cert-manager-deployment-cert-manager-cainjector",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "cert-manager-cainjector",
+                            "namespace": "cert-manager"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_WEBHOOK"
+                        ],
+                        "id": "remediate-workload-availability-risk-cert-manager-deployment-cert-manager-webhook",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "cert-manager-webhook",
+                            "namespace": "cert-manager"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_INGRESS_NGINX_DEPLOYMENT_INGRESS_NGINX_CONTROLLER"
+                        ],
+                        "id": "remediate-workload-availability-risk-ingress-nginx-deployment-ingress-nginx-controller",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "ingress-nginx-controller",
+                            "namespace": "ingress-nginx"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA"
+                        ],
+                        "id": "remediate-workload-availability-risk-monitoring-deployment-kube-prometheus-stack-grafana",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "kube-prometheus-stack-grafana",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_KUBE_STATE_METRICS"
+                        ],
+                        "id": "remediate-workload-availability-risk-monitoring-deployment-kube-prometheus-stack-kube-state-metrics",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "kube-prometheus-stack-kube-state-metrics",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_OPERATOR"
+                        ],
+                        "id": "remediate-workload-availability-risk-monitoring-deployment-kube-prometheus-stack-operator",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "Deployment",
+                            "name": "kube-prometheus-stack-operator",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_STATEFULSET_ALERTMANAGER_KUBE_PROMETHEUS_STACK_ALERTMANAGER"
+                        ],
+                        "id": "remediate-workload-availability-risk-monitoring-statefulset-alertmanager-kube-prometheus-stack-alertmanager",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "StatefulSet",
+                            "name": "alertmanager-kube-prometheus-stack-alertmanager",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "High"
+                    },
+                    {
+                        "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                        "category": "WorkloadAvailability",
+                        "evidenceRefs": [
+                            "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_STATEFULSET_PROMETHEUS_KUBE_PROMETHEUS_STACK_PROMETHEUS"
+                        ],
+                        "id": "remediate-workload-availability-risk-monitoring-statefulset-prometheus-kube-prometheus-stack-prometheus",
+                        "resource": {
+                            "apiVersion": "apps/v1",
+                            "kind": "StatefulSet",
+                            "name": "prometheus-kube-prometheus-stack-prometheus",
+                            "namespace": "monitoring"
+                        },
+                        "severity": "High"
+                    }
+                ],
+                "riskLevel": "Critical",
+                "score": 228,
+                "summary": {
+                    "critical": 0,
+                    "high": 20,
+                    "info": 3,
+                    "low": 0,
+                    "medium": 7,
+                    "totalFindings": 30
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-06-17T17:37:22Z",
+                        "message": "UpgradePlan generated from latest assessment.",
+                        "observedGeneration": 1,
+                        "reason": "Generated",
+                        "status": "True",
+                        "type": "PlanGenerated"
+                    }
+                ],
+                "generatedAt": "2026-06-17T17:37:22Z",
+                "observedGeneration": 1
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

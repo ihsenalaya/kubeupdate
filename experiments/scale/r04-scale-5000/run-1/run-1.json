@@ -1,0 +1,11 @@
+{
+  "size": 5000,
+  "run": 1,
+  "timestamp_start": "2026-06-17T18:25:59Z",
+  "timestamp_end": "2026-06-17T18:30:30Z",
+  "duration_s": 271,
+  "rss_mib": 0.000,
+  "api_requests_delta": 20,
+  "completed": false,
+  "errors": ["assessment did not complete"]
+}

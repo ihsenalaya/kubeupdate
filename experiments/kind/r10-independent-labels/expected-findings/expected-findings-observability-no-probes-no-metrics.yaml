@@ -1,0 +1,37 @@
+fixture: "observability-no-probes-no-metrics.yaml"
+labeled_by: "Codex-authored-control-labels"
+labeled_at: "2026-06-17"
+negative_control: false
+findings:
+  - family: "ReadinessProbes"
+    type: "MISSING_READINESS_PROBE"
+    severity: "Medium"
+    confidence: "certain"
+    resource:
+      apiVersion: "apps/v1"
+      kind: "Deployment"
+      namespace: "r10-observability-gap"
+      name: "opaque-api"
+    message_contains: "has no readinessProbe"
+  - family: "PDB"
+    type: "PDB_BLOCKING_RISK"
+    severity: "Low"
+    confidence: "certain"
+    resource:
+      apiVersion: "apps/v1"
+      kind: "Deployment"
+      namespace: "r10-observability-gap"
+      name: "opaque-api"
+    message_contains: "has no matching PodDisruptionBudget"
+  - family: "Observability"
+    type: "OBSERVABILITY_GAP"
+    severity: "Medium"
+    confidence: "likely"
+    resource: {}
+    message_contains: "No monitoring, prometheus, or observability namespace found"
+  - family: "Observability"
+    type: "OBSERVABILITY_GAP"
+    severity: "Low"
+    confidence: "likely"
+    resource: {}
+    message_contains: "Prometheus CRD not detected"

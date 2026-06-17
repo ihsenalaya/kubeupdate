@@ -1,0 +1,65 @@
+{
+    "apiVersion": "upgrade.guardian.io/v1alpha1",
+    "kind": "UpgradeAssessment",
+    "metadata": {
+        "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"upgrade.guardian.io/v1alpha1\",\"kind\":\"UpgradeAssessment\",\"metadata\":{\"annotations\":{},\"name\":\"scale-assessment\",\"namespace\":\"scale-test-10000\"},\"spec\":{\"checks\":{\"admissionWebhooks\":false,\"capacity\":false,\"deprecatedApis\":false,\"observability\":false,\"pdb\":true,\"policyRisks\":false,\"readinessProbes\":true,\"workloadAvailability\":true},\"mode\":\"ReadOnly\",\"scope\":{\"namespaces\":{\"exclude\":[],\"include\":[\"scale-test-10000\"]}},\"targetVersion\":\"1.35\"}}\n"
+        },
+        "creationTimestamp": "2026-06-17T19:12:17Z",
+        "generation": 1,
+        "name": "scale-assessment",
+        "namespace": "scale-test-10000",
+        "resourceVersion": "581019",
+        "uid": "9968cf8a-5f61-4793-b5bb-29577c89580e"
+    },
+    "spec": {
+        "checks": {
+            "admissionWebhooks": false,
+            "capacity": false,
+            "deprecatedApis": false,
+            "observability": false,
+            "pdb": true,
+            "policyRisks": false,
+            "readinessProbes": true,
+            "workloadAvailability": true
+        },
+        "mode": "ReadOnly",
+        "scope": {
+            "namespaces": {
+                "exclude": [],
+                "include": [
+                    "scale-test-10000"
+                ]
+            }
+        },
+        "targetVersion": "1.35"
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastTransitionTime": "2026-06-17T19:12:17Z",
+                "message": "Assessment is running.",
+                "observedGeneration": 1,
+                "reason": "Running",
+                "status": "True",
+                "type": "AssessmentRunning"
+            },
+            {
+                "lastTransitionTime": "2026-06-17T19:13:34Z",
+                "message": "Request entity too large: limit is 3145728",
+                "observedGeneration": 1,
+                "reason": "Error",
+                "status": "True",
+                "type": "AssessmentFailed"
+            }
+        ],
+        "phase": "Running",
+        "summary": {
+            "critical": 0,
+            "high": 0,
+            "low": 0,
+            "medium": 0,
+            "totalFindings": 0
+        }
+    }
+}

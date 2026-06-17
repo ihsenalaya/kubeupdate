@@ -44,10 +44,11 @@ spec:
     spec:
       containers:
         - name: app
-          image: registry.k8s.io/pause:3.9
+          image: busybox:1.36.1
+          command: ["/bin/sh", "-c", "sleep 365d"]
           readinessProbe:
             exec:
-              command: ["true"]
+              command: ["/bin/sh", "-c", "true"]
           resources:
             requests:
               cpu: 5m

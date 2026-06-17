@@ -1,0 +1,5 @@
+fixture: "deployment-two-replicas-with-pdb.yaml"
+labeled_by: "Codex-authored-control-labels"
+labeled_at: "2026-06-17"
+negative_control: true
+findings: []

@@ -8,6 +8,25 @@
   - R10 independent-labeling fixture package with 20 adversarial manifests, external-labeling instructions, template, and comparison script.
   - R04 scalability study scripts for 100/1,000/5,000/10,000 objects with 10 runs per size and an aggregation script.
   - Article RQ restructuring with five `rq:*` labels and one `Evaluation` section.
+- Executed the Terraform AKS evaluation stack and archived multi-cluster managed results:
+  - Created `aks-medium` and `aks-policy` in West Europe with Kubernetes `1.34.8` and three `Standard_D2s_v3` nodes each.
+  - Installed ingress-nginx `4.10.0`, cert-manager `v1.14.5`, kube-prometheus-stack `58.5.0`, three PDB-protected Deployments, one HPA, and one two-replica StatefulSet with PVCs.
+  - `experiments/aks/r03-aks-medium/findings.json`: phase `Completed`, 30 findings, one generated UpgradePlan with 27 required actions.
+  - `experiments/aks/r04-aks-policy/findings.json`: phase `Completed`, 58 findings, one generated UpgradePlan with 54 required actions.
+  - `experiments/aks/multi-cluster-summary.json` records node counts, Helm releases, completed exports, and in-cluster pod measurements: `aks-medium` 13s / 10 MiB RSS; `aks-policy` 171s / 71 MiB RSS.
+  - Fixed the operator status-idempotency defect in `kubeupgrade-guardian-operator` commit `4a2c14f`; the chart RBAC now grants leader-election leases.
+- Executed R10 adversarial fixture comparison:
+  - Added and pushed the real-checker fixture harness in `kubeupgrade-guardian-operator` commit `250ca1e`.
+  - Created 20 Codex-authored expected-finding files under `experiments/kind/r10-independent-labels/expected-findings`.
+  - Generated `r10-checker-observations.json` and `results-summary.json`.
+  - Result: 36 expected positive labels, 32 true positives, 0 false positives, 4 false negatives, precision 1.0000, recall 0.8889, F1 0.9412.
+  - False negatives: missing deprecated Ingress table entry, empty webhook `caBundle`, RBAC-denial simulation gap, and PVC/storageClass risk not modeled.
+- Executed AKS scalability boundary study on `aks-medium`:
+  - Ran `experiments/scale/run-scale-study.sh` with sizes 100, 1,000, 5,000, and 10,000; one run per size.
+  - 100 and 1,000 Deployment/PDB pairs completed in 7s and 41s.
+  - 5,000 and 10,000 pairs failed with `Request entity too large: limit is 3145728` when persisting `UpgradeAssessment` status.
+  - 10,000 setup also recorded API-server `ServiceUnavailable` responses during PDB apply.
+  - Archived `experiments/scale/r04-scalability-summary.json`, raw run directories, and local controller RSS samples.
 - Created managed AKS validation cluster `aks-kug-validation-we` in `rg-kug-aks-validation-we`:
   - Kubernetes `1.34.8`.
   - One `Standard_B2s` system node.

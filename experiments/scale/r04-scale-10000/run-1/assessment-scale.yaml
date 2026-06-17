@@ -1,0 +1,22 @@
+apiVersion: upgrade.guardian.io/v1alpha1
+kind: UpgradeAssessment
+metadata:
+  name: scale-assessment
+  namespace: scale-test-10000
+spec:
+  targetVersion: "1.35"
+  mode: ReadOnly
+  scope:
+    namespaces:
+      include:
+        - scale-test-10000
+      exclude: []
+  checks:
+    deprecatedApis: false
+    workloadAvailability: true
+    pdb: true
+    readinessProbes: true
+    admissionWebhooks: false
+    policyRisks: false
+    capacity: false
+    observability: false

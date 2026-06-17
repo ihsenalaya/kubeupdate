@@ -1,0 +1,131 @@
+{
+  "anomalies": [
+    {
+      "count": 1,
+      "size": 5000,
+      "type": "incomplete_runs"
+    },
+    {
+      "count": 1,
+      "size": 10000,
+      "type": "incomplete_runs"
+    },
+    {
+      "size": 5000,
+      "type": "missing_median"
+    },
+    {
+      "size": 10000,
+      "type": "missing_median"
+    }
+  ],
+  "metrics": {
+    "100": {
+      "api_requests_delta": {
+        "mean": 18.0,
+        "median": 18.0,
+        "p95": 18.0,
+        "p99": 18.0,
+        "std": 0.0
+      },
+      "completed_runs": 1,
+      "duration_s": {
+        "mean": 7.0,
+        "median": 7.0,
+        "p95": 7.0,
+        "p99": 7.0,
+        "std": 0.0
+      },
+      "rss_mib": {
+        "mean": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "std": 0.0
+      },
+      "runs": 1
+    },
+    "1000": {
+      "api_requests_delta": {
+        "mean": 3.0,
+        "median": 3.0,
+        "p95": 3.0,
+        "p99": 3.0,
+        "std": 0.0
+      },
+      "completed_runs": 1,
+      "duration_s": {
+        "mean": 41.0,
+        "median": 41.0,
+        "p95": 41.0,
+        "p99": 41.0,
+        "std": 0.0
+      },
+      "rss_mib": {
+        "mean": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "std": 0.0
+      },
+      "runs": 1
+    },
+    "10000": {
+      "api_requests_delta": {
+        "mean": null,
+        "median": null,
+        "p95": null,
+        "p99": null,
+        "std": null
+      },
+      "completed_runs": 0,
+      "duration_s": {
+        "mean": null,
+        "median": null,
+        "p95": null,
+        "p99": null,
+        "std": null
+      },
+      "rss_mib": {
+        "mean": null,
+        "median": null,
+        "p95": null,
+        "p99": null,
+        "std": null
+      },
+      "runs": 1
+    },
+    "5000": {
+      "api_requests_delta": {
+        "mean": null,
+        "median": null,
+        "p95": null,
+        "p99": null,
+        "std": null
+      },
+      "completed_runs": 0,
+      "duration_s": {
+        "mean": null,
+        "median": null,
+        "p95": null,
+        "p99": null,
+        "std": null
+      },
+      "rss_mib": {
+        "mean": null,
+        "median": null,
+        "p95": null,
+        "p99": null,
+        "std": null
+      },
+      "runs": 1
+    }
+  },
+  "monotonicity_ok": false,
+  "sizes": [
+    100,
+    1000,
+    5000,
+    10000
+  ]
+}

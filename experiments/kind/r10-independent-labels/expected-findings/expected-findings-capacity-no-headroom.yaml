@@ -1,0 +1,21 @@
+fixture: "capacity-no-headroom.yaml"
+labeled_by: "Codex-authored-control-labels"
+labeled_at: "2026-06-17"
+negative_control: false
+findings:
+  - family: "Capacity"
+    type: "CAPACITY_DRAIN_RISK"
+    severity: "High"
+    confidence: "likely"
+    resource: {}
+    message_contains: "not have enough requested capacity headroom"
+  - family: "PDB"
+    type: "PDB_BLOCKING_RISK"
+    severity: "Low"
+    confidence: "certain"
+    resource:
+      apiVersion: "apps/v1"
+      kind: "Deployment"
+      namespace: "r10-capacity"
+      name: "packed-api"
+    message_contains: "has no matching PodDisruptionBudget"

@@ -1,0 +1,10 @@
+{
+  "cluster": "aks-policy-local-controller",
+  "targetVersion": "1.35",
+  "assessmentName": "r04-aks-policy-assessment",
+  "assessmentNamespace": "kug-assessment",
+  "phase": "Completed",
+  "duration_s": 7,
+  "controller_rss_mib": 0.000,
+  "timestamp": "20260617T173808Z"
+}
