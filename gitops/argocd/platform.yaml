@@ -533,7 +533,7 @@
         "image":
           "pullPolicy": "IfNotPresent"
           "repository": "acrihsenaksfbd882.azurecr.io/kubeupgrade-guardian-operator"
-          "tag": "0.1.0"
+          "tag": "0.1.1"
         "replicaCount": 1
         "resources":
           "limits":
@@ -1532,7 +1532,7 @@
         "global":
           "imagePullPolicy": "IfNotPresent"
           "imageRegistry": "acrihsenaksfbd882.azurecr.io"
-          "imageTag": "0.1.0"
+          "imageTag": "0.1.1"
         "ingress":
           "gateway":
             "name": "platform-gateway"

@@ -181,7 +181,7 @@ variable "velero_backup_container_name" {
 variable "artifact_tag" {
   description = "Immutable tag used for locally built lab and operator images."
   type        = string
-  default     = "0.1.0"
+  default     = "0.1.1"
 }
 
 variable "lab_namespace" {
