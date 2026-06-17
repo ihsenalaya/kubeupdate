@@ -9,7 +9,7 @@
         "fp": 0,
         "precision": 1.0,
         "recall": 1.0,
-        "tp": 3
+        "tp": 4
       },
       "DeprecatedAPI": {
         "f1": 1.0,
@@ -19,7 +19,7 @@
         "fp": 0,
         "precision": 1.0,
         "recall": 1.0,
-        "tp": 3
+        "tp": 4
       },
       "PDB": {
         "f1": 1.0,
@@ -29,7 +29,7 @@
         "fp": 0,
         "precision": 1.0,
         "recall": 1.0,
-        "tp": 4
+        "tp": 7
       },
       "PolicyRisk": {
         "f1": 1.0,
@@ -39,7 +39,7 @@
         "fp": 0,
         "precision": 1.0,
         "recall": 1.0,
-        "tp": 5
+        "tp": 8
       },
       "ReadinessProbes": {
         "f1": 1.0,
@@ -49,7 +49,7 @@
         "fp": 0,
         "precision": 1.0,
         "recall": 1.0,
-        "tp": 1
+        "tp": 5
       },
       "WorkloadAvailability": {
         "f1": 1.0,
@@ -59,7 +59,7 @@
         "fp": 0,
         "precision": 1.0,
         "recall": 1.0,
-        "tp": 2
+        "tp": 3
       }
     },
     "Pluto cluster": {
@@ -101,10 +101,22 @@
             },
             "severity": "High",
             "type": "ADMISSION_WEBHOOK_RISK"
+          },
+          {
+            "family": "AdmissionWebhook",
+            "id": "gt-admission-mutating-fail-policy",
+            "messageContains": "failurePolicy=Fail",
+            "resource": {
+              "apiVersion": "admissionregistration.k8s.io/v1",
+              "kind": "MutatingWebhookConfiguration",
+              "name": "r01-mutating-fail-webhook"
+            },
+            "severity": "High",
+            "type": "ADMISSION_WEBHOOK_RISK"
           }
         ],
         "falsePositives": [],
-        "fn": 3,
+        "fn": 4,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -118,7 +130,7 @@
         "fp": 0,
         "precision": 1.0,
         "recall": 1.0,
-        "tp": 3
+        "tp": 4
       },
       "PDB": {
         "f1": 0.0,
@@ -174,10 +186,49 @@
             },
             "severity": "Low",
             "type": "PDB_BLOCKING_RISK"
+          },
+          {
+            "family": "PDB",
+            "id": "gt-pdb-stateful-max-unavailable-zero",
+            "messageContains": "may block disruption",
+            "resource": {
+              "apiVersion": "policy/v1",
+              "kind": "PodDisruptionBudget",
+              "name": "accounts-db",
+              "namespace": "r01-pdb-stateful-max-zero"
+            },
+            "severity": "High",
+            "type": "PDB_BLOCKING_RISK"
+          },
+          {
+            "family": "PDB",
+            "id": "gt-pdb-percentage-min-available",
+            "messageContains": "may block disruption",
+            "resource": {
+              "apiVersion": "policy/v1",
+              "kind": "PodDisruptionBudget",
+              "name": "report-api",
+              "namespace": "r01-pdb-percentage"
+            },
+            "severity": "Critical",
+            "type": "PDB_BLOCKING_RISK"
+          },
+          {
+            "family": "PDB",
+            "id": "gt-pdb-stateful-missing",
+            "messageContains": "has no matching PodDisruptionBudget",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "StatefulSet",
+              "name": "warehouse-db",
+              "namespace": "r01-pdb-stateful-missing"
+            },
+            "severity": "Low",
+            "type": "PDB_BLOCKING_RISK"
           }
         ],
         "falsePositives": [],
-        "fn": 4,
+        "fn": 7,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -248,10 +299,48 @@
             },
             "severity": "High",
             "type": "POLICY_RISK"
+          },
+          {
+            "family": "PolicyRisk",
+            "id": "gt-policy-hostpath-namespace",
+            "messageContains": "enforces Pod Security restricted",
+            "resource": {
+              "apiVersion": "v1",
+              "kind": "Namespace",
+              "name": "r01-policy-hostpath"
+            },
+            "severity": "Medium",
+            "type": "POLICY_RISK"
+          },
+          {
+            "family": "PolicyRisk",
+            "id": "gt-policy-hostpath-volume",
+            "messageContains": "hostPath volume",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "storage-worker",
+              "namespace": "r01-policy-hostpath"
+            },
+            "severity": "High",
+            "type": "POLICY_RISK"
+          },
+          {
+            "family": "PolicyRisk",
+            "id": "gt-policy-allow-privilege-escalation",
+            "messageContains": "allowPrivilegeEscalation=true",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "storage-worker",
+              "namespace": "r01-policy-hostpath"
+            },
+            "severity": "High",
+            "type": "POLICY_RISK"
           }
         ],
         "falsePositives": [],
-        "fn": 5,
+        "fn": 8,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -272,10 +361,62 @@
             },
             "severity": "Medium",
             "type": "MISSING_READINESS_PROBE"
+          },
+          {
+            "family": "ReadinessProbes",
+            "id": "gt-readiness-statefulset",
+            "messageContains": "has no readinessProbe",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "StatefulSet",
+              "name": "ledger-db",
+              "namespace": "r01-readiness-statefulset"
+            },
+            "severity": "Medium",
+            "type": "MISSING_READINESS_PROBE"
+          },
+          {
+            "family": "ReadinessProbes",
+            "id": "gt-readiness-daemonset",
+            "messageContains": "has no readinessProbe",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "DaemonSet",
+              "name": "node-agent",
+              "namespace": "r01-readiness-daemonset"
+            },
+            "severity": "Medium",
+            "type": "MISSING_READINESS_PROBE"
+          },
+          {
+            "family": "ReadinessProbes",
+            "id": "gt-readiness-multi-container-api",
+            "messageContains": "Container api",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "composite-api",
+              "namespace": "r01-readiness-multi-container"
+            },
+            "severity": "Medium",
+            "type": "MISSING_READINESS_PROBE"
+          },
+          {
+            "family": "ReadinessProbes",
+            "id": "gt-readiness-multi-container-sidecar",
+            "messageContains": "Container sidecar",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "composite-api",
+              "namespace": "r01-readiness-multi-container"
+            },
+            "severity": "Medium",
+            "type": "MISSING_READINESS_PROBE"
           }
         ],
         "falsePositives": [],
-        "fn": 1,
+        "fn": 5,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -309,10 +450,23 @@
             },
             "severity": "Medium",
             "type": "WORKLOAD_AVAILABILITY_RISK"
+          },
+          {
+            "family": "WorkloadAvailability",
+            "id": "gt-workload-stateful-single",
+            "messageContains": "fewer than 2 replicas",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "StatefulSet",
+              "name": "cache-singleton",
+              "namespace": "r01-workload-stateful-single"
+            },
+            "severity": "High",
+            "type": "WORKLOAD_AVAILABILITY_RISK"
           }
         ],
         "falsePositives": [],
-        "fn": 2,
+        "fn": 3,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -358,10 +512,22 @@
             },
             "severity": "High",
             "type": "ADMISSION_WEBHOOK_RISK"
+          },
+          {
+            "family": "AdmissionWebhook",
+            "id": "gt-admission-mutating-fail-policy",
+            "messageContains": "failurePolicy=Fail",
+            "resource": {
+              "apiVersion": "admissionregistration.k8s.io/v1",
+              "kind": "MutatingWebhookConfiguration",
+              "name": "r01-mutating-fail-webhook"
+            },
+            "severity": "High",
+            "type": "ADMISSION_WEBHOOK_RISK"
           }
         ],
         "falsePositives": [],
-        "fn": 3,
+        "fn": 4,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -375,7 +541,7 @@
         "fp": 0,
         "precision": 1.0,
         "recall": 1.0,
-        "tp": 3
+        "tp": 4
       },
       "PDB": {
         "f1": 0.0,
@@ -431,10 +597,49 @@
             },
             "severity": "Low",
             "type": "PDB_BLOCKING_RISK"
+          },
+          {
+            "family": "PDB",
+            "id": "gt-pdb-stateful-max-unavailable-zero",
+            "messageContains": "may block disruption",
+            "resource": {
+              "apiVersion": "policy/v1",
+              "kind": "PodDisruptionBudget",
+              "name": "accounts-db",
+              "namespace": "r01-pdb-stateful-max-zero"
+            },
+            "severity": "High",
+            "type": "PDB_BLOCKING_RISK"
+          },
+          {
+            "family": "PDB",
+            "id": "gt-pdb-percentage-min-available",
+            "messageContains": "may block disruption",
+            "resource": {
+              "apiVersion": "policy/v1",
+              "kind": "PodDisruptionBudget",
+              "name": "report-api",
+              "namespace": "r01-pdb-percentage"
+            },
+            "severity": "Critical",
+            "type": "PDB_BLOCKING_RISK"
+          },
+          {
+            "family": "PDB",
+            "id": "gt-pdb-stateful-missing",
+            "messageContains": "has no matching PodDisruptionBudget",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "StatefulSet",
+              "name": "warehouse-db",
+              "namespace": "r01-pdb-stateful-missing"
+            },
+            "severity": "Low",
+            "type": "PDB_BLOCKING_RISK"
           }
         ],
         "falsePositives": [],
-        "fn": 4,
+        "fn": 7,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -505,10 +710,48 @@
             },
             "severity": "High",
             "type": "POLICY_RISK"
+          },
+          {
+            "family": "PolicyRisk",
+            "id": "gt-policy-hostpath-namespace",
+            "messageContains": "enforces Pod Security restricted",
+            "resource": {
+              "apiVersion": "v1",
+              "kind": "Namespace",
+              "name": "r01-policy-hostpath"
+            },
+            "severity": "Medium",
+            "type": "POLICY_RISK"
+          },
+          {
+            "family": "PolicyRisk",
+            "id": "gt-policy-hostpath-volume",
+            "messageContains": "hostPath volume",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "storage-worker",
+              "namespace": "r01-policy-hostpath"
+            },
+            "severity": "High",
+            "type": "POLICY_RISK"
+          },
+          {
+            "family": "PolicyRisk",
+            "id": "gt-policy-allow-privilege-escalation",
+            "messageContains": "allowPrivilegeEscalation=true",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "storage-worker",
+              "namespace": "r01-policy-hostpath"
+            },
+            "severity": "High",
+            "type": "POLICY_RISK"
           }
         ],
         "falsePositives": [],
-        "fn": 5,
+        "fn": 8,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -529,10 +772,62 @@
             },
             "severity": "Medium",
             "type": "MISSING_READINESS_PROBE"
+          },
+          {
+            "family": "ReadinessProbes",
+            "id": "gt-readiness-statefulset",
+            "messageContains": "has no readinessProbe",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "StatefulSet",
+              "name": "ledger-db",
+              "namespace": "r01-readiness-statefulset"
+            },
+            "severity": "Medium",
+            "type": "MISSING_READINESS_PROBE"
+          },
+          {
+            "family": "ReadinessProbes",
+            "id": "gt-readiness-daemonset",
+            "messageContains": "has no readinessProbe",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "DaemonSet",
+              "name": "node-agent",
+              "namespace": "r01-readiness-daemonset"
+            },
+            "severity": "Medium",
+            "type": "MISSING_READINESS_PROBE"
+          },
+          {
+            "family": "ReadinessProbes",
+            "id": "gt-readiness-multi-container-api",
+            "messageContains": "Container api",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "composite-api",
+              "namespace": "r01-readiness-multi-container"
+            },
+            "severity": "Medium",
+            "type": "MISSING_READINESS_PROBE"
+          },
+          {
+            "family": "ReadinessProbes",
+            "id": "gt-readiness-multi-container-sidecar",
+            "messageContains": "Container sidecar",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "composite-api",
+              "namespace": "r01-readiness-multi-container"
+            },
+            "severity": "Medium",
+            "type": "MISSING_READINESS_PROBE"
           }
         ],
         "falsePositives": [],
-        "fn": 1,
+        "fn": 5,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -566,10 +861,23 @@
             },
             "severity": "Medium",
             "type": "WORKLOAD_AVAILABILITY_RISK"
+          },
+          {
+            "family": "WorkloadAvailability",
+            "id": "gt-workload-stateful-single",
+            "messageContains": "fewer than 2 replicas",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "StatefulSet",
+              "name": "cache-singleton",
+              "namespace": "r01-workload-stateful-single"
+            },
+            "severity": "High",
+            "type": "WORKLOAD_AVAILABILITY_RISK"
           }
         ],
         "falsePositives": [],
-        "fn": 2,
+        "fn": 3,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -615,10 +923,22 @@
             },
             "severity": "High",
             "type": "ADMISSION_WEBHOOK_RISK"
+          },
+          {
+            "family": "AdmissionWebhook",
+            "id": "gt-admission-mutating-fail-policy",
+            "messageContains": "failurePolicy=Fail",
+            "resource": {
+              "apiVersion": "admissionregistration.k8s.io/v1",
+              "kind": "MutatingWebhookConfiguration",
+              "name": "r01-mutating-fail-webhook"
+            },
+            "severity": "High",
+            "type": "ADMISSION_WEBHOOK_RISK"
           }
         ],
         "falsePositives": [],
-        "fn": 3,
+        "fn": 4,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -632,7 +952,7 @@
         "fp": 0,
         "precision": 1.0,
         "recall": 1.0,
-        "tp": 3
+        "tp": 4
       },
       "PDB": {
         "f1": 0.0,
@@ -688,10 +1008,49 @@
             },
             "severity": "Low",
             "type": "PDB_BLOCKING_RISK"
+          },
+          {
+            "family": "PDB",
+            "id": "gt-pdb-stateful-max-unavailable-zero",
+            "messageContains": "may block disruption",
+            "resource": {
+              "apiVersion": "policy/v1",
+              "kind": "PodDisruptionBudget",
+              "name": "accounts-db",
+              "namespace": "r01-pdb-stateful-max-zero"
+            },
+            "severity": "High",
+            "type": "PDB_BLOCKING_RISK"
+          },
+          {
+            "family": "PDB",
+            "id": "gt-pdb-percentage-min-available",
+            "messageContains": "may block disruption",
+            "resource": {
+              "apiVersion": "policy/v1",
+              "kind": "PodDisruptionBudget",
+              "name": "report-api",
+              "namespace": "r01-pdb-percentage"
+            },
+            "severity": "Critical",
+            "type": "PDB_BLOCKING_RISK"
+          },
+          {
+            "family": "PDB",
+            "id": "gt-pdb-stateful-missing",
+            "messageContains": "has no matching PodDisruptionBudget",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "StatefulSet",
+              "name": "warehouse-db",
+              "namespace": "r01-pdb-stateful-missing"
+            },
+            "severity": "Low",
+            "type": "PDB_BLOCKING_RISK"
           }
         ],
         "falsePositives": [],
-        "fn": 4,
+        "fn": 7,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -762,10 +1121,48 @@
             },
             "severity": "High",
             "type": "POLICY_RISK"
+          },
+          {
+            "family": "PolicyRisk",
+            "id": "gt-policy-hostpath-namespace",
+            "messageContains": "enforces Pod Security restricted",
+            "resource": {
+              "apiVersion": "v1",
+              "kind": "Namespace",
+              "name": "r01-policy-hostpath"
+            },
+            "severity": "Medium",
+            "type": "POLICY_RISK"
+          },
+          {
+            "family": "PolicyRisk",
+            "id": "gt-policy-hostpath-volume",
+            "messageContains": "hostPath volume",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "storage-worker",
+              "namespace": "r01-policy-hostpath"
+            },
+            "severity": "High",
+            "type": "POLICY_RISK"
+          },
+          {
+            "family": "PolicyRisk",
+            "id": "gt-policy-allow-privilege-escalation",
+            "messageContains": "allowPrivilegeEscalation=true",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "storage-worker",
+              "namespace": "r01-policy-hostpath"
+            },
+            "severity": "High",
+            "type": "POLICY_RISK"
           }
         ],
         "falsePositives": [],
-        "fn": 5,
+        "fn": 8,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -786,10 +1183,62 @@
             },
             "severity": "Medium",
             "type": "MISSING_READINESS_PROBE"
+          },
+          {
+            "family": "ReadinessProbes",
+            "id": "gt-readiness-statefulset",
+            "messageContains": "has no readinessProbe",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "StatefulSet",
+              "name": "ledger-db",
+              "namespace": "r01-readiness-statefulset"
+            },
+            "severity": "Medium",
+            "type": "MISSING_READINESS_PROBE"
+          },
+          {
+            "family": "ReadinessProbes",
+            "id": "gt-readiness-daemonset",
+            "messageContains": "has no readinessProbe",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "DaemonSet",
+              "name": "node-agent",
+              "namespace": "r01-readiness-daemonset"
+            },
+            "severity": "Medium",
+            "type": "MISSING_READINESS_PROBE"
+          },
+          {
+            "family": "ReadinessProbes",
+            "id": "gt-readiness-multi-container-api",
+            "messageContains": "Container api",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "composite-api",
+              "namespace": "r01-readiness-multi-container"
+            },
+            "severity": "Medium",
+            "type": "MISSING_READINESS_PROBE"
+          },
+          {
+            "family": "ReadinessProbes",
+            "id": "gt-readiness-multi-container-sidecar",
+            "messageContains": "Container sidecar",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "composite-api",
+              "namespace": "r01-readiness-multi-container"
+            },
+            "severity": "Medium",
+            "type": "MISSING_READINESS_PROBE"
           }
         ],
         "falsePositives": [],
-        "fn": 1,
+        "fn": 5,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -823,10 +1272,23 @@
             },
             "severity": "Medium",
             "type": "WORKLOAD_AVAILABILITY_RISK"
+          },
+          {
+            "family": "WorkloadAvailability",
+            "id": "gt-workload-stateful-single",
+            "messageContains": "fewer than 2 replicas",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "StatefulSet",
+              "name": "cache-singleton",
+              "namespace": "r01-workload-stateful-single"
+            },
+            "severity": "High",
+            "type": "WORKLOAD_AVAILABILITY_RISK"
           }
         ],
         "falsePositives": [],
-        "fn": 2,
+        "fn": 3,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -872,10 +1334,22 @@
             },
             "severity": "High",
             "type": "ADMISSION_WEBHOOK_RISK"
+          },
+          {
+            "family": "AdmissionWebhook",
+            "id": "gt-admission-mutating-fail-policy",
+            "messageContains": "failurePolicy=Fail",
+            "resource": {
+              "apiVersion": "admissionregistration.k8s.io/v1",
+              "kind": "MutatingWebhookConfiguration",
+              "name": "r01-mutating-fail-webhook"
+            },
+            "severity": "High",
+            "type": "ADMISSION_WEBHOOK_RISK"
           }
         ],
         "falsePositives": [],
-        "fn": 3,
+        "fn": 4,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -889,7 +1363,7 @@
         "fp": 0,
         "precision": 1.0,
         "recall": 1.0,
-        "tp": 3
+        "tp": 4
       },
       "PDB": {
         "f1": 0.0,
@@ -945,10 +1419,49 @@
             },
             "severity": "Low",
             "type": "PDB_BLOCKING_RISK"
+          },
+          {
+            "family": "PDB",
+            "id": "gt-pdb-stateful-max-unavailable-zero",
+            "messageContains": "may block disruption",
+            "resource": {
+              "apiVersion": "policy/v1",
+              "kind": "PodDisruptionBudget",
+              "name": "accounts-db",
+              "namespace": "r01-pdb-stateful-max-zero"
+            },
+            "severity": "High",
+            "type": "PDB_BLOCKING_RISK"
+          },
+          {
+            "family": "PDB",
+            "id": "gt-pdb-percentage-min-available",
+            "messageContains": "may block disruption",
+            "resource": {
+              "apiVersion": "policy/v1",
+              "kind": "PodDisruptionBudget",
+              "name": "report-api",
+              "namespace": "r01-pdb-percentage"
+            },
+            "severity": "Critical",
+            "type": "PDB_BLOCKING_RISK"
+          },
+          {
+            "family": "PDB",
+            "id": "gt-pdb-stateful-missing",
+            "messageContains": "has no matching PodDisruptionBudget",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "StatefulSet",
+              "name": "warehouse-db",
+              "namespace": "r01-pdb-stateful-missing"
+            },
+            "severity": "Low",
+            "type": "PDB_BLOCKING_RISK"
           }
         ],
         "falsePositives": [],
-        "fn": 4,
+        "fn": 7,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -1019,10 +1532,48 @@
             },
             "severity": "High",
             "type": "POLICY_RISK"
+          },
+          {
+            "family": "PolicyRisk",
+            "id": "gt-policy-hostpath-namespace",
+            "messageContains": "enforces Pod Security restricted",
+            "resource": {
+              "apiVersion": "v1",
+              "kind": "Namespace",
+              "name": "r01-policy-hostpath"
+            },
+            "severity": "Medium",
+            "type": "POLICY_RISK"
+          },
+          {
+            "family": "PolicyRisk",
+            "id": "gt-policy-hostpath-volume",
+            "messageContains": "hostPath volume",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "storage-worker",
+              "namespace": "r01-policy-hostpath"
+            },
+            "severity": "High",
+            "type": "POLICY_RISK"
+          },
+          {
+            "family": "PolicyRisk",
+            "id": "gt-policy-allow-privilege-escalation",
+            "messageContains": "allowPrivilegeEscalation=true",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "storage-worker",
+              "namespace": "r01-policy-hostpath"
+            },
+            "severity": "High",
+            "type": "POLICY_RISK"
           }
         ],
         "falsePositives": [],
-        "fn": 5,
+        "fn": 8,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -1043,10 +1594,62 @@
             },
             "severity": "Medium",
             "type": "MISSING_READINESS_PROBE"
+          },
+          {
+            "family": "ReadinessProbes",
+            "id": "gt-readiness-statefulset",
+            "messageContains": "has no readinessProbe",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "StatefulSet",
+              "name": "ledger-db",
+              "namespace": "r01-readiness-statefulset"
+            },
+            "severity": "Medium",
+            "type": "MISSING_READINESS_PROBE"
+          },
+          {
+            "family": "ReadinessProbes",
+            "id": "gt-readiness-daemonset",
+            "messageContains": "has no readinessProbe",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "DaemonSet",
+              "name": "node-agent",
+              "namespace": "r01-readiness-daemonset"
+            },
+            "severity": "Medium",
+            "type": "MISSING_READINESS_PROBE"
+          },
+          {
+            "family": "ReadinessProbes",
+            "id": "gt-readiness-multi-container-api",
+            "messageContains": "Container api",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "composite-api",
+              "namespace": "r01-readiness-multi-container"
+            },
+            "severity": "Medium",
+            "type": "MISSING_READINESS_PROBE"
+          },
+          {
+            "family": "ReadinessProbes",
+            "id": "gt-readiness-multi-container-sidecar",
+            "messageContains": "Container sidecar",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "composite-api",
+              "namespace": "r01-readiness-multi-container"
+            },
+            "severity": "Medium",
+            "type": "MISSING_READINESS_PROBE"
           }
         ],
         "falsePositives": [],
-        "fn": 1,
+        "fn": 5,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -1080,10 +1683,23 @@
             },
             "severity": "Medium",
             "type": "WORKLOAD_AVAILABILITY_RISK"
+          },
+          {
+            "family": "WorkloadAvailability",
+            "id": "gt-workload-stateful-single",
+            "messageContains": "fewer than 2 replicas",
+            "resource": {
+              "apiVersion": "apps/v1",
+              "kind": "StatefulSet",
+              "name": "cache-singleton",
+              "namespace": "r01-workload-stateful-single"
+            },
+            "severity": "High",
+            "type": "WORKLOAD_AVAILABILITY_RISK"
           }
         ],
         "falsePositives": [],
-        "fn": 2,
+        "fn": 3,
         "fp": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -1100,10 +1716,10 @@
       "fp": 0,
       "precision": 1.0,
       "recall": 1.0,
-      "tp": 18
+      "tp": 31
     },
     "Pluto cluster": {
-      "f1": 0.2857,
+      "f1": 0.2286,
       "falseNegatives": [
         {
           "family": "WorkloadAvailability",
@@ -1294,17 +1910,171 @@
           },
           "severity": "High",
           "type": "ADMISSION_WEBHOOK_RISK"
+        },
+        {
+          "family": "ReadinessProbes",
+          "id": "gt-readiness-statefulset",
+          "messageContains": "has no readinessProbe",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "StatefulSet",
+            "name": "ledger-db",
+            "namespace": "r01-readiness-statefulset"
+          },
+          "severity": "Medium",
+          "type": "MISSING_READINESS_PROBE"
+        },
+        {
+          "family": "ReadinessProbes",
+          "id": "gt-readiness-daemonset",
+          "messageContains": "has no readinessProbe",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "DaemonSet",
+            "name": "node-agent",
+            "namespace": "r01-readiness-daemonset"
+          },
+          "severity": "Medium",
+          "type": "MISSING_READINESS_PROBE"
+        },
+        {
+          "family": "ReadinessProbes",
+          "id": "gt-readiness-multi-container-api",
+          "messageContains": "Container api",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "composite-api",
+            "namespace": "r01-readiness-multi-container"
+          },
+          "severity": "Medium",
+          "type": "MISSING_READINESS_PROBE"
+        },
+        {
+          "family": "ReadinessProbes",
+          "id": "gt-readiness-multi-container-sidecar",
+          "messageContains": "Container sidecar",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "composite-api",
+            "namespace": "r01-readiness-multi-container"
+          },
+          "severity": "Medium",
+          "type": "MISSING_READINESS_PROBE"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-stateful-max-unavailable-zero",
+          "messageContains": "may block disruption",
+          "resource": {
+            "apiVersion": "policy/v1",
+            "kind": "PodDisruptionBudget",
+            "name": "accounts-db",
+            "namespace": "r01-pdb-stateful-max-zero"
+          },
+          "severity": "High",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-percentage-min-available",
+          "messageContains": "may block disruption",
+          "resource": {
+            "apiVersion": "policy/v1",
+            "kind": "PodDisruptionBudget",
+            "name": "report-api",
+            "namespace": "r01-pdb-percentage"
+          },
+          "severity": "Critical",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-stateful-missing",
+          "messageContains": "has no matching PodDisruptionBudget",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "StatefulSet",
+            "name": "warehouse-db",
+            "namespace": "r01-pdb-stateful-missing"
+          },
+          "severity": "Low",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "WorkloadAvailability",
+          "id": "gt-workload-stateful-single",
+          "messageContains": "fewer than 2 replicas",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "StatefulSet",
+            "name": "cache-singleton",
+            "namespace": "r01-workload-stateful-single"
+          },
+          "severity": "High",
+          "type": "WORKLOAD_AVAILABILITY_RISK"
+        },
+        {
+          "family": "AdmissionWebhook",
+          "id": "gt-admission-mutating-fail-policy",
+          "messageContains": "failurePolicy=Fail",
+          "resource": {
+            "apiVersion": "admissionregistration.k8s.io/v1",
+            "kind": "MutatingWebhookConfiguration",
+            "name": "r01-mutating-fail-webhook"
+          },
+          "severity": "High",
+          "type": "ADMISSION_WEBHOOK_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-hostpath-namespace",
+          "messageContains": "enforces Pod Security restricted",
+          "resource": {
+            "apiVersion": "v1",
+            "kind": "Namespace",
+            "name": "r01-policy-hostpath"
+          },
+          "severity": "Medium",
+          "type": "POLICY_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-hostpath-volume",
+          "messageContains": "hostPath volume",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "storage-worker",
+            "namespace": "r01-policy-hostpath"
+          },
+          "severity": "High",
+          "type": "POLICY_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-allow-privilege-escalation",
+          "messageContains": "allowPrivilegeEscalation=true",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "storage-worker",
+            "namespace": "r01-policy-hostpath"
+          },
+          "severity": "High",
+          "type": "POLICY_RISK"
         }
       ],
       "falsePositives": [],
-      "fn": 15,
+      "fn": 27,
       "fp": 0,
       "precision": 1.0,
-      "recall": 0.1667,
-      "tp": 3
+      "recall": 0.129,
+      "tp": 4
     },
     "Pluto files": {
-      "f1": 0.2857,
+      "f1": 0.2286,
       "falseNegatives": [
         {
           "family": "WorkloadAvailability",
@@ -1495,17 +2265,171 @@
           },
           "severity": "High",
           "type": "ADMISSION_WEBHOOK_RISK"
+        },
+        {
+          "family": "ReadinessProbes",
+          "id": "gt-readiness-statefulset",
+          "messageContains": "has no readinessProbe",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "StatefulSet",
+            "name": "ledger-db",
+            "namespace": "r01-readiness-statefulset"
+          },
+          "severity": "Medium",
+          "type": "MISSING_READINESS_PROBE"
+        },
+        {
+          "family": "ReadinessProbes",
+          "id": "gt-readiness-daemonset",
+          "messageContains": "has no readinessProbe",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "DaemonSet",
+            "name": "node-agent",
+            "namespace": "r01-readiness-daemonset"
+          },
+          "severity": "Medium",
+          "type": "MISSING_READINESS_PROBE"
+        },
+        {
+          "family": "ReadinessProbes",
+          "id": "gt-readiness-multi-container-api",
+          "messageContains": "Container api",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "composite-api",
+            "namespace": "r01-readiness-multi-container"
+          },
+          "severity": "Medium",
+          "type": "MISSING_READINESS_PROBE"
+        },
+        {
+          "family": "ReadinessProbes",
+          "id": "gt-readiness-multi-container-sidecar",
+          "messageContains": "Container sidecar",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "composite-api",
+            "namespace": "r01-readiness-multi-container"
+          },
+          "severity": "Medium",
+          "type": "MISSING_READINESS_PROBE"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-stateful-max-unavailable-zero",
+          "messageContains": "may block disruption",
+          "resource": {
+            "apiVersion": "policy/v1",
+            "kind": "PodDisruptionBudget",
+            "name": "accounts-db",
+            "namespace": "r01-pdb-stateful-max-zero"
+          },
+          "severity": "High",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-percentage-min-available",
+          "messageContains": "may block disruption",
+          "resource": {
+            "apiVersion": "policy/v1",
+            "kind": "PodDisruptionBudget",
+            "name": "report-api",
+            "namespace": "r01-pdb-percentage"
+          },
+          "severity": "Critical",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-stateful-missing",
+          "messageContains": "has no matching PodDisruptionBudget",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "StatefulSet",
+            "name": "warehouse-db",
+            "namespace": "r01-pdb-stateful-missing"
+          },
+          "severity": "Low",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "WorkloadAvailability",
+          "id": "gt-workload-stateful-single",
+          "messageContains": "fewer than 2 replicas",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "StatefulSet",
+            "name": "cache-singleton",
+            "namespace": "r01-workload-stateful-single"
+          },
+          "severity": "High",
+          "type": "WORKLOAD_AVAILABILITY_RISK"
+        },
+        {
+          "family": "AdmissionWebhook",
+          "id": "gt-admission-mutating-fail-policy",
+          "messageContains": "failurePolicy=Fail",
+          "resource": {
+            "apiVersion": "admissionregistration.k8s.io/v1",
+            "kind": "MutatingWebhookConfiguration",
+            "name": "r01-mutating-fail-webhook"
+          },
+          "severity": "High",
+          "type": "ADMISSION_WEBHOOK_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-hostpath-namespace",
+          "messageContains": "enforces Pod Security restricted",
+          "resource": {
+            "apiVersion": "v1",
+            "kind": "Namespace",
+            "name": "r01-policy-hostpath"
+          },
+          "severity": "Medium",
+          "type": "POLICY_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-hostpath-volume",
+          "messageContains": "hostPath volume",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "storage-worker",
+            "namespace": "r01-policy-hostpath"
+          },
+          "severity": "High",
+          "type": "POLICY_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-allow-privilege-escalation",
+          "messageContains": "allowPrivilegeEscalation=true",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "storage-worker",
+            "namespace": "r01-policy-hostpath"
+          },
+          "severity": "High",
+          "type": "POLICY_RISK"
         }
       ],
       "falsePositives": [],
-      "fn": 15,
+      "fn": 27,
       "fp": 0,
       "precision": 1.0,
-      "recall": 0.1667,
-      "tp": 3
+      "recall": 0.129,
+      "tp": 4
     },
     "kubent cluster": {
-      "f1": 0.2857,
+      "f1": 0.2286,
       "falseNegatives": [
         {
           "family": "WorkloadAvailability",
@@ -1696,17 +2620,171 @@
           },
           "severity": "High",
           "type": "ADMISSION_WEBHOOK_RISK"
+        },
+        {
+          "family": "ReadinessProbes",
+          "id": "gt-readiness-statefulset",
+          "messageContains": "has no readinessProbe",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "StatefulSet",
+            "name": "ledger-db",
+            "namespace": "r01-readiness-statefulset"
+          },
+          "severity": "Medium",
+          "type": "MISSING_READINESS_PROBE"
+        },
+        {
+          "family": "ReadinessProbes",
+          "id": "gt-readiness-daemonset",
+          "messageContains": "has no readinessProbe",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "DaemonSet",
+            "name": "node-agent",
+            "namespace": "r01-readiness-daemonset"
+          },
+          "severity": "Medium",
+          "type": "MISSING_READINESS_PROBE"
+        },
+        {
+          "family": "ReadinessProbes",
+          "id": "gt-readiness-multi-container-api",
+          "messageContains": "Container api",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "composite-api",
+            "namespace": "r01-readiness-multi-container"
+          },
+          "severity": "Medium",
+          "type": "MISSING_READINESS_PROBE"
+        },
+        {
+          "family": "ReadinessProbes",
+          "id": "gt-readiness-multi-container-sidecar",
+          "messageContains": "Container sidecar",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "composite-api",
+            "namespace": "r01-readiness-multi-container"
+          },
+          "severity": "Medium",
+          "type": "MISSING_READINESS_PROBE"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-stateful-max-unavailable-zero",
+          "messageContains": "may block disruption",
+          "resource": {
+            "apiVersion": "policy/v1",
+            "kind": "PodDisruptionBudget",
+            "name": "accounts-db",
+            "namespace": "r01-pdb-stateful-max-zero"
+          },
+          "severity": "High",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-percentage-min-available",
+          "messageContains": "may block disruption",
+          "resource": {
+            "apiVersion": "policy/v1",
+            "kind": "PodDisruptionBudget",
+            "name": "report-api",
+            "namespace": "r01-pdb-percentage"
+          },
+          "severity": "Critical",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-stateful-missing",
+          "messageContains": "has no matching PodDisruptionBudget",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "StatefulSet",
+            "name": "warehouse-db",
+            "namespace": "r01-pdb-stateful-missing"
+          },
+          "severity": "Low",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "WorkloadAvailability",
+          "id": "gt-workload-stateful-single",
+          "messageContains": "fewer than 2 replicas",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "StatefulSet",
+            "name": "cache-singleton",
+            "namespace": "r01-workload-stateful-single"
+          },
+          "severity": "High",
+          "type": "WORKLOAD_AVAILABILITY_RISK"
+        },
+        {
+          "family": "AdmissionWebhook",
+          "id": "gt-admission-mutating-fail-policy",
+          "messageContains": "failurePolicy=Fail",
+          "resource": {
+            "apiVersion": "admissionregistration.k8s.io/v1",
+            "kind": "MutatingWebhookConfiguration",
+            "name": "r01-mutating-fail-webhook"
+          },
+          "severity": "High",
+          "type": "ADMISSION_WEBHOOK_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-hostpath-namespace",
+          "messageContains": "enforces Pod Security restricted",
+          "resource": {
+            "apiVersion": "v1",
+            "kind": "Namespace",
+            "name": "r01-policy-hostpath"
+          },
+          "severity": "Medium",
+          "type": "POLICY_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-hostpath-volume",
+          "messageContains": "hostPath volume",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "storage-worker",
+            "namespace": "r01-policy-hostpath"
+          },
+          "severity": "High",
+          "type": "POLICY_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-allow-privilege-escalation",
+          "messageContains": "allowPrivilegeEscalation=true",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "storage-worker",
+            "namespace": "r01-policy-hostpath"
+          },
+          "severity": "High",
+          "type": "POLICY_RISK"
         }
       ],
       "falsePositives": [],
-      "fn": 15,
+      "fn": 27,
       "fp": 0,
       "precision": 1.0,
-      "recall": 0.1667,
-      "tp": 3
+      "recall": 0.129,
+      "tp": 4
     },
     "kubent files": {
-      "f1": 0.2857,
+      "f1": 0.2286,
       "falseNegatives": [
         {
           "family": "WorkloadAvailability",
@@ -1897,14 +2975,168 @@
           },
           "severity": "High",
           "type": "ADMISSION_WEBHOOK_RISK"
+        },
+        {
+          "family": "ReadinessProbes",
+          "id": "gt-readiness-statefulset",
+          "messageContains": "has no readinessProbe",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "StatefulSet",
+            "name": "ledger-db",
+            "namespace": "r01-readiness-statefulset"
+          },
+          "severity": "Medium",
+          "type": "MISSING_READINESS_PROBE"
+        },
+        {
+          "family": "ReadinessProbes",
+          "id": "gt-readiness-daemonset",
+          "messageContains": "has no readinessProbe",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "DaemonSet",
+            "name": "node-agent",
+            "namespace": "r01-readiness-daemonset"
+          },
+          "severity": "Medium",
+          "type": "MISSING_READINESS_PROBE"
+        },
+        {
+          "family": "ReadinessProbes",
+          "id": "gt-readiness-multi-container-api",
+          "messageContains": "Container api",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "composite-api",
+            "namespace": "r01-readiness-multi-container"
+          },
+          "severity": "Medium",
+          "type": "MISSING_READINESS_PROBE"
+        },
+        {
+          "family": "ReadinessProbes",
+          "id": "gt-readiness-multi-container-sidecar",
+          "messageContains": "Container sidecar",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "composite-api",
+            "namespace": "r01-readiness-multi-container"
+          },
+          "severity": "Medium",
+          "type": "MISSING_READINESS_PROBE"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-stateful-max-unavailable-zero",
+          "messageContains": "may block disruption",
+          "resource": {
+            "apiVersion": "policy/v1",
+            "kind": "PodDisruptionBudget",
+            "name": "accounts-db",
+            "namespace": "r01-pdb-stateful-max-zero"
+          },
+          "severity": "High",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-percentage-min-available",
+          "messageContains": "may block disruption",
+          "resource": {
+            "apiVersion": "policy/v1",
+            "kind": "PodDisruptionBudget",
+            "name": "report-api",
+            "namespace": "r01-pdb-percentage"
+          },
+          "severity": "Critical",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "PDB",
+          "id": "gt-pdb-stateful-missing",
+          "messageContains": "has no matching PodDisruptionBudget",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "StatefulSet",
+            "name": "warehouse-db",
+            "namespace": "r01-pdb-stateful-missing"
+          },
+          "severity": "Low",
+          "type": "PDB_BLOCKING_RISK"
+        },
+        {
+          "family": "WorkloadAvailability",
+          "id": "gt-workload-stateful-single",
+          "messageContains": "fewer than 2 replicas",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "StatefulSet",
+            "name": "cache-singleton",
+            "namespace": "r01-workload-stateful-single"
+          },
+          "severity": "High",
+          "type": "WORKLOAD_AVAILABILITY_RISK"
+        },
+        {
+          "family": "AdmissionWebhook",
+          "id": "gt-admission-mutating-fail-policy",
+          "messageContains": "failurePolicy=Fail",
+          "resource": {
+            "apiVersion": "admissionregistration.k8s.io/v1",
+            "kind": "MutatingWebhookConfiguration",
+            "name": "r01-mutating-fail-webhook"
+          },
+          "severity": "High",
+          "type": "ADMISSION_WEBHOOK_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-hostpath-namespace",
+          "messageContains": "enforces Pod Security restricted",
+          "resource": {
+            "apiVersion": "v1",
+            "kind": "Namespace",
+            "name": "r01-policy-hostpath"
+          },
+          "severity": "Medium",
+          "type": "POLICY_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-hostpath-volume",
+          "messageContains": "hostPath volume",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "storage-worker",
+            "namespace": "r01-policy-hostpath"
+          },
+          "severity": "High",
+          "type": "POLICY_RISK"
+        },
+        {
+          "family": "PolicyRisk",
+          "id": "gt-policy-allow-privilege-escalation",
+          "messageContains": "allowPrivilegeEscalation=true",
+          "resource": {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "name": "storage-worker",
+            "namespace": "r01-policy-hostpath"
+          },
+          "severity": "High",
+          "type": "POLICY_RISK"
         }
       ],
       "falsePositives": [],
-      "fn": 15,
+      "fn": 27,
       "fp": 0,
       "precision": 1.0,
-      "recall": 0.1667,
-      "tp": 3
+      "recall": 0.129,
+      "tp": 4
     }
   }
 }

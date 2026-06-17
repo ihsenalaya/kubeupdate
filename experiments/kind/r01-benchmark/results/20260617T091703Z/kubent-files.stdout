@@ -18,6 +18,15 @@
 		"Since": "1.21.0"
 	},
 	{
+		"Name": "legacy-psp",
+		"Namespace": "\u003cundefined\u003e",
+		"Kind": "PodSecurityPolicy",
+		"ApiVersion": "policy/v1beta1",
+		"RuleSet": "Deprecated APIs removed in 1.25",
+		"ReplaceWith": "\u003cremoved\u003e",
+		"Since": "1.21.0"
+	},
+	{
 		"Name": "legacy-hpa",
 		"Namespace": "r01-deprecated-api",
 		"Kind": "HorizontalPodAutoscaler",

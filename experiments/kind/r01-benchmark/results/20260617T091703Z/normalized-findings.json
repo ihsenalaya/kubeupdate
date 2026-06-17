@@ -2,6 +2,18 @@
   "KubeUpgrade Guardian": [
     {
       "family": "AdmissionWebhook",
+      "message": "MutatingWebhookConfiguration r01-mutating-fail-webhook webhook mutate.example.com has risk: failurePolicy=Fail.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "r01-mutating-fail-webhook"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "ADMISSION_WEBHOOK_RISK"
+    },
+    {
+      "family": "AdmissionWebhook",
       "message": "ValidatingWebhookConfiguration r01-risky-webhook webhook policy.example.com has risk: failurePolicy=Fail.",
       "resource": {
         "apiVersion": "admissionregistration.k8s.io/v1",
@@ -76,6 +88,18 @@
       "type": "DEPRECATED_OR_REMOVED_API"
     },
     {
+      "family": "DeprecatedAPI",
+      "message": "PodSecurityPolicy /legacy-psp uses policy/v1beta1 removed in Kubernetes 1.25.",
+      "resource": {
+        "apiVersion": "policy/v1beta1",
+        "kind": "PodSecurityPolicy",
+        "name": "legacy-psp"
+      },
+      "severity": "Critical",
+      "source": "KubeUpgrade Guardian",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    },
+    {
       "family": "ReadinessProbes",
       "message": "Container api in Deployment r01-missing-readiness/checkout-api has no readinessProbe.",
       "resource": {
@@ -83,6 +107,58 @@
         "kind": "Deployment",
         "name": "checkout-api",
         "namespace": "r01-missing-readiness"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "MISSING_READINESS_PROBE"
+    },
+    {
+      "family": "ReadinessProbes",
+      "message": "Container agent in DaemonSet r01-readiness-daemonset/node-agent has no readinessProbe.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "DaemonSet",
+        "name": "node-agent",
+        "namespace": "r01-readiness-daemonset"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "MISSING_READINESS_PROBE"
+    },
+    {
+      "family": "ReadinessProbes",
+      "message": "Container api in Deployment r01-readiness-multi-container/composite-api has no readinessProbe.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "composite-api",
+        "namespace": "r01-readiness-multi-container"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "MISSING_READINESS_PROBE"
+    },
+    {
+      "family": "ReadinessProbes",
+      "message": "Container sidecar in Deployment r01-readiness-multi-container/composite-api has no readinessProbe.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "composite-api",
+        "namespace": "r01-readiness-multi-container"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "MISSING_READINESS_PROBE"
+    },
+    {
+      "family": "ReadinessProbes",
+      "message": "Container db in StatefulSet r01-readiness-statefulset/ledger-db has no readinessProbe.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "StatefulSet",
+        "name": "ledger-db",
+        "namespace": "r01-readiness-statefulset"
       },
       "severity": "Medium",
       "source": "KubeUpgrade Guardian",
@@ -139,6 +215,83 @@
       "severity": "High",
       "source": "KubeUpgrade Guardian",
       "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PDB",
+      "message": "PDB r01-pdb-percentage/report-api may block disruption for Deployment r01-pdb-percentage/report-api.",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "name": "report-api",
+        "namespace": "r01-pdb-percentage"
+      },
+      "severity": "Critical",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PDB",
+      "message": "PDB r01-pdb-stateful-max-zero/accounts-db may block disruption for StatefulSet r01-pdb-stateful-max-zero/accounts-db.",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "name": "accounts-db",
+        "namespace": "r01-pdb-stateful-max-zero"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PDB",
+      "message": "StatefulSet r01-pdb-stateful-missing/warehouse-db has no matching PodDisruptionBudget.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "StatefulSet",
+        "name": "warehouse-db",
+        "namespace": "r01-pdb-stateful-missing"
+      },
+      "severity": "Low",
+      "source": "KubeUpgrade Guardian",
+      "type": "PDB_BLOCKING_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Deployment r01-policy-hostpath/storage-worker may violate restricted policy: allowPrivilegeEscalation=true.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "storage-worker",
+        "namespace": "r01-policy-hostpath"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Deployment r01-policy-hostpath/storage-worker may violate restricted policy: hostPath volume.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "storage-worker",
+        "namespace": "r01-policy-hostpath"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
+    },
+    {
+      "family": "PolicyRisk",
+      "message": "Namespace r01-policy-hostpath enforces Pod Security restricted.",
+      "resource": {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "name": "r01-policy-hostpath"
+      },
+      "severity": "Medium",
+      "source": "KubeUpgrade Guardian",
+      "type": "POLICY_RISK"
     },
     {
       "family": "PolicyRisk",
@@ -228,6 +381,19 @@
       "severity": "Medium",
       "source": "KubeUpgrade Guardian",
       "type": "WORKLOAD_AVAILABILITY_RISK"
+    },
+    {
+      "family": "WorkloadAvailability",
+      "message": "StatefulSet r01-workload-stateful-single/cache-singleton has fewer than 2 replicas.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "StatefulSet",
+        "name": "cache-singleton",
+        "namespace": "r01-workload-stateful-single"
+      },
+      "severity": "High",
+      "source": "KubeUpgrade Guardian",
+      "type": "WORKLOAD_AVAILABILITY_RISK"
     }
   ],
   "Pluto cluster": [
@@ -262,6 +428,18 @@
         "apiVersion": "policy/v1beta1",
         "kind": "PodDisruptionBudget",
         "name": "legacy-pdb"
+      },
+      "severity": "Critical",
+      "source": "Pluto cluster",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    },
+    {
+      "family": "DeprecatedAPI",
+      "message": "PodSecurityPolicy legacy-psp uses policy/v1beta1",
+      "resource": {
+        "apiVersion": "policy/v1beta1",
+        "kind": "PodSecurityPolicy",
+        "name": "legacy-psp"
       },
       "severity": "Critical",
       "source": "Pluto cluster",
@@ -304,6 +482,18 @@
       "severity": "Critical",
       "source": "Pluto files",
       "type": "DEPRECATED_OR_REMOVED_API"
+    },
+    {
+      "family": "DeprecatedAPI",
+      "message": "PodSecurityPolicy legacy-psp uses policy/v1beta1",
+      "resource": {
+        "apiVersion": "policy/v1beta1",
+        "kind": "PodSecurityPolicy",
+        "name": "legacy-psp"
+      },
+      "severity": "Critical",
+      "source": "Pluto files",
+      "type": "DEPRECATED_OR_REMOVED_API"
     }
   ],
   "kubent cluster": [
@@ -328,6 +518,19 @@
         "kind": "PodDisruptionBudget",
         "name": "legacy-pdb",
         "namespace": "r01-deprecated-api"
+      },
+      "severity": "Critical",
+      "source": "kubent cluster",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    },
+    {
+      "family": "DeprecatedAPI",
+      "message": "PodSecurityPolicy legacy-psp uses policy/v1beta1",
+      "resource": {
+        "apiVersion": "policy/v1beta1",
+        "kind": "PodSecurityPolicy",
+        "name": "legacy-psp",
+        "namespace": ""
       },
       "severity": "Critical",
       "source": "kubent cluster",
@@ -369,6 +572,19 @@
         "kind": "PodDisruptionBudget",
         "name": "legacy-pdb",
         "namespace": "r01-deprecated-api"
+      },
+      "severity": "Critical",
+      "source": "kubent files",
+      "type": "DEPRECATED_OR_REMOVED_API"
+    },
+    {
+      "family": "DeprecatedAPI",
+      "message": "PodSecurityPolicy legacy-psp uses policy/v1beta1",
+      "resource": {
+        "apiVersion": "policy/v1beta1",
+        "kind": "PodSecurityPolicy",
+        "name": "legacy-psp",
+        "namespace": ""
       },
       "severity": "Critical",
       "source": "kubent files",

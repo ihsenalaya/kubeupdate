@@ -16,6 +16,21 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: r01-readiness-statefulset
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-readiness-daemonset
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-readiness-multi-container
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: r01-pdb-min-blocking
 ---
 apiVersion: v1
@@ -36,7 +51,27 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: r01-pdb-stateful-max-zero
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-pdb-percentage
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-pdb-stateful-missing
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: r01-standalone-pod
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-workload-stateful-single
 ---
 apiVersion: v1
 kind: Namespace
@@ -51,12 +86,27 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: r01-policy-hostpath
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-policy-warn-audit
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: r01-admission-target
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: r01-deprecated-api
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r01-modern-api-negative
 ---
 apiVersion: v1
 kind: Namespace
@@ -122,6 +172,103 @@ spec:
   selector:
     matchLabels:
       app: checkout-api
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ledger-db
+  namespace: r01-readiness-statefulset
+spec:
+  serviceName: ledger-db
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ledger-db
+  template:
+    metadata:
+      labels:
+        app: ledger-db
+    spec:
+      containers:
+        - name: db
+          image: registry.k8s.io/pause:3.9
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: ledger-db
+  namespace: r01-readiness-statefulset
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: ledger-db
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-agent
+  namespace: r01-readiness-daemonset
+spec:
+  selector:
+    matchLabels:
+      app: node-agent
+  template:
+    metadata:
+      labels:
+        app: node-agent
+    spec:
+      containers:
+        - name: agent
+          image: registry.k8s.io/pause:3.9
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: composite-api
+  namespace: r01-readiness-multi-container
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: composite-api
+  template:
+    metadata:
+      labels:
+        app: composite-api
+    spec:
+      containers:
+        - name: api
+          image: registry.k8s.io/pause:3.9
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+        - name: sidecar
+          image: registry.k8s.io/pause:3.9
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: composite-api
+  namespace: r01-readiness-multi-container
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: composite-api
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -286,6 +433,135 @@ spec:
         allowPrivilegeEscalation: false
 ---
 apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: accounts-db
+  namespace: r01-pdb-stateful-max-zero
+spec:
+  serviceName: accounts-db
+  replicas: 2
+  selector:
+    matchLabels:
+      app: accounts-db
+  template:
+    metadata:
+      labels:
+        app: accounts-db
+    spec:
+      containers:
+        - name: db
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: accounts-db
+  namespace: r01-pdb-stateful-max-zero
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: accounts-db
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: report-api
+  namespace: r01-pdb-percentage
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: report-api
+  template:
+    metadata:
+      labels:
+        app: report-api
+    spec:
+      containers:
+        - name: api
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: report-api
+  namespace: r01-pdb-percentage
+spec:
+  minAvailable: 100%
+  selector:
+    matchLabels:
+      app: report-api
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: warehouse-db
+  namespace: r01-pdb-stateful-missing
+spec:
+  serviceName: warehouse-db
+  replicas: 2
+  selector:
+    matchLabels:
+      app: warehouse-db
+  template:
+    metadata:
+      labels:
+        app: warehouse-db
+    spec:
+      containers:
+        - name: db
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: cache-singleton
+  namespace: r01-workload-stateful-single
+spec:
+  serviceName: cache-singleton
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cache-singleton
+  template:
+    metadata:
+      labels:
+        app: cache-singleton
+    spec:
+      containers:
+        - name: cache
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: legacy-worker
@@ -353,6 +629,96 @@ spec:
     matchLabels:
       app: unsafe-api
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storage-worker
+  namespace: r01-policy-hostpath
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: storage-worker
+  template:
+    metadata:
+      labels:
+        app: storage-worker
+    spec:
+      volumes:
+        - name: host-data
+          hostPath:
+            path: /var/lib/r01
+      containers:
+        - name: worker
+          image: registry.k8s.io/pause:3.9
+          volumeMounts:
+            - name: host-data
+              mountPath: /host
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: true
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: storage-worker
+  namespace: r01-policy-hostpath
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: storage-worker
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: warn-only-worker
+  namespace: r01-policy-warn-audit
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: warn-only-worker
+  template:
+    metadata:
+      labels:
+        app: warn-only-worker
+    spec:
+      containers:
+        - name: worker
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: warn-only-worker
+  namespace: r01-policy-warn-audit
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: warn-only-worker
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: available-webhook
+  namespace: r01-admission-target
+spec:
+  ports:
+    - name: https
+      port: 443
+      targetPort: 9443
+  selector:
+    app: available-webhook
+---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
@@ -372,6 +738,57 @@ webhooks:
         apiVersions: ["v1"]
         operations: ["UPDATE"]
         resources: ["configmaps"]
+        scope: Namespaced
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: r01-mutating-fail-webhook
+webhooks:
+  - name: mutate.example.com
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+    failurePolicy: Fail
+    namespaceSelector:
+      matchLabels:
+        webhook-scope: selected
+    clientConfig:
+      service:
+        namespace: r01-admission-target
+        name: available-webhook
+        path: /mutate
+    rules:
+      - apiGroups: ["apps"]
+        apiVersions: ["v1"]
+        operations: ["CREATE"]
+        resources: ["deployments"]
+        scope: Namespaced
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: r01-safe-webhook
+webhooks:
+  - name: safe.example.com
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+    failurePolicy: Ignore
+    namespaceSelector:
+      matchLabels:
+        webhook-scope: selected
+    objectSelector:
+      matchLabels:
+        app: profile-api
+    clientConfig:
+      service:
+        namespace: r01-admission-target
+        name: available-webhook
+        path: /validate
+    rules:
+      - apiGroups: ["apps"]
+        apiVersions: ["v1"]
+        operations: ["UPDATE"]
+        resources: ["deployments"]
         scope: Namespaced
 ---
 apiVersion: apps/v1
@@ -446,6 +863,83 @@ spec:
         target:
           type: Utilization
           averageUtilization: 80
+---
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: legacy-psp
+spec:
+  privileged: false
+  allowPrivilegeEscalation: false
+  runAsUser:
+    rule: RunAsAny
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  fsGroup:
+    rule: RunAsAny
+  volumes:
+    - configMap
+    - emptyDir
+    - secret
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: modern-hpa-target
+  namespace: r01-modern-api-negative
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: modern-hpa-target
+  template:
+    metadata:
+      labels:
+        app: modern-hpa-target
+    spec:
+      containers:
+        - name: api
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: modern-hpa-target
+  namespace: r01-modern-api-negative
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: modern-hpa-target
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: modern-hpa
+  namespace: r01-modern-api-negative
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: modern-hpa-target
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 ---
 apiVersion: apps/v1
 kind: Deployment

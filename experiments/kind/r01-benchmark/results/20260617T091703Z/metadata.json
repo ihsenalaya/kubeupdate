@@ -1,0 +1,9 @@
+{
+  "expectedFindings": 31,
+  "kugFindings": 31,
+  "kugNegativeControlObservations": 0,
+  "kugWaitDurationSeconds": 23.219,
+  "negativeControls": 5,
+  "runId": "20260617T091703Z",
+  "toolVersions": "kind v0.31.0 go1.25.5 linux/amd64\n{\n  \"clientVersion\": {\n    \"major\": \"1\",\n    \"minor\": \"34\",\n    \"gitVersion\": \"v1.34.1\",\n    \"gitCommit\": \"93248f9ae092f571eb870b7664c534bfc7d00f03\",\n    \"gitTreeState\": \"clean\",\n    \"buildDate\": \"2025-09-09T19:44:50Z\",\n    \"goVersion\": \"go1.24.6\",\n    \"compiler\": \"gc\",\n    \"platform\": \"linux/amd64\"\n  },\n  \"kustomizeVersion\": \"v5.7.1\",\n  \"serverVersion\": {\n    \"major\": \"1\",\n    \"minor\": \"24\",\n    \"gitVersion\": \"v1.24.15\",\n    \"gitCommit\": \"2c67202dc0bb96a7a837cbfb8d72e1f34dfc2808\",\n    \"gitTreeState\": \"clean\",\n    \"buildDate\": \"2023-06-15T01:09:03Z\",\n    \"goVersion\": \"go1.19.10\",\n    \"compiler\": \"gc\",\n    \"platform\": \"linux/amd64\"\n  }\n}\nWarning: version difference between client (1.34) and server (1.24) exceeds the supported minor version skew of +/-1\ngo version go1.25.8 linux/amd64\nVersion:5.24.0 Commit:dd5ec8cccce5e42dfe8054b8250baa35546056a0\n11:21AM INF version 0.7.3 (git sha 57480c07b3f91238f12a35d0ec88d9368aae99aa)"
+}

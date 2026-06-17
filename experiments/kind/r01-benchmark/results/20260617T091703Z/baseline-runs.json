@@ -14,7 +14,7 @@
       "--ignore-removals",
       "--ignore-unavailable-replacements"
     ],
-    "durationSeconds": 0.215,
+    "durationSeconds": 0.242,
     "name": "pluto-files",
     "returncode": 0
   },
@@ -33,7 +33,7 @@
       "--ignore-removals",
       "--ignore-unavailable-replacements"
     ],
-    "durationSeconds": 2.552,
+    "durationSeconds": 1.577,
     "name": "pluto-cluster",
     "returncode": 0
   },
@@ -52,7 +52,7 @@
       "--log-level",
       "error"
     ],
-    "durationSeconds": 0.135,
+    "durationSeconds": 0.642,
     "name": "kubent-files",
     "returncode": 0
   },
@@ -70,7 +70,7 @@
       "--log-level",
       "error"
     ],
-    "durationSeconds": 6.381,
+    "durationSeconds": 6.461,
     "name": "kubent-cluster",
     "returncode": 0
   }

@@ -1,0 +1,303 @@
+2026-06-17T11:21:01+02:00	INFO	setup	starting manager
+2026-06-17T11:21:01+02:00	INFO	controller-runtime.metrics	Starting metrics server
+2026-06-17T11:21:01+02:00	INFO	controller-runtime.metrics	Serving metrics server	{"bindAddress": ":18080", "secure": false}
+2026-06-17T11:21:01+02:00	INFO	starting server	{"kind": "health probe", "addr": "[::]:18081"}
+2026-06-17T11:21:01+02:00	INFO	Starting EventSource	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "source": "kind source: *v1alpha1.UpgradeAssessment"}
+2026-06-17T11:21:01+02:00	INFO	Starting EventSource	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "source": "kind source: *v1alpha1.UpgradePlan"}
+2026-06-17T11:21:01+02:00	INFO	Starting Controller	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment"}
+2026-06-17T11:21:01+02:00	INFO	Starting workers	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "worker count": 1}
+2026-06-17T11:21:29+02:00	INFO	KubeAPIWarningLogger	policy/v1beta1 PodDisruptionBudget is deprecated in v1.21+, unavailable in v1.25+; use policy/v1 PodDisruptionBudget
+2026-06-17T11:21:29+02:00	INFO	KubeAPIWarningLogger	policy/v1beta1 PodSecurityPolicy is deprecated in v1.21+, unavailable in v1.25+
+2026-06-17T11:21:29+02:00	INFO	KubeAPIWarningLogger	autoscaling/v2beta2 HorizontalPodAutoscaler is deprecated in v1.23+, unavailable in v1.26+; use autoscaling/v2 HorizontalPodAutoscaler
+2026-06-17T11:21:29+02:00	INFO	KubeAPIWarningLogger	batch/v1beta1 CronJob is deprecated in v1.21+, unavailable in v1.25+; use batch/v1 CronJob
+2026-06-17T11:21:30+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "c3fde9e1-ed44-4d28-a446-0b8a49e24ab6", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:30+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "9f96d67a-17f8-478b-ba55-a02e6dedb9d9", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:31+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "04d938a3-41f4-4197-8c33-210e312b85ac", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:31+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "ffdfaf6f-84e9-4574-9748-ee4b9bb3eeab", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:32+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "7eebdcd2-741c-44bf-920c-69bfff3f5851", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:33+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "3d592b03-8870-4200-af76-7fd5118b5fc5", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:34+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "cc393e38-ec88-47fb-955a-7b8ff76b0ad6", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:34+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "bef2a1eb-5f0c-4aad-9338-29d1eac4e9dc", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:35+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "30b84b91-3bf5-40d3-968e-a330a2b8d683", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:35+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "3f24f8f2-aca5-4d0f-9caf-f1328389d8da", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:36+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "41b8516f-8979-400b-9100-435b9e4bf83b", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:37+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "5c7c383e-4009-4108-9453-c2ac8691cabe", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:38+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "7e2bc2b5-4241-40eb-a2e8-1f4617ed138d", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:41+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "97a1a9f5-1b98-49cf-a696-7d4cdf32c842", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:41+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "95dbc024-9721-49a7-9cc4-dacff3e42c5f", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:44+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "a2586fe3-4b8a-4047-a58b-c072d63b6510", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:46+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "61771ea5-c8cc-4744-b157-02ad46963345", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:48+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "872a6c23-ccf6-4493-a7bc-427088d16c40", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:52+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "a259748c-458e-48d4-8b27-efad80e2de1a", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:54+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "320bbf9f-ed9d-49f6-8bc5-e31897a19ada", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:54+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "bf9e705c-45d5-4ae3-949b-67ad3ac5c135", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:55+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "74780d3b-e85d-4a8d-8505-55a231dd32a8", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:55+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "944962d6-7761-49c5-9b57-8a46e0b44676", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:56+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "ad5b0afb-99e8-4f44-a913-7e4c17a643a0", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:56+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "219f7c94-756f-4b0d-a22f-321302c388c2", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:56+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "34e2ef0b-4cd1-462c-9b50-3acdfbbac965", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:57+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "744b7273-57aa-4ac6-a7ee-604dddd72883", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:58+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "5d7038a1-26e5-46ca-886b-cf53729e2cff", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:58+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "0de09df7-d90f-4893-9126-7a291789065c", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:58+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "6deaa881-603b-4776-984c-fe65dbad90f5", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:58+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "4d150943-5bb0-4845-9787-93983639db6d", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:58+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "fcefaedd-94c0-44e8-96b8-fd713748c171", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:59+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "6272b1a9-4ea2-46ff-823f-c232103f52b8", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:59+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "6fe24f79-c4d4-4efb-80f5-d418669fff0e", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:21:59+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "15258364-77d4-4bf0-9b1c-82c6a497ab1b", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:22:02+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "a8bfa154-7f3a-451a-8cca-d693fc924732", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:22:02+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "73eb160c-c125-414a-b7b4-6a4e705d82b0", "error": "Operation cannot be fulfilled on upgradeassessments.upgrade.guardian.io \"r01-assessment\": the object has been modified; please apply your changes to the latest version and try again"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:22:04+02:00	INFO	Stopping and waiting for non leader election runnables
+2026-06-17T11:22:04+02:00	INFO	Stopping and waiting for leader election runnables
+2026-06-17T11:22:04+02:00	INFO	Shutdown signal received, waiting for all workers to finish	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment"}
+2026-06-17T11:22:04+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "1f4e1e7a-7d30-48db-8827-1106449168e0", "error": "Put \"https://127.0.0.1:43909/apis/upgrade.guardian.io/v1alpha1/namespaces/r01-system/upgradeassessments/r01-assessment/status\": context canceled"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:22:04+02:00	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"r01-assessment","namespace":"r01-system"}, "namespace": "r01-system", "name": "r01-assessment", "reconcileID": "eb2e4652-847b-4957-8a04-7b6eb3dc3277", "error": "client rate limiter Wait returned an error: context canceled"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/home/ihsen/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-17T11:22:04+02:00	INFO	All workers finished	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment"}
+2026-06-17T11:22:04+02:00	INFO	Stopping and waiting for caches
+W0617 11:22:04.311521  379615 reflector.go:462] pkg/mod/k8s.io/client-go@v0.29.0/tools/cache/reflector.go:229: watch of *v1.DaemonSet ended with: an error on the server ("unable to decode an event from the watch stream: context canceled") has prevented the request from succeeding
+W0617 11:22:04.312796  379615 reflector.go:462] pkg/mod/k8s.io/client-go@v0.29.0/tools/cache/reflector.go:229: watch of *v1.PodDisruptionBudget ended with: an error on the server ("unable to decode an event from the watch stream: context canceled") has prevented the request from succeeding
+W0617 11:22:04.311713  379615 reflector.go:462] pkg/mod/k8s.io/client-go@v0.29.0/tools/cache/reflector.go:229: watch of *v1.Deployment ended with: an error on the server ("unable to decode an event from the watch stream: context canceled") has prevented the request from succeeding
+W0617 11:22:04.312496  379615 reflector.go:462] pkg/mod/k8s.io/client-go@v0.29.0/tools/cache/reflector.go:229: watch of *v1.Namespace ended with: an error on the server ("unable to decode an event from the watch stream: context canceled") has prevented the request from succeeding
+W0617 11:22:04.312590  379615 reflector.go:462] pkg/mod/k8s.io/client-go@v0.29.0/tools/cache/reflector.go:229: watch of *v1.MutatingWebhookConfiguration ended with: an error on the server ("unable to decode an event from the watch stream: context canceled") has prevented the request from succeeding
+W0617 11:22:04.312665  379615 reflector.go:462] pkg/mod/k8s.io/client-go@v0.29.0/tools/cache/reflector.go:229: watch of *v1.Service ended with: an error on the server ("unable to decode an event from the watch stream: context canceled") has prevented the request from succeeding
+W0617 11:22:04.312730  379615 reflector.go:462] pkg/mod/k8s.io/client-go@v0.29.0/tools/cache/reflector.go:229: watch of *v1.ValidatingWebhookConfiguration ended with: an error on the server ("unable to decode an event from the watch stream: context canceled") has prevented the request from succeeding
+W0617 11:22:04.312674  379615 reflector.go:462] pkg/mod/k8s.io/client-go@v0.29.0/tools/cache/reflector.go:229: watch of *v1.CustomResourceDefinition ended with: an error on the server ("unable to decode an event from the watch stream: context canceled") has prevented the request from succeeding
+2026-06-17T11:22:04+02:00	INFO	Stopping and waiting for webhooks
+2026-06-17T11:22:04+02:00	INFO	Stopping and waiting for HTTP servers
+2026-06-17T11:22:04+02:00	INFO	shutting down server	{"kind": "health probe", "addr": "[::]:18081"}
+2026-06-17T11:22:04+02:00	INFO	controller-runtime.metrics	Shutting down metrics server with timeout of 1 minute
+2026-06-17T11:22:04+02:00	INFO	Wait completed, proceeding to shutdown the manager

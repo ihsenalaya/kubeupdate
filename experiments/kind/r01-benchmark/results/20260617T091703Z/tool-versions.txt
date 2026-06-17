@@ -27,4 +27,4 @@ kind v0.31.0 go1.25.5 linux/amd64
 Warning: version difference between client (1.34) and server (1.24) exceeds the supported minor version skew of +/-1
 go version go1.25.8 linux/amd64
 Version:5.24.0 Commit:dd5ec8cccce5e42dfe8054b8250baa35546056a0
-10:36AM INF version 0.7.3 (git sha 57480c07b3f91238f12a35d0ec88d9368aae99aa)
+11:21AM INF version 0.7.3 (git sha 57480c07b3f91238f12a35d0ec88d9368aae99aa)

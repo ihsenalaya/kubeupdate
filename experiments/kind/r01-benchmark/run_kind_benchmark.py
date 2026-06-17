@@ -20,15 +20,25 @@ BENCHMARK_NAMESPACES = [
     "r01-system",
     "r01-low-replicas",
     "r01-missing-readiness",
+    "r01-readiness-statefulset",
+    "r01-readiness-daemonset",
+    "r01-readiness-multi-container",
     "r01-pdb-min-blocking",
     "r01-pdb-max-zero",
     "r01-pdb-no-match",
     "r01-pdb-missing",
+    "r01-pdb-stateful-max-zero",
+    "r01-pdb-percentage",
+    "r01-pdb-stateful-missing",
     "r01-standalone-pod",
+    "r01-workload-stateful-single",
     "r01-policy-restricted",
     "r01-policy-missing-sc",
+    "r01-policy-hostpath",
+    "r01-policy-warn-audit",
     "r01-admission-target",
     "r01-deprecated-api",
+    "r01-modern-api-negative",
     "r01-safe",
 ]
 
@@ -90,6 +100,9 @@ def ensure_cluster():
 
 def clean_previous_run():
     kubectl(["delete", "validatingwebhookconfiguration", "r01-risky-webhook", "--ignore-not-found"], check=False)
+    kubectl(["delete", "validatingwebhookconfiguration", "r01-safe-webhook", "--ignore-not-found"], check=False)
+    kubectl(["delete", "mutatingwebhookconfiguration", "r01-mutating-fail-webhook", "--ignore-not-found"], check=False)
+    kubectl(["delete", "podsecuritypolicy", "legacy-psp", "--ignore-not-found"], check=False)
     for namespace in BENCHMARK_NAMESPACES:
         kubectl(["delete", "namespace", namespace, "--ignore-not-found", "--wait=true"], check=False, timeout=120)
 
@@ -153,7 +166,7 @@ def stop_controller(process, log):
 
 def apply_scenarios(manifest_dir):
     kubectl(["apply", "-f", str(manifest_dir / "00-scenarios.yaml")], timeout=180)
-    for namespace in ["r01-policy-restricted", "r01-policy-missing-sc"]:
+    for namespace in ["r01-policy-restricted", "r01-policy-missing-sc", "r01-policy-hostpath"]:
         kubectl(
             [
                 "label",
@@ -163,6 +176,16 @@ def apply_scenarios(manifest_dir):
                 "--overwrite",
             ]
         )
+    kubectl(
+        [
+            "label",
+            "namespace",
+            "r01-policy-warn-audit",
+            "pod-security.kubernetes.io/warn=restricted",
+            "pod-security.kubernetes.io/audit=restricted",
+            "--overwrite",
+        ]
+    )
     kubectl(["apply", "-f", str(manifest_dir / "10-assessment.yaml")], timeout=60)
 
 
@@ -341,6 +364,44 @@ def score_by_family(expected, actual):
     return out
 
 
+def resource_matches_control(control_resource, actual_resource):
+    for key in ["apiVersion", "kind", "namespace", "name"]:
+        if key in control_resource and resource_value(control_resource, key) != resource_value(actual_resource, key):
+            return False
+    return True
+
+
+def negative_control_observations(negative_controls, normalized):
+    observations = []
+    for control in negative_controls:
+        resource = control.get("resource", {})
+        by_source = {}
+        for source, findings in normalized.items():
+            by_source[source] = [
+                finding
+                for finding in findings
+                if resource_matches_control(resource, finding.get("resource", {}) or {})
+            ]
+        observations.append(
+            {
+                "id": control.get("id", ""),
+                "description": control.get("description", ""),
+                "resource": resource,
+                "observations": by_source,
+            }
+        )
+    return observations
+
+
+def format_resource(resource):
+    namespace = resource.get("namespace")
+    name = resource.get("name", "")
+    kind = resource.get("kind", "")
+    if namespace:
+        return f"{kind} {namespace}/{name}"
+    return f"{kind} {name}"
+
+
 def markdown_table(rows, headers):
     lines = ["| " + " | ".join(headers) + " |", "| " + " | ".join(["---"] * len(headers)) + " |"]
     for row in rows:
@@ -348,23 +409,35 @@ def markdown_table(rows, headers):
     return "\n".join(lines)
 
 
-def write_summary(result_dir, metadata, metrics):
-    rows = []
-    for name, values in metrics["overall"].items():
-        rows.append(
+def write_summary(result_dir, metadata, metrics, negative_observations):
+    api_rows = []
+    non_api_rows = []
+    family_rows = []
+    negative_rows = []
+    empty_score = score_source([], [])
+    for tool, families in metrics["byFamily"].items():
+        api_values = families.get("DeprecatedAPI", empty_score)
+        api_rows.append(
             {
-                "Tool": name,
-                "TP": values["tp"],
-                "FP": values["fp"],
-                "FN": values["fn"],
-                "Precision": values["precision"],
-                "Recall": values["recall"],
-                "F1": values["f1"],
+                "Tool": tool,
+                "TP": api_values["tp"],
+                "FP": api_values["fp"],
+                "FN": api_values["fn"],
+                "Precision": api_values["precision"],
+                "Recall": api_values["recall"],
+                "F1": api_values["f1"],
             }
         )
-    family_rows = []
-    for tool, families in metrics["byFamily"].items():
+
+        non_api_tp = 0
+        non_api_fp = 0
+        non_api_fn = 0
         for family, values in families.items():
+            if family == "DeprecatedAPI":
+                continue
+            non_api_tp += values["tp"]
+            non_api_fp += values["fp"]
+            non_api_fn += values["fn"]
             family_rows.append(
                 {
                     "Tool": tool,
@@ -377,6 +450,33 @@ def write_summary(result_dir, metadata, metrics):
                     "F1": values["f1"],
                 }
             )
+        precision = non_api_tp / (non_api_tp + non_api_fp) if non_api_tp + non_api_fp else 0.0
+        recall = non_api_tp / (non_api_tp + non_api_fn) if non_api_tp + non_api_fn else 0.0
+        f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
+        non_api_rows.append(
+            {
+                "Tool": tool,
+                "Covered": non_api_tp,
+                "Unexpected": non_api_fp,
+                "Uncovered": non_api_fn,
+                "Coverage": round(recall, 4),
+                "F1": round(f1, 4),
+                }
+            )
+
+    for control in negative_observations:
+        observations = control["observations"]
+        negative_rows.append(
+            {
+                "Control": control["id"],
+                "Resource": format_resource(control["resource"]),
+                "KUG": len(observations.get("KubeUpgrade Guardian", [])),
+                "Pluto files": len(observations.get("Pluto files", [])),
+                "Pluto cluster": len(observations.get("Pluto cluster", [])),
+                "kubent files": len(observations.get("kubent files", [])),
+                "kubent cluster": len(observations.get("kubent cluster", [])),
+            }
+        )
 
     summary = [
         "# R01 Benchmark Summary",
@@ -386,6 +486,7 @@ def write_summary(result_dir, metadata, metrics):
         f"- Kind image: `{KIND_IMAGE}`",
         f"- Target version: `{TARGET_VERSION}`",
         f"- Expected findings: `{metadata['expectedFindings']}`",
+        f"- Negative controls: `{metadata.get('negativeControls', 0)}`",
         f"- Observed KubeUpgrade Guardian findings: `{metadata['kugFindings']}`",
         "",
         "## Tool Versions",
@@ -394,18 +495,30 @@ def write_summary(result_dir, metadata, metrics):
         metadata["toolVersions"].strip(),
         "```",
         "",
-        "## Overall Metrics",
+        "## API-Deprecation Subset",
         "",
-        markdown_table(rows, ["Tool", "TP", "FP", "FN", "Precision", "Recall", "F1"]),
+        markdown_table(api_rows, ["Tool", "TP", "FP", "FN", "Precision", "Recall", "F1"]),
         "",
-        "## Metrics By Family",
+        "## Non-API Readiness Coverage",
+        "",
+        markdown_table(non_api_rows, ["Tool", "Covered", "Unexpected", "Uncovered", "Coverage", "F1"]),
+        "",
+        "## Non-API Metrics By Family",
         "",
         markdown_table(family_rows, ["Tool", "Family", "TP", "FP", "FN", "Precision", "Recall", "F1"]),
         "",
+        "## Negative Controls",
+        "",
+        markdown_table(
+            negative_rows,
+            ["Control", "Resource", "KUG", "Pluto files", "Pluto cluster", "kubent files", "kubent cluster"],
+        ),
+        "",
         "## Notes",
         "",
-        "- Pluto and kubent are API-deprecation baselines; their non-deprecated family false negatives are expected and make the scope difference explicit.",
-        "- This run is a controlled benchmark, not yet a production-cluster evaluation.",
+        "- Pluto and kubent are evaluated as specialized API-deprecation baselines, not as general readiness tools.",
+        "- The non-API table reports coverage outside the declared scope of Pluto and kubent; it must not be read as a global superiority claim.",
+        "- This run is a controlled benchmark with positive and negative fixtures, not a production-cluster evaluation.",
     ]
     (result_dir / "summary.md").write_text("\n".join(summary) + "\n", encoding="utf-8")
 
@@ -545,26 +658,36 @@ def main():
             "kubent cluster": normalize_kubent(result_dir / "kubent-cluster.stdout", "kubent cluster"),
         }
         write_json(result_dir / "normalized-findings.json", normalized)
+        negative_observations = negative_control_observations(truth.get("negativeControls", []), normalized)
+        write_json(result_dir / "negative-control-observations.json", negative_observations)
 
         metrics = {"overall": {}, "byFamily": {}}
         for name, actual in normalized.items():
             metrics["overall"][name] = score_source(expected, actual)
             metrics["byFamily"][name] = score_by_family(expected, actual)
         write_json(result_dir / "metrics.json", metrics)
+        kug_negative_observations = sum(
+            len(control["observations"].get("KubeUpgrade Guardian", [])) for control in negative_observations
+        )
 
         metadata = {
             "runId": run_id,
             "expectedFindings": len(expected),
+            "negativeControls": len(truth.get("negativeControls", [])),
+            "kugNegativeControlObservations": kug_negative_observations,
             "kugFindings": len(normalized["KubeUpgrade Guardian"]),
             "kugWaitDurationSeconds": round(kug_duration, 3),
             "toolVersions": tool_versions,
         }
         write_json(result_dir / "metadata.json", metadata)
-        write_summary(result_dir, metadata, metrics)
+        write_summary(result_dir, metadata, metrics, negative_observations)
 
         kug = metrics["overall"]["KubeUpgrade Guardian"]
-        if kug["fp"] or kug["fn"]:
-            print(f"R01 benchmark completed with KubeUpgrade Guardian mismatches: FP={kug['fp']} FN={kug['fn']}")
+        if kug["fp"] or kug["fn"] or kug_negative_observations:
+            print(
+                "R01 benchmark completed with KubeUpgrade Guardian mismatches: "
+                f"FP={kug['fp']} FN={kug['fn']} negativeControls={kug_negative_observations}"
+            )
             print(result_dir)
             return 2
         print(f"R01 benchmark completed successfully: {result_dir}")

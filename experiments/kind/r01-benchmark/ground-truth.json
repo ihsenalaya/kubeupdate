@@ -1,6 +1,56 @@
 {
   "targetVersion": "1.32",
   "scope": "Kind cluster with Kubernetes 1.24.15, controlled manifests, and four core risk families plus deprecated APIs.",
+  "negativeControls": [
+    {
+      "id": "neg-safe-deployment",
+      "description": "Deployment with three replicas, readinessProbe, restricted-compatible security context, and matching PDB.",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r01-safe",
+        "name": "profile-api"
+      }
+    },
+    {
+      "id": "neg-safe-webhook",
+      "description": "Webhook with failurePolicy=Ignore, existing service, namespaceSelector, and objectSelector.",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "ValidatingWebhookConfiguration",
+        "name": "r01-safe-webhook"
+      }
+    },
+    {
+      "id": "neg-policy-warn-audit-only",
+      "description": "Namespace uses Pod Security warn/audit labels without enforce; current checker should not treat it as an enforced policy blocker.",
+      "resource": {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "name": "r01-policy-warn-audit"
+      }
+    },
+    {
+      "id": "neg-modern-hpa",
+      "description": "Modern autoscaling/v2 HPA should not be reported by the deprecated API checker.",
+      "resource": {
+        "apiVersion": "autoscaling/v2",
+        "kind": "HorizontalPodAutoscaler",
+        "namespace": "r01-modern-api-negative",
+        "name": "modern-hpa"
+      }
+    },
+    {
+      "id": "neg-modern-pdb-served-through-conversion",
+      "description": "Modern policy/v1 PDBs served through legacy discovery must not be treated as source-level deprecated API use.",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "namespace": "r01-modern-api-negative",
+        "name": "modern-hpa-target"
+      }
+    }
+  ],
   "expectedFindings": [
     {
       "id": "gt-workload-low-replicas",
@@ -193,6 +243,160 @@
       "messageContains": "namespaceSelector is absent"
     },
     {
+      "id": "gt-readiness-statefulset",
+      "family": "ReadinessProbes",
+      "type": "MISSING_READINESS_PROBE",
+      "severity": "Medium",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "StatefulSet",
+        "namespace": "r01-readiness-statefulset",
+        "name": "ledger-db"
+      },
+      "messageContains": "has no readinessProbe"
+    },
+    {
+      "id": "gt-readiness-daemonset",
+      "family": "ReadinessProbes",
+      "type": "MISSING_READINESS_PROBE",
+      "severity": "Medium",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "DaemonSet",
+        "namespace": "r01-readiness-daemonset",
+        "name": "node-agent"
+      },
+      "messageContains": "has no readinessProbe"
+    },
+    {
+      "id": "gt-readiness-multi-container-api",
+      "family": "ReadinessProbes",
+      "type": "MISSING_READINESS_PROBE",
+      "severity": "Medium",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r01-readiness-multi-container",
+        "name": "composite-api"
+      },
+      "messageContains": "Container api"
+    },
+    {
+      "id": "gt-readiness-multi-container-sidecar",
+      "family": "ReadinessProbes",
+      "type": "MISSING_READINESS_PROBE",
+      "severity": "Medium",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r01-readiness-multi-container",
+        "name": "composite-api"
+      },
+      "messageContains": "Container sidecar"
+    },
+    {
+      "id": "gt-pdb-stateful-max-unavailable-zero",
+      "family": "PDB",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "namespace": "r01-pdb-stateful-max-zero",
+        "name": "accounts-db"
+      },
+      "messageContains": "may block disruption"
+    },
+    {
+      "id": "gt-pdb-percentage-min-available",
+      "family": "PDB",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "Critical",
+      "resource": {
+        "apiVersion": "policy/v1",
+        "kind": "PodDisruptionBudget",
+        "namespace": "r01-pdb-percentage",
+        "name": "report-api"
+      },
+      "messageContains": "may block disruption"
+    },
+    {
+      "id": "gt-pdb-stateful-missing",
+      "family": "PDB",
+      "type": "PDB_BLOCKING_RISK",
+      "severity": "Low",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "StatefulSet",
+        "namespace": "r01-pdb-stateful-missing",
+        "name": "warehouse-db"
+      },
+      "messageContains": "has no matching PodDisruptionBudget"
+    },
+    {
+      "id": "gt-workload-stateful-single",
+      "family": "WorkloadAvailability",
+      "type": "WORKLOAD_AVAILABILITY_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "StatefulSet",
+        "namespace": "r01-workload-stateful-single",
+        "name": "cache-singleton"
+      },
+      "messageContains": "fewer than 2 replicas"
+    },
+    {
+      "id": "gt-admission-mutating-fail-policy",
+      "family": "AdmissionWebhook",
+      "type": "ADMISSION_WEBHOOK_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "admissionregistration.k8s.io/v1",
+        "kind": "MutatingWebhookConfiguration",
+        "name": "r01-mutating-fail-webhook"
+      },
+      "messageContains": "failurePolicy=Fail"
+    },
+    {
+      "id": "gt-policy-hostpath-namespace",
+      "family": "PolicyRisk",
+      "type": "POLICY_RISK",
+      "severity": "Medium",
+      "resource": {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "name": "r01-policy-hostpath"
+      },
+      "messageContains": "enforces Pod Security restricted"
+    },
+    {
+      "id": "gt-policy-hostpath-volume",
+      "family": "PolicyRisk",
+      "type": "POLICY_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r01-policy-hostpath",
+        "name": "storage-worker"
+      },
+      "messageContains": "hostPath volume"
+    },
+    {
+      "id": "gt-policy-allow-privilege-escalation",
+      "family": "PolicyRisk",
+      "type": "POLICY_RISK",
+      "severity": "High",
+      "resource": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "namespace": "r01-policy-hostpath",
+        "name": "storage-worker"
+      },
+      "messageContains": "allowPrivilegeEscalation=true"
+    },
+    {
       "id": "gt-deprecated-pdb",
       "family": "DeprecatedAPI",
       "type": "DEPRECATED_OR_REMOVED_API",
@@ -230,6 +434,18 @@
         "name": "legacy-hpa"
       },
       "messageContains": "removed in Kubernetes 1.26"
+    },
+    {
+      "id": "gt-deprecated-psp",
+      "family": "DeprecatedAPI",
+      "type": "DEPRECATED_OR_REMOVED_API",
+      "severity": "Critical",
+      "resource": {
+        "apiVersion": "policy/v1beta1",
+        "kind": "PodSecurityPolicy",
+        "name": "legacy-psp"
+      },
+      "messageContains": "removed in Kubernetes 1.25"
     }
   ]
 }
