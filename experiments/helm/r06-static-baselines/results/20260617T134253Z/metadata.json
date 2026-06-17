@@ -1,0 +1,17 @@
+{
+  "charts": [
+    "cert-manager",
+    "external-dns",
+    "ingress-nginx",
+    "kube-prometheus-stack",
+    "kyverno"
+  ],
+  "r05Result": "experiments/helm/r05-realistic-workloads/results/20260617T133841Z",
+  "r05RunId": "20260617T133841Z",
+  "runId": "20260617T134253Z",
+  "tools": [
+    "kube-score",
+    "kube-linter",
+    "polaris"
+  ]
+}

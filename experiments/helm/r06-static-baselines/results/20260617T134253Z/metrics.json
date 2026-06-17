@@ -1,0 +1,1197 @@
+{
+  "runs": [
+    {
+      "chart": "cert-manager",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests:/manifests:ro",
+        "zegl/kube-score:latest",
+        "score",
+        "--output-format",
+        "json",
+        "--kubernetes-version",
+        "v1.32",
+        "/manifests/cert-manager.yaml"
+      ],
+      "durationSeconds": 1.691,
+      "image": "zegl/kube-score:latest",
+      "imageDigests": [
+        "zegl/kube-score@sha256:ac4c43ad560af905d66f6bf57b0937c591332e6dbf2167c31193a13b4695ab97"
+      ],
+      "manifest": "experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/cert-manager.yaml",
+      "returncode": 1,
+      "stderrBytes": 0,
+      "stderrSample": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutBytes": 83374,
+      "stdoutSha256": "7643497b9183736a88d49724797c94312466b894cc8e857c3f2f1deaa854565f",
+      "summary": {
+        "commentCount": 49,
+        "failingCheckInstances": 29,
+        "objectCount": 7,
+        "parseableJson": true,
+        "topFailingChecks": [
+          {
+            "count": 4,
+            "name": "container-ephemeral-storage-request-and-limit"
+          },
+          {
+            "count": 4,
+            "name": "container-image-pull-policy"
+          },
+          {
+            "count": 4,
+            "name": "container-resources"
+          },
+          {
+            "count": 4,
+            "name": "container-security-context-user-group-id"
+          },
+          {
+            "count": 4,
+            "name": "pod-networkpolicy"
+          },
+          {
+            "count": 4,
+            "name": "pod-topology-spread-constraints"
+          },
+          {
+            "count": 3,
+            "name": "deployment-replicas"
+          },
+          {
+            "count": 2,
+            "name": "pod-probes"
+          }
+        ],
+        "uniqueFailingChecks": 8
+      },
+      "tool": "kube-score",
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "zegl/kube-score:latest",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "kube-score version: v1.20.0-docker-linux/amd64, commit: 81371e9f53b633bec69423fc298295bd71bd869a, built: 2025-04-28T18:55:13+02:00"
+      }
+    },
+    {
+      "chart": "cert-manager",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests:/manifests:ro",
+        "stackrox/kube-linter:latest",
+        "lint",
+        "--format",
+        "json",
+        "/manifests/cert-manager.yaml"
+      ],
+      "durationSeconds": 1.276,
+      "image": "stackrox/kube-linter:latest",
+      "imageDigests": [
+        "stackrox/kube-linter@sha256:f2bfce7879206d32f69ab6572c376f916643f54ca291ac38cf7d01ef591ff3f9"
+      ],
+      "manifest": "experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/cert-manager.yaml",
+      "returncode": 1,
+      "stderrBytes": 27,
+      "stderrSample": "Error: found 9 lint errors",
+      "stderrSha256": "23a3a6791f6bb3dd2a339606ce8a80daaf568ef4a50d49b6ff4a9a8e70c63249",
+      "stdoutBytes": 17143,
+      "stdoutSha256": "578b60b8ca6f79b76be3102e95615ac51ea47a652fc3ebdd0188a902762c08d5",
+      "summary": {
+        "checksStatus": "Failed",
+        "parseableJson": true,
+        "reportCount": 9,
+        "topChecks": [
+          {
+            "count": 4,
+            "name": "unset-cpu-requirements"
+          },
+          {
+            "count": 4,
+            "name": "unset-memory-requirements"
+          },
+          {
+            "count": 1,
+            "name": "job-ttl-seconds-after-finished"
+          }
+        ],
+        "uniqueChecks": 3
+      },
+      "tool": "kube-linter",
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "stackrox/kube-linter:latest",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "0.8.3"
+      }
+    },
+    {
+      "chart": "cert-manager",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests:/manifests:ro",
+        "quay.io/fairwinds/polaris:latest",
+        "polaris",
+        "audit",
+        "--format",
+        "json",
+        "--audit-path",
+        "/manifests/cert-manager.yaml"
+      ],
+      "durationSeconds": 1.5,
+      "image": "quay.io/fairwinds/polaris:latest",
+      "imageDigests": [
+        "quay.io/fairwinds/polaris@sha256:7af688527df75c3825395ded8aeb3775fad2027228aa06c9959d39ae6c00e999"
+      ],
+      "manifest": "experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/cert-manager.yaml",
+      "returncode": 0,
+      "stderrBytes": 0,
+      "stderrSample": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutBytes": 58633,
+      "stdoutSha256": "0cbca1a0cc5c154cf6186d329441eef6cfc9b067e553d90911aed668ec9fb98b",
+      "summary": {
+        "failedCheckInstances": 20,
+        "objectCount": 52,
+        "parseableJson": true,
+        "score": 91,
+        "severityCounts": {
+          "warning": 20
+        },
+        "topFailedChecks": [
+          {
+            "count": 4,
+            "name": "priorityClassNotSet"
+          },
+          {
+            "count": 4,
+            "name": "pullPolicyNotAlways"
+          },
+          {
+            "count": 3,
+            "name": "deploymentMissingReplicas"
+          },
+          {
+            "count": 3,
+            "name": "metadataAndInstanceMismatched"
+          },
+          {
+            "count": 3,
+            "name": "missingPodDisruptionBudget"
+          },
+          {
+            "count": 3,
+            "name": "topologySpreadConstraint"
+          }
+        ],
+        "uniqueFailedChecks": 6
+      },
+      "tool": "polaris",
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "quay.io/fairwinds/polaris:latest",
+          "polaris",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "Polaris version:10.1.8"
+      }
+    },
+    {
+      "chart": "external-dns",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests:/manifests:ro",
+        "zegl/kube-score:latest",
+        "score",
+        "--output-format",
+        "json",
+        "--kubernetes-version",
+        "v1.32",
+        "/manifests/external-dns.yaml"
+      ],
+      "durationSeconds": 0.784,
+      "image": "zegl/kube-score:latest",
+      "imageDigests": [
+        "zegl/kube-score@sha256:ac4c43ad560af905d66f6bf57b0937c591332e6dbf2167c31193a13b4695ab97"
+      ],
+      "manifest": "experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/external-dns.yaml",
+      "returncode": 1,
+      "stderrBytes": 0,
+      "stderrSample": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutBytes": 21895,
+      "stdoutSha256": "403aedf9efb7a74355a3948d29bc45eeb6797554518a132892541fc3039a387e",
+      "summary": {
+        "commentCount": 12,
+        "failingCheckInstances": 8,
+        "objectCount": 2,
+        "parseableJson": true,
+        "topFailingChecks": [
+          {
+            "count": 1,
+            "name": "container-ephemeral-storage-request-and-limit"
+          },
+          {
+            "count": 1,
+            "name": "container-image-pull-policy"
+          },
+          {
+            "count": 1,
+            "name": "container-resources"
+          },
+          {
+            "count": 1,
+            "name": "deployment-replicas"
+          },
+          {
+            "count": 1,
+            "name": "deployment-strategy"
+          },
+          {
+            "count": 1,
+            "name": "pod-networkpolicy"
+          },
+          {
+            "count": 1,
+            "name": "pod-probes-identical"
+          },
+          {
+            "count": 1,
+            "name": "pod-topology-spread-constraints"
+          }
+        ],
+        "uniqueFailingChecks": 8
+      },
+      "tool": "kube-score",
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "zegl/kube-score:latest",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "kube-score version: v1.20.0-docker-linux/amd64, commit: 81371e9f53b633bec69423fc298295bd71bd869a, built: 2025-04-28T18:55:13+02:00"
+      }
+    },
+    {
+      "chart": "external-dns",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests:/manifests:ro",
+        "stackrox/kube-linter:latest",
+        "lint",
+        "--format",
+        "json",
+        "/manifests/external-dns.yaml"
+      ],
+      "durationSeconds": 0.897,
+      "image": "stackrox/kube-linter:latest",
+      "imageDigests": [
+        "stackrox/kube-linter@sha256:f2bfce7879206d32f69ab6572c376f916643f54ca291ac38cf7d01ef591ff3f9"
+      ],
+      "manifest": "experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/external-dns.yaml",
+      "returncode": 1,
+      "stderrBytes": 27,
+      "stderrSample": "Error: found 2 lint errors",
+      "stderrSha256": "8e8427107b921660038d13b4e002b29f5c5b89885c2c27a6947dc42f71222121",
+      "stdoutBytes": 13485,
+      "stdoutSha256": "685cd0248a834e161625093c3cfe32dc1046ad2f9e632fcf7ef947f87176a964",
+      "summary": {
+        "checksStatus": "Failed",
+        "parseableJson": true,
+        "reportCount": 2,
+        "topChecks": [
+          {
+            "count": 1,
+            "name": "unset-cpu-requirements"
+          },
+          {
+            "count": 1,
+            "name": "unset-memory-requirements"
+          }
+        ],
+        "uniqueChecks": 2
+      },
+      "tool": "kube-linter",
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "stackrox/kube-linter:latest",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "0.8.3"
+      }
+    },
+    {
+      "chart": "external-dns",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests:/manifests:ro",
+        "quay.io/fairwinds/polaris:latest",
+        "polaris",
+        "audit",
+        "--format",
+        "json",
+        "--audit-path",
+        "/manifests/external-dns.yaml"
+      ],
+      "durationSeconds": 0.843,
+      "image": "quay.io/fairwinds/polaris:latest",
+      "imageDigests": [
+        "quay.io/fairwinds/polaris@sha256:7af688527df75c3825395ded8aeb3775fad2027228aa06c9959d39ae6c00e999"
+      ],
+      "manifest": "experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/external-dns.yaml",
+      "returncode": 0,
+      "stderrBytes": 0,
+      "stderrSample": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutBytes": 10752,
+      "stdoutSha256": "a71380d221337573fbea21d0715673957389fed77360144726af890b82e6aea6",
+      "summary": {
+        "failedCheckInstances": 9,
+        "objectCount": 5,
+        "parseableJson": true,
+        "score": 80,
+        "severityCounts": {
+          "warning": 9
+        },
+        "topFailedChecks": [
+          {
+            "count": 1,
+            "name": "cpuLimitsMissing"
+          },
+          {
+            "count": 1,
+            "name": "cpuRequestsMissing"
+          },
+          {
+            "count": 1,
+            "name": "deploymentMissingReplicas"
+          },
+          {
+            "count": 1,
+            "name": "memoryLimitsMissing"
+          },
+          {
+            "count": 1,
+            "name": "memoryRequestsMissing"
+          },
+          {
+            "count": 1,
+            "name": "missingPodDisruptionBudget"
+          },
+          {
+            "count": 1,
+            "name": "priorityClassNotSet"
+          },
+          {
+            "count": 1,
+            "name": "pullPolicyNotAlways"
+          },
+          {
+            "count": 1,
+            "name": "topologySpreadConstraint"
+          }
+        ],
+        "uniqueFailedChecks": 9
+      },
+      "tool": "polaris",
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "quay.io/fairwinds/polaris:latest",
+          "polaris",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "Polaris version:10.1.8"
+      }
+    },
+    {
+      "chart": "ingress-nginx",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests:/manifests:ro",
+        "zegl/kube-score:latest",
+        "score",
+        "--output-format",
+        "json",
+        "--kubernetes-version",
+        "v1.32",
+        "/manifests/ingress-nginx.yaml"
+      ],
+      "durationSeconds": 0.806,
+      "image": "zegl/kube-score:latest",
+      "imageDigests": [
+        "zegl/kube-score@sha256:ac4c43ad560af905d66f6bf57b0937c591332e6dbf2167c31193a13b4695ab97"
+      ],
+      "manifest": "experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/ingress-nginx.yaml",
+      "returncode": 1,
+      "stderrBytes": 0,
+      "stderrSample": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutBytes": 56644,
+      "stdoutSha256": "bb39109e39a306c3df5b552a93f85c2adc43679146e2727203fd07639af5a00e",
+      "summary": {
+        "commentCount": 30,
+        "failingCheckInstances": 19,
+        "objectCount": 6,
+        "parseableJson": true,
+        "topFailingChecks": [
+          {
+            "count": 3,
+            "name": "container-ephemeral-storage-request-and-limit"
+          },
+          {
+            "count": 3,
+            "name": "container-image-pull-policy"
+          },
+          {
+            "count": 3,
+            "name": "container-resources"
+          },
+          {
+            "count": 3,
+            "name": "pod-networkpolicy"
+          },
+          {
+            "count": 3,
+            "name": "pod-topology-spread-constraints"
+          },
+          {
+            "count": 1,
+            "name": "container-security-context-readonlyrootfilesystem"
+          },
+          {
+            "count": 1,
+            "name": "container-security-context-user-group-id"
+          },
+          {
+            "count": 1,
+            "name": "deployment-has-host-podantiaffinity"
+          },
+          {
+            "count": 1,
+            "name": "pod-probes-identical"
+          }
+        ],
+        "uniqueFailingChecks": 9
+      },
+      "tool": "kube-score",
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "zegl/kube-score:latest",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "kube-score version: v1.20.0-docker-linux/amd64, commit: 81371e9f53b633bec69423fc298295bd71bd869a, built: 2025-04-28T18:55:13+02:00"
+      }
+    },
+    {
+      "chart": "ingress-nginx",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests:/manifests:ro",
+        "stackrox/kube-linter:latest",
+        "lint",
+        "--format",
+        "json",
+        "/manifests/ingress-nginx.yaml"
+      ],
+      "durationSeconds": 0.866,
+      "image": "stackrox/kube-linter:latest",
+      "imageDigests": [
+        "stackrox/kube-linter@sha256:f2bfce7879206d32f69ab6572c376f916643f54ca291ac38cf7d01ef591ff3f9"
+      ],
+      "manifest": "experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/ingress-nginx.yaml",
+      "returncode": 1,
+      "stderrBytes": 28,
+      "stderrSample": "Error: found 10 lint errors",
+      "stderrSha256": "33e7f1e7862e0e7d3b6b933487f663de28cfe26a13ffd3c71ed3ffcd2b9d8d60",
+      "stdoutBytes": 17677,
+      "stdoutSha256": "c6f5820ca9f4e630cc5a8ba59c1ac3bec4d4104f06c50b3522a3e9451c62c0af",
+      "summary": {
+        "checksStatus": "Failed",
+        "parseableJson": true,
+        "reportCount": 10,
+        "topChecks": [
+          {
+            "count": 3,
+            "name": "unset-memory-requirements"
+          },
+          {
+            "count": 2,
+            "name": "unset-cpu-requirements"
+          },
+          {
+            "count": 1,
+            "name": "liveness-port"
+          },
+          {
+            "count": 1,
+            "name": "no-anti-affinity"
+          },
+          {
+            "count": 1,
+            "name": "no-read-only-root-fs"
+          },
+          {
+            "count": 1,
+            "name": "pdb-unhealthy-pod-eviction-policy"
+          },
+          {
+            "count": 1,
+            "name": "readiness-port"
+          }
+        ],
+        "uniqueChecks": 7
+      },
+      "tool": "kube-linter",
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "stackrox/kube-linter:latest",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "0.8.3"
+      }
+    },
+    {
+      "chart": "ingress-nginx",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests:/manifests:ro",
+        "quay.io/fairwinds/polaris:latest",
+        "polaris",
+        "audit",
+        "--format",
+        "json",
+        "--audit-path",
+        "/manifests/ingress-nginx.yaml"
+      ],
+      "durationSeconds": 0.947,
+      "image": "quay.io/fairwinds/polaris:latest",
+      "imageDigests": [
+        "quay.io/fairwinds/polaris@sha256:7af688527df75c3825395ded8aeb3775fad2027228aa06c9959d39ae6c00e999"
+      ],
+      "manifest": "experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/ingress-nginx.yaml",
+      "returncode": 0,
+      "stderrBytes": 0,
+      "stderrSample": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutBytes": 37990,
+      "stdoutSha256": "4b2e89addd2fd8a442ce3fde67c836cf7b831e64653eed00b4c79ea7290c4309",
+      "summary": {
+        "failedCheckInstances": 25,
+        "objectCount": 19,
+        "parseableJson": true,
+        "score": 85,
+        "severityCounts": {
+          "warning": 25
+        },
+        "topFailedChecks": [
+          {
+            "count": 3,
+            "name": "cpuLimitsMissing"
+          },
+          {
+            "count": 3,
+            "name": "memoryLimitsMissing"
+          },
+          {
+            "count": 3,
+            "name": "metadataAndInstanceMismatched"
+          },
+          {
+            "count": 3,
+            "name": "priorityClassNotSet"
+          },
+          {
+            "count": 3,
+            "name": "pullPolicyNotAlways"
+          },
+          {
+            "count": 2,
+            "name": "automountServiceAccountToken"
+          },
+          {
+            "count": 2,
+            "name": "cpuRequestsMissing"
+          },
+          {
+            "count": 2,
+            "name": "memoryRequestsMissing"
+          },
+          {
+            "count": 2,
+            "name": "missingNetworkPolicy"
+          },
+          {
+            "count": 1,
+            "name": "notReadOnlyRootFilesystem"
+          }
+        ],
+        "uniqueFailedChecks": 11
+      },
+      "tool": "polaris",
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "quay.io/fairwinds/polaris:latest",
+          "polaris",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "Polaris version:10.1.8"
+      }
+    },
+    {
+      "chart": "kube-prometheus-stack",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests:/manifests:ro",
+        "zegl/kube-score:latest",
+        "score",
+        "--output-format",
+        "json",
+        "--kubernetes-version",
+        "v1.32",
+        "/manifests/kube-prometheus-stack.yaml"
+      ],
+      "durationSeconds": 1.081,
+      "image": "zegl/kube-score:latest",
+      "imageDigests": [
+        "zegl/kube-score@sha256:ac4c43ad560af905d66f6bf57b0937c591332e6dbf2167c31193a13b4695ab97"
+      ],
+      "manifest": "experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/kube-prometheus-stack.yaml",
+      "returncode": 1,
+      "stderrBytes": 0,
+      "stderrSample": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutBytes": 143737,
+      "stdoutSha256": "acd3db2af09fb7007b1a59401990160f3f3210ef0d3bfe116ed8af96e416dd44",
+      "summary": {
+        "commentCount": 94,
+        "failingCheckInstances": 47,
+        "objectCount": 17,
+        "parseableJson": true,
+        "topFailingChecks": [
+          {
+            "count": 7,
+            "name": "service-targets-pod"
+          },
+          {
+            "count": 6,
+            "name": "container-ephemeral-storage-request-and-limit"
+          },
+          {
+            "count": 6,
+            "name": "container-image-pull-policy"
+          },
+          {
+            "count": 6,
+            "name": "container-resources"
+          },
+          {
+            "count": 6,
+            "name": "pod-networkpolicy"
+          },
+          {
+            "count": 6,
+            "name": "pod-topology-spread-constraints"
+          },
+          {
+            "count": 3,
+            "name": "container-security-context-user-group-id"
+          },
+          {
+            "count": 3,
+            "name": "deployment-replicas"
+          },
+          {
+            "count": 3,
+            "name": "pod-probes-identical"
+          },
+          {
+            "count": 1,
+            "name": "container-security-context-readonlyrootfilesystem"
+          }
+        ],
+        "uniqueFailingChecks": 10
+      },
+      "tool": "kube-score",
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "zegl/kube-score:latest",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "kube-score version: v1.20.0-docker-linux/amd64, commit: 81371e9f53b633bec69423fc298295bd71bd869a, built: 2025-04-28T18:55:13+02:00"
+      }
+    },
+    {
+      "chart": "kube-prometheus-stack",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests:/manifests:ro",
+        "stackrox/kube-linter:latest",
+        "lint",
+        "--format",
+        "json",
+        "/manifests/kube-prometheus-stack.yaml"
+      ],
+      "durationSeconds": 1.706,
+      "image": "stackrox/kube-linter:latest",
+      "imageDigests": [
+        "stackrox/kube-linter@sha256:f2bfce7879206d32f69ab6572c376f916643f54ca291ac38cf7d01ef591ff3f9"
+      ],
+      "manifest": "experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/kube-prometheus-stack.yaml",
+      "returncode": 1,
+      "stderrBytes": 28,
+      "stderrSample": "Error: found 31 lint errors",
+      "stderrSha256": "900e71b3a32f763786a565f97a9338a193e69e3a029674c1b3164cd5ba460379",
+      "stdoutBytes": 28111,
+      "stdoutSha256": "370b75834648cd8d14ff978ce44f81682a3a89e79a8eeda678562887042d8244",
+      "summary": {
+        "checksStatus": "Failed",
+        "parseableJson": true,
+        "reportCount": 31,
+        "topChecks": [
+          {
+            "count": 8,
+            "name": "unset-cpu-requirements"
+          },
+          {
+            "count": 8,
+            "name": "unset-memory-requirements"
+          },
+          {
+            "count": 7,
+            "name": "dangling-service"
+          },
+          {
+            "count": 3,
+            "name": "no-read-only-root-fs"
+          },
+          {
+            "count": 3,
+            "name": "sensitive-host-mounts"
+          },
+          {
+            "count": 1,
+            "name": "host-network"
+          },
+          {
+            "count": 1,
+            "name": "host-pid"
+          }
+        ],
+        "uniqueChecks": 7
+      },
+      "tool": "kube-linter",
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "stackrox/kube-linter:latest",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "0.8.3"
+      }
+    },
+    {
+      "chart": "kube-prometheus-stack",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests:/manifests:ro",
+        "quay.io/fairwinds/polaris:latest",
+        "polaris",
+        "audit",
+        "--format",
+        "json",
+        "--audit-path",
+        "/manifests/kube-prometheus-stack.yaml"
+      ],
+      "durationSeconds": 2.086,
+      "image": "quay.io/fairwinds/polaris:latest",
+      "imageDigests": [
+        "quay.io/fairwinds/polaris@sha256:7af688527df75c3825395ded8aeb3775fad2027228aa06c9959d39ae6c00e999"
+      ],
+      "manifest": "experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/kube-prometheus-stack.yaml",
+      "returncode": 0,
+      "stderrBytes": 0,
+      "stderrSample": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutBytes": 119899,
+      "stdoutSha256": "d0446848227c7e8ea44958fa6803f7885efd886b8d2e8434e37bfb086639ad2c",
+      "summary": {
+        "failedCheckInstances": 86,
+        "objectCount": 129,
+        "parseableJson": true,
+        "score": 79,
+        "severityCounts": {
+          "danger": 3,
+          "warning": 83
+        },
+        "topFailedChecks": [
+          {
+            "count": 8,
+            "name": "cpuLimitsMissing"
+          },
+          {
+            "count": 8,
+            "name": "cpuRequestsMissing"
+          },
+          {
+            "count": 8,
+            "name": "memoryLimitsMissing"
+          },
+          {
+            "count": 8,
+            "name": "memoryRequestsMissing"
+          },
+          {
+            "count": 8,
+            "name": "pullPolicyNotAlways"
+          },
+          {
+            "count": 6,
+            "name": "metadataAndInstanceMismatched"
+          },
+          {
+            "count": 6,
+            "name": "missingNetworkPolicy"
+          },
+          {
+            "count": 6,
+            "name": "priorityClassNotSet"
+          },
+          {
+            "count": 5,
+            "name": "automountServiceAccountToken"
+          },
+          {
+            "count": 4,
+            "name": "topologySpreadConstraint"
+          }
+        ],
+        "uniqueFailedChecks": 21
+      },
+      "tool": "polaris",
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "quay.io/fairwinds/polaris:latest",
+          "polaris",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "Polaris version:10.1.8"
+      }
+    },
+    {
+      "chart": "kyverno",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests:/manifests:ro",
+        "zegl/kube-score:latest",
+        "score",
+        "--output-format",
+        "json",
+        "--kubernetes-version",
+        "v1.32",
+        "/manifests/kyverno.yaml"
+      ],
+      "durationSeconds": 1.166,
+      "image": "zegl/kube-score:latest",
+      "imageDigests": [
+        "zegl/kube-score@sha256:ac4c43ad560af905d66f6bf57b0937c591332e6dbf2167c31193a13b4695ab97"
+      ],
+      "manifest": "experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/kyverno.yaml",
+      "returncode": 1,
+      "stderrBytes": 0,
+      "stderrSample": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutBytes": 131839,
+      "stdoutSha256": "57fd38bcde5a92f33bcf41a8f106f0c2277d6d0a549cf8e8058a54d8b96ea7aa",
+      "summary": {
+        "commentCount": 49,
+        "failingCheckInstances": 39,
+        "objectCount": 14,
+        "parseableJson": true,
+        "topFailingChecks": [
+          {
+            "count": 7,
+            "name": "container-ephemeral-storage-request-and-limit"
+          },
+          {
+            "count": 7,
+            "name": "container-image-pull-policy"
+          },
+          {
+            "count": 7,
+            "name": "pod-networkpolicy"
+          },
+          {
+            "count": 7,
+            "name": "pod-topology-spread-constraints"
+          },
+          {
+            "count": 4,
+            "name": "container-resources"
+          },
+          {
+            "count": 3,
+            "name": "deployment-replicas"
+          },
+          {
+            "count": 2,
+            "name": "deployment-has-poddisruptionbudget"
+          },
+          {
+            "count": 2,
+            "name": "pod-probes"
+          }
+        ],
+        "uniqueFailingChecks": 8
+      },
+      "tool": "kube-score",
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "zegl/kube-score:latest",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "kube-score version: v1.20.0-docker-linux/amd64, commit: 81371e9f53b633bec69423fc298295bd71bd869a, built: 2025-04-28T18:55:13+02:00"
+      }
+    },
+    {
+      "chart": "kyverno",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests:/manifests:ro",
+        "stackrox/kube-linter:latest",
+        "lint",
+        "--format",
+        "json",
+        "/manifests/kyverno.yaml"
+      ],
+      "durationSeconds": 1.935,
+      "image": "stackrox/kube-linter:latest",
+      "imageDigests": [
+        "stackrox/kube-linter@sha256:f2bfce7879206d32f69ab6572c376f916643f54ca291ac38cf7d01ef591ff3f9"
+      ],
+      "manifest": "experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/kyverno.yaml",
+      "returncode": 1,
+      "stderrBytes": 27,
+      "stderrSample": "Error: found 4 lint errors",
+      "stderrSha256": "43a123934686029253da9500c1d28158faa3136b3dd0a0380901033c46893782",
+      "stdoutBytes": 14297,
+      "stdoutSha256": "15ba20b08d4b3e94564cdee11074cfbd631b3ad117cf0b93a1fa83fa882b57b2",
+      "summary": {
+        "checksStatus": "Failed",
+        "parseableJson": true,
+        "reportCount": 4,
+        "topChecks": [
+          {
+            "count": 3,
+            "name": "job-ttl-seconds-after-finished"
+          },
+          {
+            "count": 1,
+            "name": "pdb-unhealthy-pod-eviction-policy"
+          }
+        ],
+        "uniqueChecks": 2
+      },
+      "tool": "kube-linter",
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "stackrox/kube-linter:latest",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "0.8.3"
+      }
+    },
+    {
+      "chart": "kyverno",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests:/manifests:ro",
+        "quay.io/fairwinds/polaris:latest",
+        "polaris",
+        "audit",
+        "--format",
+        "json",
+        "--audit-path",
+        "/manifests/kyverno.yaml"
+      ],
+      "durationSeconds": 2.1,
+      "image": "quay.io/fairwinds/polaris:latest",
+      "imageDigests": [
+        "quay.io/fairwinds/polaris@sha256:7af688527df75c3825395ded8aeb3775fad2027228aa06c9959d39ae6c00e999"
+      ],
+      "manifest": "experiments/helm/r05-realistic-workloads/results/20260617T133841Z/manifests/kyverno.yaml",
+      "returncode": 0,
+      "stderrBytes": 0,
+      "stderrSample": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutBytes": 109889,
+      "stdoutSha256": "b2421f1ec90c298aeaf43d719bcd5b0d8e217baf2773feb8570d6addb3364b5f",
+      "summary": {
+        "failedCheckInstances": 63,
+        "objectCount": 76,
+        "parseableJson": true,
+        "score": 84,
+        "severityCounts": {
+          "danger": 12,
+          "warning": 51
+        },
+        "topFailedChecks": [
+          {
+            "count": 8,
+            "name": "pullPolicyNotAlways"
+          },
+          {
+            "count": 7,
+            "name": "automountServiceAccountToken"
+          },
+          {
+            "count": 7,
+            "name": "metadataAndInstanceMismatched"
+          },
+          {
+            "count": 7,
+            "name": "missingNetworkPolicy"
+          },
+          {
+            "count": 7,
+            "name": "priorityClassNotSet"
+          },
+          {
+            "count": 4,
+            "name": "clusterrolePodExecAttach"
+          },
+          {
+            "count": 4,
+            "name": "clusterrolebindingClusterAdmin"
+          },
+          {
+            "count": 4,
+            "name": "clusterrolebindingPodExecAttach"
+          },
+          {
+            "count": 4,
+            "name": "cpuLimitsMissing"
+          },
+          {
+            "count": 4,
+            "name": "topologySpreadConstraint"
+          }
+        ],
+        "uniqueFailedChecks": 13
+      },
+      "tool": "polaris",
+      "version": {
+        "command": [
+          "docker",
+          "run",
+          "--rm",
+          "quay.io/fairwinds/polaris:latest",
+          "polaris",
+          "version"
+        ],
+        "returncode": 0,
+        "text": "Polaris version:10.1.8"
+      }
+    }
+  ]
+}
