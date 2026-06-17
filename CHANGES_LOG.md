@@ -27,6 +27,11 @@
   - 5,000 and 10,000 pairs failed with `Request entity too large: limit is 3145728` when persisting `UpgradeAssessment` status.
   - 10,000 setup also recorded API-server `ServiceUnavailable` responses during PDB apply.
   - Archived `experiments/scale/r04-scalability-summary.json`, raw run directories, and local controller RSS samples.
+- Destroyed the AKS evaluation stack after archiving results:
+  - Terraform destroyed 9 resources for `aks-small`, `aks-medium`, and `aks-policy`.
+  - Verified `az aks list` no longer returns the three clusters.
+  - Verified `rg-aks-small`, `rg-aks-medium`, and `rg-aks-policy` no longer exist.
+  - Verified Terraform state is empty and `/home/ihsen/.kube/config-aks-a`, `/home/ihsen/.kube/config-aks-b`, and `/home/ihsen/.kube/config-aks-c` are absent.
 - Created managed AKS validation cluster `aks-kug-validation-we` in `rg-kug-aks-validation-we`:
   - Kubernetes `1.34.8`.
   - One `Standard_B2s` system node.
