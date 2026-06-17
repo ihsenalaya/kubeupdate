@@ -40,16 +40,23 @@
 
 ## Phase 4: AKS Validation
 
-- Minimal AKS cluster.
+- Minimal AKS cluster. **Done:** `aks-kug-validation-we`, Kubernetes `1.34.8`, one `Standard_B2s` node, run `20260617T101556Z`.
 - Platform-like AKS cluster.
 - Add-ons: ingress-nginx, cert-manager, Prometheus, Kyverno or Gatekeeper, GitOps optional.
-- Record AKS version, node pools, node image, upgrade settings, surge configuration.
+- Record AKS version, node pools, node image, upgrade settings, surge configuration. **Partial:** minimal cluster metadata and provider webhooks recorded; platform-like cluster still pending.
+
+## Phase 4b: Resource And Scalability Profiling
+
+- **Done for minimal AKS:** assessment wait duration, local controller peak RSS, scoped object inventory, and cluster-level API-server request-counter delta.
+- **Pending:** exact per-controller API attribution, multi-size runs at 100 / 1,000 / 10,000 objects, and cache warm-up separation.
 
 ## Phase 5: Expert Review
 
 - 2-3 Kubernetes/platform engineers.
 - Rubric for correctness, actionability, prioritization, evidence support, remediation safety.
 - Capture disagreements.
+- **Prepared:** `UPGRADEPLAN_EXPERT_REVIEW_PACKET.md`.
+- **Pending:** actual independent reviewer ratings. Do not claim expert validation until this is completed.
 
 ## Phase 5b: Results Section Required For Submission
 

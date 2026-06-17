@@ -4,6 +4,8 @@ Audit date: 2026-06-17
 
 Scope: internal comparison between `REVIEWER_REMARKS_TRACKER.md` and `article/kubeupgrade-guardian-readiness.tex`. This file is not manuscript content. A remark is marked `Conforme` only when the current article contains direct supporting text, tables, figures, or results. `Partiel` means the article mitigates the issue but does not fully close it. `Ouvert` means the article does not yet contain enough evidence.
 
+Update after AKS pass: the article now includes managed AKS validation run `20260617T101556Z`, runtime/resource/API-counter profiling, provider-observation separation, scoring sensitivity, early scope/non-claims, CRD security discussion, checker interaction discussion, scalability limits, documentation strategy, and related-tool positioning. The remaining substantive non-claim is external expert-rated `UpgradePlan` actionability: the review packet exists, but independent expert ratings have not been collected and must not be claimed.
+
 | ID | Tracker status | Article evidence | Audit verdict |
 | --- | --- | --- | --- |
 | R01 | Complete | Abstract and Results report run `20260617T091703Z`, 31 TP, 0 FP, 0 FN, 5 negative controls; see lines 30, 343-439. | Conforme |
@@ -53,8 +55,8 @@ Scope: internal comparison between `REVIEWER_REMARKS_TRACKER.md` and `article/ku
 
 ## Summary
 
-- Conforme: R01, R02, R07, R08, R09, R10, R11, R12, R13, R14, R16, R17, R20, R24, R25, R29, R30, R31, R32, R33, R34, R35, R40.
-- Partiel: R04, R15, R18, R19, R21, R23, R28, R36.
-- Ouvert: R03, R05, R06, R22, R26, R27, R37, R38, R39, R41, R42, R43, R44.
+- Conforme after AKS pass: R01, R02, R03, R04, R06, R07, R08, R09, R10, R11, R12, R13, R14, R15, R16, R17, R20, R23, R24, R25, R26, R27, R28, R29, R30, R31, R32, R33, R34, R35, R36, R37, R38, R39, R40, R42, R43, R44.
+- Partiel after AKS pass: R18, R19, R21, R22, R41.
+- Explicit non-claim / requires external work: expert-rated UpgradePlan actionability. A review packet exists, but independent expert ratings are not collected.
 
-Priority for the next article pass: R37, R38, R42, R43, then R06/R27/R39 for related-work positioning. R36 requires new instrumentation before it can be marked complete.
+Priority for the next article pass: collect external expert ratings, add platform-like AKS validation with add-ons, and strengthen close academic Kubernetes upgrade/evolution related work.
