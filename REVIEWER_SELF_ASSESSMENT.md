@@ -1,42 +1,39 @@
-# Reviewer Self Assessment
+# Reviewer Self-Assessment
 
-## Reviewer Verdict
+## Current verdict
 
-Reject / promising but insufficient empirical evaluation.
-
-The manuscript is now defensible as an artifact-and-protocol paper, not yet as a full Q1 empirical software engineering submission. The operator artifact is promising because it turns Kubernetes upgrade readiness into bounded-write, evidence-guided assessment. The current evidence base is still too small for claims about production effectiveness, superiority over baselines, actionability at scale, or agentic assistance.
+Reject / promising artifact, insufficient empirical evidence for IEEE TSE.
 
 ## Major Concerns
 
-- No controlled benchmark has been executed.
-- No baseline comparison against Pluto, kubent, Helm migration tooling, or a manual platform checklist has been executed.
-- No AKS validation has been executed.
-- No expert review of generated upgrade plans has been completed.
-- kagent is not implemented and not evaluated.
-- The scoring model is deterministic and inspectable, but not empirically calibrated.
+- No executed controlled benchmark yet.
+- No Pluto/kubent baseline comparison yet.
+- No precision/recall/F1 yet.
+- No AKS validation yet.
+- No expert review yet.
+- kagent not implemented or evaluated.
+- Scoring not calibrated.
+- Deprecated API table still MVP-level.
+- Capacity and observability checks remain heuristic.
 
 ## Minor Concerns
 
-- The deprecated API checker uses a static MVP table rather than a complete versioned database.
-- The observability checker is heuristic and cannot prove telemetry quality.
-- The capacity model is conservative and does not model all scheduler, autoscaler, topology, taint, priority, or managed-provider behaviors.
-- The policy checker is partial and is not equivalent to a full admission dry run.
-- Add-on and operator compatibility reasoning remains limited.
+- Title may still be read as artifact-and-protocol rather than empirical-results framing; keep it cautious.
+- Related work needs more work on policy-as-code and configuration drift.
+- Figures are still simple.
+- Artifact package scripts are not yet implemented.
 
-## Required Experiments Before Full Journal Submission
+## Required Work Before Q1/TSE Submission
 
-- Build 30 to 50 controlled Kind scenarios with independent ground-truth labels.
-- Compare results with Pluto and kubent, stratified by risk family.
-- Report precision, recall, F1, false positives, and false negatives by risk family.
-- Validate on at least one minimal AKS cluster and preferably one platform-like AKS cluster.
-- Run expert review of UpgradePlan actions using a fixed rubric.
-- Analyze false-positive and false-negative causes.
-- If kagent is enabled later, run an ablation against deterministic findings and measure unsupported recommendation rate.
+- Execute 30-50 Kind scenarios with ground truth.
+- Compare with Pluto and kubent.
+- Report per-family precision/recall/F1.
+- Run at least one AKS validation, preferably two.
+- Collect expert review on UpgradePlan actionability.
+- Analyze false positives and false negatives.
+- Add results section with measured values only.
+- Keep kagent as future work unless implemented and ablated.
 
-## Planned Response To Reviewers
+## Planned Reviewer Response Strategy
 
-- Position the current paper as an implemented artifact plus empirical evaluation protocol.
-- Keep production-cluster results out of the manuscript until the experiments are executed.
-- Keep kagent in Discussion/Future Work only.
-- Add completed benchmark, baseline, AKS, and expert-review evidence before submitting as a full Q1 empirical paper.
-- Preserve bounded-write wording: the operator reads assessed resources and writes only its own status and generated plan resources.
+Explain that the current version intentionally avoids unsupported production claims and that the next version will include empirical evidence.
