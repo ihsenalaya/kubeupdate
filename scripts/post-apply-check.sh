@@ -54,18 +54,22 @@ for app in "\${apps[@]}"; do
   done
 
   kubectl -n argocd get "application/\${app}" >/dev/null
-  kubectl -n argocd wait --for=jsonpath='{.status.sync.status}'=Synced "application/\${app}" --timeout=25m
 done
 
 for ns in cert-manager external-dns external-secrets istio-system istio-ingress monitoring loki tracing keda kyverno kubecost velero neuvector kubeupgrade-guardian-system upgrade-lab; do
   kubectl get namespace "\${ns}" >/dev/null
 done
 
+kubectl -n argocd wait --for=jsonpath='{.status.sync.status}'=Synced application/istiod --timeout=25m
 kubectl -n istio-system wait --for=condition=Available deployment/istiod --timeout=10m
 
 if kubectl -n istio-ingress get pods -l app=istio-ingress -o jsonpath='{range .items[*]}{range .spec.containers[*]}{.image}{"\n"}{end}{end}' | grep -qx 'auto'; then
   kubectl -n istio-ingress delete pod -l app=istio-ingress --wait=false
 fi
+
+for app in "\${apps[@]}"; do
+  kubectl -n argocd wait --for=jsonpath='{.status.sync.status}'=Synced "application/\${app}" --timeout=25m
+done
 
 kubectl -n istio-ingress rollout status deployment/istio-ingress --timeout=10m
 kubectl -n neuvector rollout status deployment/neuvector-controller-pod --timeout=10m
