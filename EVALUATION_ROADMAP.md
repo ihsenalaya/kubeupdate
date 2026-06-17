@@ -7,6 +7,8 @@
 - Ground truth labels.
 - Version-pinned Kubernetes targets.
 - Output archived for all tools.
+- Core evaluated families: deprecated APIs, PDB/eviction, workload availability/readiness, admission/policy risks.
+- Secondary-only families until deeper modeling: capacity, observability, add-on/operator compatibility, managed-provider constraints.
 
 ## Phase 2: Baseline Comparison
 
@@ -25,6 +27,16 @@
 - Risk-family coverage.
 - Assessment runtime.
 - Plan actionability.
+- Scoring decision stability.
+- Action-order rank correlation.
+
+## Phase 3b: Scoring Sensitivity
+
+- Scoring-A: current weights.
+- Scoring-B: equal weights.
+- Scoring-C: expert-calibrated weights.
+- Scoring-D: blocker-first decision only.
+- Report changed decisions and changed action ordering.
 
 ## Phase 4: AKS Validation
 
@@ -38,6 +50,23 @@
 - 2-3 Kubernetes/platform engineers.
 - Rubric for correctness, actionability, prioritization, evidence support, remediation safety.
 - Capture disagreements.
+
+## Phase 5b: Results Section Required For Submission
+
+- RQ1 Results: frequency of risk families in scenarios and validation clusters.
+- RQ2 Results: KubeUpgrade Guardian precision/recall/F1 by risk family.
+- RQ3 Results: comparison with Pluto, kubent, and manual checklist.
+- RQ4 Results: expert-rated UpgradePlan actionability and evidence support.
+- Error Analysis: false positives, false negatives, and root causes.
+
+## Expected Comparison Table
+
+| Tool | API | PDB | Probe | Webhook | Policy | Plan |
+| --- | --- | --- | --- | --- | --- | --- |
+| KubeUpgrade Guardian | measured | measured | measured | measured | measured | measured |
+| Pluto | measured | measured | measured | measured | measured | measured |
+| kubent | measured | measured | measured | measured | measured | measured |
+| Manual checklist | measured | measured | measured | measured | measured | measured |
 
 ## Phase 6: Optional Production Or Pre-Production Study
 
