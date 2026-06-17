@@ -1,0 +1,27 @@
+apiVersion: upgrade.guardian.io/v1alpha1
+kind: UpgradeAssessment
+metadata:
+  name: r04-aks-policy-assessment
+  namespace: kug-assessment
+spec:
+  targetVersion: "1.35"
+  mode: ReadOnly
+  scope:
+    namespaces:
+      include:
+        - ingress-nginx
+        - cert-manager
+        - monitoring
+        - gatekeeper-system
+        - kube-system
+        - kug-real-workloads
+      exclude: []
+  checks:
+    deprecatedApis: true
+    workloadAvailability: true
+    pdb: true
+    readinessProbes: true
+    admissionWebhooks: true
+    policyRisks: true
+    capacity: true
+    observability: true

@@ -1,0 +1,19 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: r10-webhook-missing-service
+webhooks:
+  - name: missing.r10.example.com
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+    failurePolicy: Fail
+    clientConfig:
+      service:
+        namespace: r10-webhook-missing
+        name: absent-webhook
+        path: /validate
+    rules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["UPDATE"]
+        resources: ["configmaps"]

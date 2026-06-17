@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ledger-db
+  namespace: kug-real-workloads
+spec:
+  clusterIP: None
+  selector:
+    app: ledger-db
+  ports:
+    - name: tcp
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ledger-db
+  namespace: kug-real-workloads
+  labels:
+    app: ledger-db
+spec:
+  serviceName: ledger-db
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ledger-db
+  template:
+    metadata:
+      labels:
+        app: ledger-db
+    spec:
+      containers:
+        - name: db
+          image: registry.k8s.io/pause:3.9
+          ports:
+            - name: tcp
+              containerPort: 5432
+          readinessProbe:
+            exec:
+              command: ["true"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 65532
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: ledger-db
+  namespace: kug-real-workloads
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: ledger-db

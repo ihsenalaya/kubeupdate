@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r10-pvc-no-storageclass
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: r10-pvc-no-storageclass
+spec:
+  clusterIP: None
+  selector:
+    app: db
+  ports:
+    - name: tcp
+      port: 5432
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+  namespace: r10-pvc-no-storageclass
+spec:
+  serviceName: db
+  replicas: 2
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - name: db
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: ""
+        resources:
+          requests:
+            storage: 1Gi

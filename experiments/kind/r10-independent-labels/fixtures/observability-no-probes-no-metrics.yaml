@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r10-observability-gap
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opaque-api
+  namespace: r10-observability-gap
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: opaque-api
+  template:
+    metadata:
+      labels:
+        app: opaque-api
+    spec:
+      containers:
+        - name: api
+          image: registry.k8s.io/pause:3.9

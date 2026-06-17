@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r10-pdb-ambiguous
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: singleton
+  namespace: r10-pdb-ambiguous
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: singleton
+  template:
+    metadata:
+      labels:
+        app: singleton
+    spec:
+      containers:
+        - name: app
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: singleton
+  namespace: r10-pdb-ambiguous
+spec:
+  maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app: singleton

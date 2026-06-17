@@ -1,0 +1,15 @@
+fixture: "fixture-name.yaml"
+labeled_by: "[NOM EXTERNE]"
+labeled_at: "[DATE ISO]"
+negative_control: false
+findings:
+  - family: "PDB"
+    type: "PDB_NO_MATCHING_PODS"
+    severity: "High"
+    confidence: "certain"
+    resource:
+      apiVersion: "policy/v1"
+      kind: "PodDisruptionBudget"
+      namespace: "example-namespace"
+      name: "example-name"
+    message_contains: "optional text fragment"

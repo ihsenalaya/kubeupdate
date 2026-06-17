@@ -1,0 +1,170 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kug-real-workloads
+  labels:
+    pod-security.kubernetes.io/enforce: baseline
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-api
+  namespace: kug-real-workloads
+  labels:
+    app: orders-api
+    app.kubernetes.io/part-of: kug-real-workloads
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: orders-api
+  template:
+    metadata:
+      labels:
+        app: orders-api
+        app.kubernetes.io/part-of: kug-real-workloads
+    spec:
+      containers:
+        - name: api
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          resources:
+            requests:
+              cpu: 20m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 65532
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: orders-api
+  namespace: kug-real-workloads
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: orders-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-api
+  namespace: kug-real-workloads
+  labels:
+    app: catalog-api
+    app.kubernetes.io/part-of: kug-real-workloads
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: catalog-api
+  template:
+    metadata:
+      labels:
+        app: catalog-api
+        app.kubernetes.io/part-of: kug-real-workloads
+    spec:
+      containers:
+        - name: api
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          resources:
+            requests:
+              cpu: 20m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 65532
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: catalog-api
+  namespace: kug-real-workloads
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: catalog-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-api
+  namespace: kug-real-workloads
+  labels:
+    app: worker-api
+    app.kubernetes.io/part-of: kug-real-workloads
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: worker-api
+  template:
+    metadata:
+      labels:
+        app: worker-api
+        app.kubernetes.io/part-of: kug-real-workloads
+    spec:
+      containers:
+        - name: worker
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+          resources:
+            requests:
+              cpu: 20m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 65532
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: worker-api
+  namespace: kug-real-workloads
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: worker-api
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: catalog-api
+  namespace: kug-real-workloads
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: catalog-api
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70

@@ -2,6 +2,12 @@
 
 ## 2026-06-17
 
+- Added CODEX-prepared Q1 action-plan scaffolding from `propmt.txt`:
+  - Terraform AKS evaluation stack for `aks-small`, `aks-medium`, and `aks-policy`.
+  - AKS add-on/workload deployment, teardown, and assessment runner scripts.
+  - R10 independent-labeling fixture package with 20 adversarial manifests, external-labeling instructions, template, and comparison script.
+  - R04 scalability study scripts for 100/1,000/5,000/10,000 objects with 10 runs per size and an aggregation script.
+  - Article RQ restructuring with five `rq:*` labels and one `Evaluation` section.
 - Created managed AKS validation cluster `aks-kug-validation-we` in `rg-kug-aks-validation-we`:
   - Kubernetes `1.34.8`.
   - One `Standard_B2s` system node.

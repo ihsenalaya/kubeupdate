@@ -1,0 +1,22 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: r10-restrictive-webhook
+webhooks:
+  - name: restrictive.r10.example.com
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+    failurePolicy: Fail
+    objectSelector:
+      matchLabels:
+        tier: platform
+    clientConfig:
+      service:
+        namespace: r10-admission
+        name: policy-webhook
+        path: /validate
+    rules:
+      - apiGroups: ["apps"]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["deployments", "statefulsets"]

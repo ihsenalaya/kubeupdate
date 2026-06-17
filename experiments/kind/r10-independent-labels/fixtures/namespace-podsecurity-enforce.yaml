@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r10-psa-enforce
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: privileged-app
+  namespace: r10-psa-enforce
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: privileged-app
+  template:
+    metadata:
+      labels:
+        app: privileged-app
+    spec:
+      containers:
+        - name: app
+          image: registry.k8s.io/pause:3.9
+          securityContext:
+            privileged: true

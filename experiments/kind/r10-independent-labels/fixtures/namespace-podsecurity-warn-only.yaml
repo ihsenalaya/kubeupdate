@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r10-psa-warn
+  labels:
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: warn-only
+  namespace: r10-psa-warn
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: warn-only
+  template:
+    metadata:
+      labels:
+        app: warn-only
+    spec:
+      containers:
+        - name: app
+          image: registry.k8s.io/pause:3.9

@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: r10-pdb-zero
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: r10-pdb-zero
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: registry.k8s.io/pause:3.9
+          readinessProbe:
+            exec:
+              command: ["true"]
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: stale-pdb
+  namespace: r10-pdb-zero
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: absent
