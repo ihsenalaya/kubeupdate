@@ -2,8 +2,8 @@ apiVersion: v2
 name: upgrade-lab
 description: Polyglot microservices application for AKS upgrade-readiness testing.
 type: application
-version: 0.1.1
-appVersion: "0.1.1"
+version: 0.1.2
+appVersion: "0.1.2"
 keywords:
   - aks
   - microservices

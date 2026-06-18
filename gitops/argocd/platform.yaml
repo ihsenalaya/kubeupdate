@@ -69,7 +69,7 @@
           "azure.workload.identity/use": "true"
         "serviceAccount":
           "annotations":
-            "azure.workload.identity/client-id": "e07afd21-8b7a-4dad-b72d-dfbee70e731b"
+            "azure.workload.identity/client-id": "f30500a6-b5ab-44e6-954f-5cdafcd26d35"
           "name": "cert-manager"
     "repoURL": "https://charts.jetstack.io"
     "targetRevision": "v1.20.2"
@@ -127,7 +127,7 @@
         "registry": "txt"
         "serviceAccount":
           "annotations":
-            "azure.workload.identity/client-id": "fb259b02-ae66-4bf5-90db-f96a02313a52"
+            "azure.workload.identity/client-id": "f496e40f-4c78-4b11-8b24-08814c9f6b35"
           "labels":
             "azure.workload.identity/use": "true"
           "name": "external-dns"
@@ -191,7 +191,7 @@
         "replicaCount": 1
         "serviceAccount":
           "annotations":
-            "azure.workload.identity/client-id": "d13eac4c-c6f0-41bf-9b8f-e3ede63a269d"
+            "azure.workload.identity/client-id": "e4d1717e-d584-419b-97e7-76768a06425a"
           "extraLabels":
             "azure.workload.identity/use": "true"
           "name": "external-secrets"
@@ -533,7 +533,7 @@
         "image":
           "pullPolicy": "IfNotPresent"
           "repository": "acrihsenaksfbd882.azurecr.io/kubeupgrade-guardian-operator"
-          "tag": "0.1.1"
+          "tag": "0.1.2"
         "replicaCount": 1
         "resources":
           "limits":
@@ -986,7 +986,7 @@
                     "environment": "AzurePublicCloud"
                     "hostedZoneName": "ihsenalaya.xyz"
                     "managedIdentity":
-                      "clientID": "e07afd21-8b7a-4dad-b72d-dfbee70e731b"
+                      "clientID": "f30500a6-b5ab-44e6-954f-5cdafcd26d35"
                     "resourceGroupName": "ihsen"
                     "subscriptionID": "ec0e829d-64e1-43fd-b721-ecf5b5112773"
         - "apiVersion": "cert-manager.io/v1"
@@ -1532,7 +1532,7 @@
         "global":
           "imagePullPolicy": "IfNotPresent"
           "imageRegistry": "acrihsenaksfbd882.azurecr.io"
-          "imageTag": "0.1.1"
+          "imageTag": "0.1.2"
         "ingress":
           "gateway":
             "name": "platform-gateway"
@@ -1627,7 +1627,7 @@
         "serviceAccount":
           "server":
             "annotations":
-              "azure.workload.identity/client-id": "1d5d19d0-1c4a-4e88-bd96-825cda2050da"
+              "azure.workload.identity/client-id": "bad9ae4c-f01a-47bc-bffd-c04ee2d4e515"
             "name": "velero"
     "repoURL": "https://vmware-tanzu.github.io/helm-charts"
     "targetRevision": "12.0.3"
