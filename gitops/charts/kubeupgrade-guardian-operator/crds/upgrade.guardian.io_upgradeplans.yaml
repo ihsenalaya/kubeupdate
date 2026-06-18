@@ -39,6 +39,69 @@ spec:
           spec:
             description: UpgradePlanSpec defines the desired state of UpgradePlan
             properties:
+              acceptedRisks:
+                items:
+                  description: ClassifiedFindingRef is a compact finding reference
+                    published in an UpgradePlan.
+                  properties:
+                    category:
+                      type: string
+                    classification:
+                      description: FindingClassification records the rule that determined
+                        whether a finding is blocking.
+                      properties:
+                        matchedRule:
+                          type: string
+                        reason:
+                          type: string
+                        status:
+                          description: FindingClassificationStatus states how a finding
+                            is used for decisioning.
+                          enum:
+                          - Blocking
+                          - AcceptedRisk
+                          - ProviderManaged
+                          - Informational
+                          type: string
+                      required:
+                      - status
+                      type: object
+                    id:
+                      type: string
+                    message:
+                      type: string
+                    recommendation:
+                      type: string
+                    resource:
+                      description: ResourceRef identifies a Kubernetes resource used
+                        as finding evidence.
+                      properties:
+                        apiVersion:
+                          type: string
+                        kind:
+                          type: string
+                        name:
+                          type: string
+                        namespace:
+                          type: string
+                      type: object
+                    severity:
+                      description: RiskLevel is the severity of a finding or the aggregate
+                        assessment risk.
+                      enum:
+                      - Critical
+                      - High
+                      - Medium
+                      - Low
+                      - Info
+                      type: string
+                    type:
+                      type: string
+                  required:
+                  - classification
+                  - id
+                  type: object
+                type: array
               assessmentRef:
                 description: AssessmentReference points an UpgradePlan back to its
                   source UpgradeAssessment.
@@ -50,6 +113,87 @@ spec:
                 required:
                 - name
                 type: object
+              blockingFindings:
+                items:
+                  description: ClassifiedFindingRef is a compact finding reference
+                    published in an UpgradePlan.
+                  properties:
+                    category:
+                      type: string
+                    classification:
+                      description: FindingClassification records the rule that determined
+                        whether a finding is blocking.
+                      properties:
+                        matchedRule:
+                          type: string
+                        reason:
+                          type: string
+                        status:
+                          description: FindingClassificationStatus states how a finding
+                            is used for decisioning.
+                          enum:
+                          - Blocking
+                          - AcceptedRisk
+                          - ProviderManaged
+                          - Informational
+                          type: string
+                      required:
+                      - status
+                      type: object
+                    id:
+                      type: string
+                    message:
+                      type: string
+                    recommendation:
+                      type: string
+                    resource:
+                      description: ResourceRef identifies a Kubernetes resource used
+                        as finding evidence.
+                      properties:
+                        apiVersion:
+                          type: string
+                        kind:
+                          type: string
+                        name:
+                          type: string
+                        namespace:
+                          type: string
+                      type: object
+                    severity:
+                      description: RiskLevel is the severity of a finding or the aggregate
+                        assessment risk.
+                      enum:
+                      - Critical
+                      - High
+                      - Medium
+                      - Low
+                      - Info
+                      type: string
+                    type:
+                      type: string
+                  required:
+                  - classification
+                  - id
+                  type: object
+                type: array
+              classificationSummary:
+                description: ClassificationSummary stores aggregate counts by finding
+                  classification.
+                properties:
+                  acceptedRisk:
+                    type: integer
+                  blocking:
+                    type: integer
+                  informational:
+                    type: integer
+                  providerManaged:
+                    type: integer
+                  total:
+                    type: integer
+                required:
+                - blocking
+                - total
+                type: object
               decision:
                 description: Decision is the non-executing upgrade recommendation
                   generated by the assessment.
@@ -59,6 +203,154 @@ spec:
                 - DoNotUpgrade
                 - AssessmentIncomplete
                 type: string
+              informationalFindings:
+                items:
+                  description: ClassifiedFindingRef is a compact finding reference
+                    published in an UpgradePlan.
+                  properties:
+                    category:
+                      type: string
+                    classification:
+                      description: FindingClassification records the rule that determined
+                        whether a finding is blocking.
+                      properties:
+                        matchedRule:
+                          type: string
+                        reason:
+                          type: string
+                        status:
+                          description: FindingClassificationStatus states how a finding
+                            is used for decisioning.
+                          enum:
+                          - Blocking
+                          - AcceptedRisk
+                          - ProviderManaged
+                          - Informational
+                          type: string
+                      required:
+                      - status
+                      type: object
+                    id:
+                      type: string
+                    message:
+                      type: string
+                    recommendation:
+                      type: string
+                    resource:
+                      description: ResourceRef identifies a Kubernetes resource used
+                        as finding evidence.
+                      properties:
+                        apiVersion:
+                          type: string
+                        kind:
+                          type: string
+                        name:
+                          type: string
+                        namespace:
+                          type: string
+                      type: object
+                    severity:
+                      description: RiskLevel is the severity of a finding or the aggregate
+                        assessment risk.
+                      enum:
+                      - Critical
+                      - High
+                      - Medium
+                      - Low
+                      - Info
+                      type: string
+                    type:
+                      type: string
+                  required:
+                  - classification
+                  - id
+                  type: object
+                type: array
+              providerManagedRisks:
+                items:
+                  description: ClassifiedFindingRef is a compact finding reference
+                    published in an UpgradePlan.
+                  properties:
+                    category:
+                      type: string
+                    classification:
+                      description: FindingClassification records the rule that determined
+                        whether a finding is blocking.
+                      properties:
+                        matchedRule:
+                          type: string
+                        reason:
+                          type: string
+                        status:
+                          description: FindingClassificationStatus states how a finding
+                            is used for decisioning.
+                          enum:
+                          - Blocking
+                          - AcceptedRisk
+                          - ProviderManaged
+                          - Informational
+                          type: string
+                      required:
+                      - status
+                      type: object
+                    id:
+                      type: string
+                    message:
+                      type: string
+                    recommendation:
+                      type: string
+                    resource:
+                      description: ResourceRef identifies a Kubernetes resource used
+                        as finding evidence.
+                      properties:
+                        apiVersion:
+                          type: string
+                        kind:
+                          type: string
+                        name:
+                          type: string
+                        namespace:
+                          type: string
+                      type: object
+                    severity:
+                      description: RiskLevel is the severity of a finding or the aggregate
+                        assessment risk.
+                      enum:
+                      - Critical
+                      - High
+                      - Medium
+                      - Low
+                      - Info
+                      type: string
+                    type:
+                      type: string
+                  required:
+                  - classification
+                  - id
+                  type: object
+                type: array
+              rawSummary:
+                description: FindingSummary stores aggregate finding counts.
+                properties:
+                  critical:
+                    type: integer
+                  high:
+                    type: integer
+                  info:
+                    type: integer
+                  low:
+                    type: integer
+                  medium:
+                    type: integer
+                  totalFindings:
+                    type: integer
+                required:
+                - critical
+                - high
+                - low
+                - medium
+                - totalFindings
+                type: object
               recommendedOrder:
                 items:
                   type: string
@@ -72,11 +364,6 @@ spec:
                       type: string
                     category:
                       type: string
-                    heuristic:
-                      description: "True when this action derives from capacity
-                        or observability checks rather than a deterministic rule.
-                        Treat with lower confidence."
-                      type: boolean
                     evidenceRefs:
                       items:
                         type: string
@@ -125,6 +412,8 @@ spec:
                 type: string
               score:
                 type: integer
+              sourceVersion:
+                type: string
               summary:
                 description: FindingSummary stores aggregate finding counts.
                 properties:
@@ -147,6 +436,35 @@ spec:
                 - medium
                 - totalFindings
                 type: object
+              targetVersion:
+                type: string
+              upgradePath:
+                items:
+                  description: UpgradePathStep describes one Kubernetes minor-version
+                    hop.
+                  properties:
+                    from:
+                      type: string
+                    phases:
+                      items:
+                        description: UpgradePhase describes a non-executing step in
+                          the recommended upgrade chronology.
+                        properties:
+                          description:
+                            type: string
+                          name:
+                            type: string
+                        required:
+                        - name
+                        type: object
+                      type: array
+                    to:
+                      type: string
+                  required:
+                  - from
+                  - to
+                  type: object
+                type: array
             required:
             - assessmentRef
             - decision

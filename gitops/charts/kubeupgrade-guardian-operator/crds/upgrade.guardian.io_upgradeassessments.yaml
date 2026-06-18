@@ -39,6 +39,40 @@ spec:
           spec:
             description: UpgradeAssessmentSpec defines the desired state of UpgradeAssessment
             properties:
+              acceptedRisks:
+                items:
+                  description: AcceptedRisk documents a human-approved exception for
+                    a specific finding.
+                  properties:
+                    approvedBy:
+                      type: string
+                    expiresAt:
+                      format: date-time
+                      type: string
+                    findingId:
+                      type: string
+                    reason:
+                      type: string
+                    resource:
+                      description: ResourceRef identifies a Kubernetes resource used
+                        as finding evidence.
+                      properties:
+                        apiVersion:
+                          type: string
+                        kind:
+                          type: string
+                        name:
+                          type: string
+                        namespace:
+                          type: string
+                      type: object
+                    type:
+                      type: string
+                  required:
+                  - approvedBy
+                  - reason
+                  type: object
+                type: array
               checks:
                 description: AssessmentChecks enables or disables individual assessment
                   checkers.
@@ -67,6 +101,14 @@ spec:
                 enum:
                 - ReadOnly
                 type: string
+              profile:
+                default: production
+                description: Profile tunes how non-universal findings are interpreted.
+                enum:
+                - lab
+                - staging
+                - production
+                type: string
               scope:
                 description: AssessmentScope defines the cluster slice to assess.
                 properties:
@@ -84,6 +126,12 @@ spec:
                         type: array
                     type: object
                 type: object
+              sourceVersion:
+                description: |-
+                  SourceVersion is the current Kubernetes minor version, for example "1.34".
+                  When omitted, the generated plan uses "current" as the source.
+                pattern: ^(|1\.[0-9]+)$
+                type: string
               targetVersion:
                 description: TargetVersion is the Kubernetes minor version being assessed,
                   for example "1.32".
@@ -95,6 +143,37 @@ spec:
           status:
             description: UpgradeAssessmentStatus defines the observed state of UpgradeAssessment
             properties:
+              artifactRef:
+                description: ArtifactReference points an UpgradeAssessment status
+                  to the generated human-readable artifact.
+                properties:
+                  kind:
+                    type: string
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                required:
+                - name
+                type: object
+              classificationSummary:
+                description: ClassificationSummary stores aggregate counts by finding
+                  classification.
+                properties:
+                  acceptedRisk:
+                    type: integer
+                  blocking:
+                    type: integer
+                  informational:
+                    type: integer
+                  providerManaged:
+                    type: integer
+                  total:
+                    type: integer
+                required:
+                - blocking
+                - total
+                type: object
               conditions:
                 items:
                   description: Condition contains details for one aspect of the current
@@ -161,6 +240,26 @@ spec:
                   properties:
                     category:
                       type: string
+                    classification:
+                      description: FindingClassification records the rule that determined
+                        whether a finding is blocking.
+                      properties:
+                        matchedRule:
+                          type: string
+                        reason:
+                          type: string
+                        status:
+                          description: FindingClassificationStatus states how a finding
+                            is used for decisioning.
+                          enum:
+                          - Blocking
+                          - AcceptedRisk
+                          - ProviderManaged
+                          - Informational
+                          type: string
+                      required:
+                      - status
+                      type: object
                     evidence:
                       items:
                         description: Evidence is an observable fact collected from
@@ -192,11 +291,6 @@ spec:
                         - id
                         type: object
                       type: array
-                    heuristic:
-                      description: "True when this finding comes from capacity or
-                        observability checks rather than a deterministic rule.
-                        Treat with lower confidence."
-                      type: boolean
                     id:
                       type: string
                     message:
@@ -254,6 +348,28 @@ spec:
                 - Completed
                 - Failed
                 type: string
+              rawSummary:
+                description: FindingSummary stores aggregate finding counts.
+                properties:
+                  critical:
+                    type: integer
+                  high:
+                    type: integer
+                  info:
+                    type: integer
+                  low:
+                    type: integer
+                  medium:
+                    type: integer
+                  totalFindings:
+                    type: integer
+                required:
+                - critical
+                - high
+                - low
+                - medium
+                - totalFindings
+                type: object
               riskLevel:
                 description: RiskLevel is the severity of a finding or the aggregate
                   assessment risk.
