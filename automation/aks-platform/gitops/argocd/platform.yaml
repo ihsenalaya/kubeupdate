@@ -1,0 +1,1645 @@
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "AppProject"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "-1"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "platform"
+  "namespace": "argocd"
+"spec":
+  "clusterResourceWhitelist":
+  - "group": "*"
+    "kind": "*"
+  "description": "Open-source AKS platform add-ons"
+  "destinations":
+  - "namespace": "*"
+    "server": "https://kubernetes.default.svc"
+  "namespaceResourceWhitelist":
+  - "group": "*"
+    "kind": "*"
+  "orphanedResources":
+    "warn": true
+  "sourceRepos":
+  - "*"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "cert-manager"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "cert-manager"
+    "server": "https://kubernetes.default.svc"
+  "ignoreDifferences":
+  - "group": "admissionregistration.k8s.io"
+    "jqPathExpressions":
+    - ".webhooks[]?.clientConfig.caBundle"
+    - ".webhooks[]?.failurePolicy"
+    - ".webhooks[]?.namespaceSelector.matchExpressions"
+    "kind": "MutatingWebhookConfiguration"
+  - "group": "admissionregistration.k8s.io"
+    "jqPathExpressions":
+    - ".webhooks[]?.clientConfig.caBundle"
+    - ".webhooks[]?.failurePolicy"
+    - ".webhooks[]?.namespaceSelector.matchExpressions"
+    "kind": "ValidatingWebhookConfiguration"
+  - "group": "apiextensions.k8s.io"
+    "jsonPointers":
+    - "/metadata/annotations"
+    - "/metadata/labels"
+    "kind": "CustomResourceDefinition"
+  "project": "platform"
+  "source":
+    "chart": "cert-manager"
+    "helm":
+      "releaseName": "cert-manager"
+      "values": |
+        "extraArgs":
+        - "--dns01-recursive-nameservers-only"
+        - "--dns01-recursive-nameservers=1.1.1.1:53,8.8.8.8:53"
+        "installCRDs": true
+        "podLabels":
+          "azure.workload.identity/use": "true"
+        "serviceAccount":
+          "annotations":
+            "azure.workload.identity/client-id": "b3681182-5546-46b3-9922-0d868db358b3"
+          "name": "cert-manager"
+    "repoURL": "https://charts.jetstack.io"
+    "targetRevision": "v1.20.2"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "external-dns"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "external-dns"
+    "server": "https://kubernetes.default.svc"
+  "ignoreDifferences":
+  - "group": "apiextensions.k8s.io"
+    "jsonPointers":
+    - "/metadata/annotations"
+    - "/metadata/labels"
+    "kind": "CustomResourceDefinition"
+  "project": "platform"
+  "source":
+    "chart": "external-dns"
+    "helm":
+      "releaseName": "external-dns"
+      "values": |
+        "domainFilters":
+        - "aks.ihsenalaya.xyz"
+        "extraVolumeMounts":
+        - "mountPath": "/etc/kubernetes"
+          "name": "azure-config-file"
+          "readOnly": true
+        "extraVolumes":
+        - "name": "azure-config-file"
+          "secret":
+            "secretName": "external-dns-azure"
+        "fullnameOverride": "external-dns"
+        "podLabels":
+          "azure.workload.identity/use": "true"
+        "policy": "upsert-only"
+        "provider":
+          "name": "azure-private-dns"
+        "registry": "txt"
+        "serviceAccount":
+          "annotations":
+            "azure.workload.identity/client-id": "50c289d3-5920-4473-beec-82f0cd50ddf3"
+          "labels":
+            "azure.workload.identity/use": "true"
+          "name": "external-dns"
+        "serviceMonitor":
+          "enabled": true
+        "sources":
+        - "service"
+        "txtOwnerId": "aks-ihsen-mvp-we"
+    "repoURL": "https://kubernetes-sigs.github.io/external-dns"
+    "targetRevision": "1.21.1"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "external-secrets"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "external-secrets"
+    "server": "https://kubernetes.default.svc"
+  "ignoreDifferences":
+  - "group": "admissionregistration.k8s.io"
+    "jqPathExpressions":
+    - ".webhooks[]?.clientConfig.caBundle"
+    - ".webhooks[]?.failurePolicy"
+    - ".webhooks[]?.namespaceSelector.matchExpressions"
+    "kind": "MutatingWebhookConfiguration"
+  - "group": "admissionregistration.k8s.io"
+    "jqPathExpressions":
+    - ".webhooks[]?.clientConfig.caBundle"
+    - ".webhooks[]?.failurePolicy"
+    - ".webhooks[]?.namespaceSelector.matchExpressions"
+    "kind": "ValidatingWebhookConfiguration"
+  - "group": "apiextensions.k8s.io"
+    "jsonPointers":
+    - "/metadata/annotations"
+    - "/metadata/labels"
+    "kind": "CustomResourceDefinition"
+  "project": "platform"
+  "source":
+    "chart": "external-secrets"
+    "helm":
+      "releaseName": "external-secrets"
+      "values": |
+        "installCRDs": true
+        "podLabels":
+          "azure.workload.identity/use": "true"
+        "replicaCount": 1
+        "serviceAccount":
+          "annotations":
+            "azure.workload.identity/client-id": "56f1f258-b47b-4508-a85d-4770408eda94"
+          "extraLabels":
+            "azure.workload.identity/use": "true"
+          "name": "external-secrets"
+        "serviceMonitor":
+          "enabled": true
+    "repoURL": "https://charts.external-secrets.io"
+    "targetRevision": "2.6.0"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "istio-base"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "istio-system"
+    "server": "https://kubernetes.default.svc"
+  "ignoreDifferences":
+  - "group": "admissionregistration.k8s.io"
+    "jqPathExpressions":
+    - ".webhooks[]?.clientConfig.caBundle"
+    - ".webhooks[]?.failurePolicy"
+    - ".webhooks[]?.namespaceSelector.matchExpressions"
+    "kind": "MutatingWebhookConfiguration"
+  - "group": "admissionregistration.k8s.io"
+    "jqPathExpressions":
+    - ".webhooks[]?.clientConfig.caBundle"
+    - ".webhooks[]?.failurePolicy"
+    - ".webhooks[]?.namespaceSelector.matchExpressions"
+    "kind": "ValidatingWebhookConfiguration"
+  "project": "platform"
+  "source":
+    "chart": "base"
+    "repoURL": "https://istio-release.storage.googleapis.com/charts"
+    "targetRevision": "1.30.1"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "istio-ingress"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "istio-ingress"
+    "server": "https://kubernetes.default.svc"
+  "ignoreDifferences":
+  - "group": "admissionregistration.k8s.io"
+    "jqPathExpressions":
+    - ".webhooks[]?.clientConfig.caBundle"
+    - ".webhooks[]?.failurePolicy"
+    - ".webhooks[]?.namespaceSelector.matchExpressions"
+    "kind": "MutatingWebhookConfiguration"
+  - "group": "admissionregistration.k8s.io"
+    "jqPathExpressions":
+    - ".webhooks[]?.clientConfig.caBundle"
+    - ".webhooks[]?.failurePolicy"
+    - ".webhooks[]?.namespaceSelector.matchExpressions"
+    "kind": "ValidatingWebhookConfiguration"
+  "project": "platform"
+  "source":
+    "chart": "gateway"
+    "helm":
+      "releaseName": "istio-ingress"
+      "values": |
+        "autoscaling":
+          "enabled": true
+          "maxReplicas": 3
+          "minReplicas": 1
+        "resources":
+          "limits":
+            "cpu": "1000m"
+            "memory": "512Mi"
+          "requests":
+            "cpu": "100m"
+            "memory": "128Mi"
+        "service":
+          "annotations":
+            "external-dns.alpha.kubernetes.io/hostname": "argocd.aks.ihsenalaya.xyz,grafana.aks.ihsenalaya.xyz,jaeger.aks.ihsenalaya.xyz,kubecost.aks.ihsenalaya.xyz,neuvector.aks.ihsenalaya.xyz,lab.aks.ihsenalaya.xyz"
+            "service.beta.kubernetes.io/azure-load-balancer-internal": "true"
+            "service.beta.kubernetes.io/azure-load-balancer-internal-subnet": "snet-aks-nodes"
+            "service.beta.kubernetes.io/azure-load-balancer-ipv4": "10.42.0.100"
+          "loadBalancerIP": "10.42.0.100"
+          "type": "LoadBalancer"
+    "repoURL": "https://istio-release.storage.googleapis.com/charts"
+    "targetRevision": "1.30.1"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "istiod"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "istio-system"
+    "server": "https://kubernetes.default.svc"
+  "ignoreDifferences":
+  - "group": "admissionregistration.k8s.io"
+    "jqPathExpressions":
+    - ".webhooks[]?.clientConfig.caBundle"
+    - ".webhooks[]?.failurePolicy"
+    - ".webhooks[]?.namespaceSelector.matchExpressions"
+    "kind": "MutatingWebhookConfiguration"
+  - "group": "admissionregistration.k8s.io"
+    "jqPathExpressions":
+    - ".webhooks[]?.clientConfig.caBundle"
+    - ".webhooks[]?.failurePolicy"
+    - ".webhooks[]?.namespaceSelector.matchExpressions"
+    "kind": "ValidatingWebhookConfiguration"
+  "project": "platform"
+  "source":
+    "chart": "istiod"
+    "repoURL": "https://istio-release.storage.googleapis.com/charts"
+    "targetRevision": "1.30.1"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "jaeger"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "tracing"
+    "server": "https://kubernetes.default.svc"
+  "project": "platform"
+  "source":
+    "chart": "jaeger"
+    "helm":
+      "releaseName": "jaeger"
+      "values": |
+        "jaeger":
+          "replicas": 1
+          "resources":
+            "limits":
+              "cpu": "1000m"
+              "memory": "1Gi"
+            "requests":
+              "cpu": "100m"
+              "memory": "256Mi"
+    "repoURL": "https://jaegertracing.github.io/helm-charts"
+    "targetRevision": "4.11.1"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "keda"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "keda"
+    "server": "https://kubernetes.default.svc"
+  "ignoreDifferences":
+  - "group": "admissionregistration.k8s.io"
+    "jqPathExpressions":
+    - ".webhooks[]?.clientConfig.caBundle"
+    - ".webhooks[]?.failurePolicy"
+    - ".webhooks[]?.namespaceSelector.matchExpressions"
+    "kind": "MutatingWebhookConfiguration"
+  - "group": "admissionregistration.k8s.io"
+    "jqPathExpressions":
+    - ".webhooks[]?.clientConfig.caBundle"
+    - ".webhooks[]?.failurePolicy"
+    - ".webhooks[]?.namespaceSelector.matchExpressions"
+    "kind": "ValidatingWebhookConfiguration"
+  - "group": "apiextensions.k8s.io"
+    "jsonPointers":
+    - "/metadata/annotations"
+    - "/metadata/labels"
+    "kind": "CustomResourceDefinition"
+  "project": "platform"
+  "source":
+    "chart": "keda"
+    "helm":
+      "releaseName": "keda"
+      "values": |
+        "crds":
+          "install": true
+        "metricsServer":
+          "replicaCount": 1
+        "operator":
+          "replicaCount": 1
+        "prometheus":
+          "metricServer":
+            "enabled": true
+          "operator":
+            "enabled": true
+          "webhooks":
+            "enabled": true
+        "webhooks":
+          "replicaCount": 1
+    "repoURL": "https://kedacore.github.io/charts"
+    "targetRevision": "2.20.1"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "kubecost"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "kubecost"
+    "server": "https://kubernetes.default.svc"
+  "project": "platform"
+  "source":
+    "chart": "cost-analyzer"
+    "helm":
+      "releaseName": "kubecost"
+      "values": |
+        "global":
+          "clusterId": "aks-ihsen-mvp-we"
+          "grafana":
+            "domainName": "kube-prometheus-stack-grafana.monitoring.svc.cluster.local"
+            "enabled": false
+            "proxy": false
+          "prometheus":
+            "enabled": false
+            "fqdn": "http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"
+        "kubecostProductConfigs":
+          "clusterName": "aks-ihsen-mvp-we"
+        "persistentVolume":
+          "enabled": true
+          "size": "32Gi"
+        "prometheus":
+          "alertmanager":
+            "enabled": false
+          "kubeStateMetrics":
+            "enabled": false
+          "nodeExporter":
+            "enabled": false
+          "server":
+            "enabled": false
+    "repoURL": "https://kubecost.github.io/cost-analyzer"
+    "targetRevision": "2.8.6"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "kubeupgrade-guardian-operator"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "kubeupgrade-guardian-system"
+    "server": "https://kubernetes.default.svc"
+  "project": "platform"
+  "source":
+    "helm":
+      "releaseName": "kubeupgrade-guardian"
+      "values": |
+        "image":
+          "pullPolicy": "IfNotPresent"
+          "repository": "acrihsenaksfbd882.azurecr.io/kubeupgrade-guardian-operator"
+          "tag": "0.1.4"
+        "podDisruptionBudget":
+          "enabled": true
+          "minAvailable": 1
+        "replicaCount": 2
+        "resources":
+          "limits":
+            "cpu": "500m"
+            "memory": "256Mi"
+          "requests":
+            "cpu": "50m"
+            "memory": "96Mi"
+    "path": "gitops/charts/kubeupgrade-guardian-operator"
+    "repoURL": "https://github.com/ihsenalaya/kubeupdate.git"
+    "targetRevision": "main"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+    - "SkipDryRunOnMissingResource=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "kyverno"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "kyverno"
+    "server": "https://kubernetes.default.svc"
+  "ignoreDifferences":
+  - "group": "admissionregistration.k8s.io"
+    "jqPathExpressions":
+    - ".webhooks[]?.clientConfig.caBundle"
+    - ".webhooks[]?.failurePolicy"
+    - ".webhooks[]?.namespaceSelector.matchExpressions"
+    "kind": "MutatingWebhookConfiguration"
+  - "group": "admissionregistration.k8s.io"
+    "jqPathExpressions":
+    - ".webhooks[]?.clientConfig.caBundle"
+    - ".webhooks[]?.failurePolicy"
+    - ".webhooks[]?.namespaceSelector.matchExpressions"
+    "kind": "ValidatingWebhookConfiguration"
+  - "group": "apiextensions.k8s.io"
+    "jsonPointers":
+    - "/metadata/annotations"
+    - "/metadata/labels"
+    "kind": "CustomResourceDefinition"
+  "project": "platform"
+  "source":
+    "chart": "kyverno"
+    "helm":
+      "releaseName": "kyverno"
+      "values": |
+        "admissionController":
+          "replicas": 1
+        "backgroundController":
+          "replicas": 1
+        "cleanupController":
+          "replicas": 1
+        "grafana":
+          "enabled": true
+        "reportsController":
+          "replicas": 1
+        "serviceMonitor":
+          "enabled": true
+    "repoURL": "https://kyverno.github.io/kyverno"
+    "targetRevision": "3.8.1"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "loki"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "loki"
+    "server": "https://kubernetes.default.svc"
+  "project": "platform"
+  "source":
+    "chart": "loki"
+    "helm":
+      "releaseName": "loki"
+      "values": |
+        "backend":
+          "replicas": 0
+        "chunksCache":
+          "enabled": false
+        "deploymentMode": "SingleBinary"
+        "loki":
+          "auth_enabled": false
+          "commonConfig":
+            "replication_factor": 1
+          "schemaConfig":
+            "configs":
+            - "from": "2024-04-01"
+              "index":
+                "period": "24h"
+                "prefix": "loki_index_"
+              "object_store": "filesystem"
+              "schema": "v13"
+              "store": "tsdb"
+          "storage":
+            "type": "filesystem"
+        "lokiCanary":
+          "enabled": false
+        "read":
+          "replicas": 0
+        "resultsCache":
+          "enabled": false
+        "singleBinary":
+          "persistence":
+            "enabled": true
+            "size": "50Gi"
+          "replicas": 1
+          "resources":
+            "limits":
+              "cpu": "1500m"
+              "memory": "2Gi"
+            "requests":
+              "cpu": "200m"
+              "memory": "512Mi"
+        "test":
+          "enabled": false
+        "write":
+          "replicas": 0
+    "repoURL": "https://grafana.github.io/helm-charts"
+    "targetRevision": "7.0.0"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "monitoring"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "monitoring"
+    "server": "https://kubernetes.default.svc"
+  "ignoreDifferences":
+  - "group": "admissionregistration.k8s.io"
+    "jqPathExpressions":
+    - ".webhooks[]?.clientConfig.caBundle"
+    - ".webhooks[]?.failurePolicy"
+    - ".webhooks[]?.namespaceSelector.matchExpressions"
+    "kind": "MutatingWebhookConfiguration"
+  - "group": "admissionregistration.k8s.io"
+    "jqPathExpressions":
+    - ".webhooks[]?.clientConfig.caBundle"
+    - ".webhooks[]?.failurePolicy"
+    - ".webhooks[]?.namespaceSelector.matchExpressions"
+    "kind": "ValidatingWebhookConfiguration"
+  - "group": "apiextensions.k8s.io"
+    "jsonPointers":
+    - "/metadata/annotations"
+    - "/metadata/labels"
+    "kind": "CustomResourceDefinition"
+  "project": "platform"
+  "source":
+    "chart": "kube-prometheus-stack"
+    "helm":
+      "releaseName": "kube-prometheus-stack"
+      "values": |
+        "alertmanager":
+          "alertmanagerSpec":
+            "replicas": 1
+          "annotations":
+            "argocd.argoproj.io/sync-wave": "1"
+          "enabled": true
+        "fullnameOverride": "kube-prometheus-stack"
+        "grafana":
+          "additionalDataSources":
+          - "access": "proxy"
+            "isDefault": false
+            "name": "Loki"
+            "type": "loki"
+            "url": "http://loki-gateway.loki.svc.cluster.local"
+          - "access": "proxy"
+            "name": "Jaeger"
+            "type": "jaeger"
+            "url": "http://jaeger.tracing.svc.cluster.local:16686"
+          "admin":
+            "existingSecret": "grafana-admin"
+            "passwordKey": "admin-password"
+            "userKey": "admin-user"
+          "enabled": true
+          "grafana.ini":
+            "analytics":
+              "check_for_updates": false
+            "server":
+              "root_url": "https://grafana.aks.ihsenalaya.xyz"
+          "persistence":
+            "enabled": true
+            "size": "10Gi"
+            "storageClassName": "azure-disk-immediate"
+        "prometheus":
+          "annotations":
+            "argocd.argoproj.io/sync-wave": "1"
+          "prometheusSpec":
+            "evaluationInterval": "30s"
+            "replicas": 1
+            "resources":
+              "limits":
+                "cpu": "1500m"
+                "memory": "3Gi"
+              "requests":
+                "cpu": "250m"
+                "memory": "1Gi"
+            "retention": "7d"
+            "retentionSize": "20GB"
+            "scrapeInterval": "30s"
+            "storageSpec":
+              "volumeClaimTemplate":
+                "spec":
+                  "accessModes":
+                  - "ReadWriteOnce"
+                  "resources":
+                    "requests":
+                      "storage": "64Gi"
+    "repoURL": "https://prometheus-community.github.io/helm-charts"
+    "targetRevision": "86.2.3"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+    - "SkipDryRunOnMissingResource=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "neuvector"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "neuvector"
+    "server": "https://kubernetes.default.svc"
+  "project": "platform"
+  "source":
+    "chart": "core"
+    "helm":
+      "releaseName": "neuvector"
+      "values": |
+        "autoGenerateCert": false
+        "controller":
+          "certificate":
+            "keyFile": "tls.key"
+            "pemFile": "tls.crt"
+            "secret": "neuvector-internal"
+          "internal":
+            "certificate":
+              "secret": "neuvector-internal"
+          "replicas": 1
+        "cve":
+          "scanner":
+            "internal":
+              "certificate":
+                "secret": "neuvector-internal"
+            "replicas": 1
+          "updater":
+            "internal":
+              "certificate":
+                "secret": "neuvector-internal"
+        "defaultValidityPeriod": 3650
+        "enforcer":
+          "internal":
+            "certificate":
+              "secret": "neuvector-internal"
+        "internal":
+          "autoGenerateCert": false
+          "autoRotateCert": false
+          "certmanager":
+            "enabled": true
+            "secretname": "neuvector-internal"
+        "manager":
+          "env":
+            "ssl": false
+          "svc":
+            "type": "ClusterIP"
+    "repoURL": "https://neuvector.github.io/neuvector-helm"
+    "targetRevision": "2.10.2"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+    - "SkipDryRunOnMissingResource=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "opentelemetry-collector"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "tracing"
+    "server": "https://kubernetes.default.svc"
+  "project": "platform"
+  "source":
+    "chart": "opentelemetry-collector"
+    "helm":
+      "releaseName": "opentelemetry-collector"
+      "values": |
+        "config":
+          "exporters":
+            "debug": {}
+            "otlp/jaeger":
+              "endpoint": "jaeger.tracing.svc.cluster.local:4317"
+              "tls":
+                "insecure": true
+          "processors":
+            "batch": {}
+            "memory_limiter":
+              "check_interval": "5s"
+              "limit_percentage": 80
+              "spike_limit_percentage": 25
+          "receivers":
+            "otlp":
+              "protocols":
+                "grpc":
+                  "endpoint": "0.0.0.0:4317"
+                "http":
+                  "endpoint": "0.0.0.0:4318"
+          "service":
+            "pipelines":
+              "traces":
+                "exporters":
+                - "otlp/jaeger"
+                "processors":
+                - "memory_limiter"
+                - "batch"
+                "receivers":
+                - "otlp"
+        "image":
+          "repository": "otel/opentelemetry-collector-contrib"
+        "mode": "deployment"
+        "ports":
+          "otlp":
+            "containerPort": 4317
+            "enabled": true
+            "protocol": "TCP"
+            "servicePort": 4317
+          "otlp-http":
+            "containerPort": 4318
+            "enabled": true
+            "protocol": "TCP"
+            "servicePort": 4318
+        "replicaCount": 1
+    "repoURL": "https://open-telemetry.github.io/opentelemetry-helm-charts"
+    "targetRevision": "0.158.1"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "platform-config"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "istio-ingress"
+    "server": "https://kubernetes.default.svc"
+  "project": "platform"
+  "source":
+    "chart": "raw"
+    "helm":
+      "releaseName": "platform-config"
+      "values": |
+        "resources":
+        - "allowVolumeExpansion": true
+          "apiVersion": "storage.k8s.io/v1"
+          "kind": "StorageClass"
+          "metadata":
+            "name": "azure-disk-immediate"
+          "parameters":
+            "skuname": "StandardSSD_LRS"
+          "provisioner": "disk.csi.azure.com"
+          "reclaimPolicy": "Delete"
+          "volumeBindingMode": "Immediate"
+        - "apiVersion": "cert-manager.io/v1"
+          "kind": "ClusterIssuer"
+          "metadata":
+            "name": "letsencrypt-dns01"
+          "spec":
+            "acme":
+              "email": "Ihsen.alaya@outlook.com"
+              "privateKeySecretRef":
+                "name": "letsencrypt-dns01-account-key"
+              "server": "https://acme-v02.api.letsencrypt.org/directory"
+              "solvers":
+              - "dns01":
+                  "azureDNS":
+                    "environment": "AzurePublicCloud"
+                    "hostedZoneName": "ihsenalaya.xyz"
+                    "managedIdentity":
+                      "clientID": "b3681182-5546-46b3-9922-0d868db358b3"
+                    "resourceGroupName": "ihsen"
+                    "subscriptionID": "ec0e829d-64e1-43fd-b721-ecf5b5112773"
+        - "apiVersion": "cert-manager.io/v1"
+          "kind": "Certificate"
+          "metadata":
+            "name": "platform-wildcard"
+            "namespace": "istio-ingress"
+          "spec":
+            "dnsNames":
+            - "aks.ihsenalaya.xyz"
+            - "*.aks.ihsenalaya.xyz"
+            "issuerRef":
+              "kind": "ClusterIssuer"
+              "name": "letsencrypt-dns01"
+            "secretName": "platform-wildcard-tls"
+        - "apiVersion": "external-secrets.io/v1"
+          "kind": "ClusterSecretStore"
+          "metadata":
+            "name": "azure-keyvault"
+          "spec":
+            "provider":
+              "azurekv":
+                "authType": "WorkloadIdentity"
+                "serviceAccountRef":
+                  "name": "external-secrets"
+                  "namespace": "external-secrets"
+                "vaultUrl": "https://kvihsenaksfbd882.vault.azure.net/"
+        - "apiVersion": "external-secrets.io/v1"
+          "kind": "ExternalSecret"
+          "metadata":
+            "name": "grafana-admin"
+            "namespace": "monitoring"
+          "spec":
+            "data":
+            - "remoteRef":
+                "conversionStrategy": "Default"
+                "decodingStrategy": "None"
+                "key": "grafana-admin-user"
+                "metadataPolicy": "None"
+                "nullBytePolicy": "Ignore"
+              "secretKey": "admin-user"
+            - "remoteRef":
+                "conversionStrategy": "Default"
+                "decodingStrategy": "None"
+                "key": "grafana-admin-password"
+                "metadataPolicy": "None"
+                "nullBytePolicy": "Ignore"
+              "secretKey": "admin-password"
+            "refreshInterval": "1h"
+            "secretStoreRef":
+              "kind": "ClusterSecretStore"
+              "name": "azure-keyvault"
+            "target":
+              "creationPolicy": "Owner"
+              "deletionPolicy": "Retain"
+              "name": "grafana-admin"
+        - "apiVersion": "networking.istio.io/v1"
+          "kind": "Gateway"
+          "metadata":
+            "name": "platform-gateway"
+            "namespace": "istio-ingress"
+          "spec":
+            "selector":
+              "istio": "ingress"
+            "servers":
+            - "hosts":
+              - "*.aks.ihsenalaya.xyz"
+              "port":
+                "name": "http"
+                "number": 80
+                "protocol": "HTTP"
+              "tls":
+                "httpsRedirect": true
+            - "hosts":
+              - "*.aks.ihsenalaya.xyz"
+              "port":
+                "name": "https"
+                "number": 443
+                "protocol": "HTTPS"
+              "tls":
+                "credentialName": "platform-wildcard-tls"
+                "mode": "SIMPLE"
+        - "apiVersion": "networking.istio.io/v1"
+          "kind": "VirtualService"
+          "metadata":
+            "name": "argocd"
+            "namespace": "istio-ingress"
+          "spec":
+            "gateways":
+            - "platform-gateway"
+            "hosts":
+            - "argocd.aks.ihsenalaya.xyz"
+            "http":
+            - "route":
+              - "destination":
+                  "host": "argocd-server.argocd.svc.cluster.local"
+                  "port":
+                    "number": 80
+        - "apiVersion": "networking.istio.io/v1"
+          "kind": "VirtualService"
+          "metadata":
+            "name": "grafana"
+            "namespace": "istio-ingress"
+          "spec":
+            "gateways":
+            - "platform-gateway"
+            "hosts":
+            - "grafana.aks.ihsenalaya.xyz"
+            "http":
+            - "route":
+              - "destination":
+                  "host": "kube-prometheus-stack-grafana.monitoring.svc.cluster.local"
+                  "port":
+                    "number": 80
+        - "apiVersion": "networking.istio.io/v1"
+          "kind": "VirtualService"
+          "metadata":
+            "name": "jaeger"
+            "namespace": "istio-ingress"
+          "spec":
+            "gateways":
+            - "platform-gateway"
+            "hosts":
+            - "jaeger.aks.ihsenalaya.xyz"
+            "http":
+            - "route":
+              - "destination":
+                  "host": "jaeger.tracing.svc.cluster.local"
+                  "port":
+                    "number": 16686
+        - "apiVersion": "networking.istio.io/v1"
+          "kind": "VirtualService"
+          "metadata":
+            "name": "kubecost"
+            "namespace": "istio-ingress"
+          "spec":
+            "gateways":
+            - "platform-gateway"
+            "hosts":
+            - "kubecost.aks.ihsenalaya.xyz"
+            "http":
+            - "route":
+              - "destination":
+                  "host": "kubecost-cost-analyzer.kubecost.svc.cluster.local"
+                  "port":
+                    "number": 9090
+        - "apiVersion": "networking.istio.io/v1"
+          "kind": "VirtualService"
+          "metadata":
+            "name": "neuvector"
+            "namespace": "istio-ingress"
+          "spec":
+            "gateways":
+            - "platform-gateway"
+            "hosts":
+            - "neuvector.aks.ihsenalaya.xyz"
+            "http":
+            - "route":
+              - "destination":
+                  "host": "neuvector-service-webui.neuvector.svc.cluster.local"
+                  "port":
+                    "number": 8443
+        - "apiVersion": "karpenter.azure.com/v1beta1"
+          "kind": "AKSNodeClass"
+          "metadata":
+            "name": "platform-apps"
+          "spec":
+            "fipsMode": "Disabled"
+            "imageFamily": "AzureLinux"
+            "maxPods": 110
+            "osDiskSizeGB": 128
+            "tags":
+              "Cluster": "aks-ihsen-mvp-we"
+              "Environment": "mvp"
+              "ManagedBy": "karpenter"
+            "vnetSubnetID": "/subscriptions/ec0e829d-64e1-43fd-b721-ecf5b5112773/resourceGroups/rg-ihsen-aks-mvp-we/providers/Microsoft.Network/virtualNetworks/vnet-ihsen-aks-westeurope/subnets/snet-aks-nodes"
+        - "apiVersion": "karpenter.sh/v1"
+          "kind": "NodePool"
+          "metadata":
+            "name": "platform-apps"
+          "spec":
+            "disruption":
+              "consolidateAfter": "5m"
+              "consolidationPolicy": "WhenEmptyOrUnderutilized"
+            "limits":
+              "cpu": "32"
+              "memory": "128Gi"
+            "template":
+              "spec":
+                "expireAfter": "720h"
+                "nodeClassRef":
+                  "group": "karpenter.azure.com"
+                  "kind": "AKSNodeClass"
+                  "name": "platform-apps"
+                "requirements":
+                - "key": "kubernetes.io/arch"
+                  "operator": "In"
+                  "values":
+                  - "amd64"
+                - "key": "kubernetes.io/os"
+                  "operator": "In"
+                  "values":
+                  - "linux"
+                - "key": "karpenter.sh/capacity-type"
+                  "operator": "In"
+                  "values":
+                  - "on-demand"
+                - "key": "karpenter.azure.com/sku-family"
+                  "operator": "In"
+                  "values":
+                  - "D"
+                  - "E"
+                - "key": "karpenter.azure.com/sku-version"
+                  "operator": "In"
+                  "values":
+                  - "5"
+            "weight": 10
+        - "apiVersion": "kyverno.io/v1"
+          "kind": "ClusterPolicy"
+          "metadata":
+            "name": "require-standard-labels"
+          "spec":
+            "admission": true
+            "applyRules": "All"
+            "background": true
+            "emitWarning": false
+            "failurePolicy": "Fail"
+            "mutateExistingOnPolicyUpdate": false
+            "rules":
+            - "exclude":
+                "any":
+                - "resources":
+                    "namespaces":
+                    - "kube-system"
+                    - "argocd"
+                    - "cert-manager"
+                    - "external-dns"
+                    - "external-secrets"
+                    - "istio-system"
+                    - "istio-ingress"
+                    - "monitoring"
+                    - "loki"
+                    - "tracing"
+                    - "keda"
+                    - "kyverno"
+                    - "kubecost"
+                    - "velero"
+                    - "neuvector"
+              "match":
+                "any":
+                - "resources":
+                    "kinds":
+                    - "Pod"
+              "name": "require-app-labels"
+              "skipBackgroundRequests": true
+              "validate":
+                "allowExistingViolations": true
+                "failureAction": "Audit"
+                "message": "Pods should define app.kubernetes.io/name and app.kubernetes.io/part-of
+                  labels."
+                "pattern":
+                  "metadata":
+                    "labels":
+                      "app.kubernetes.io/name": "?*"
+                      "app.kubernetes.io/part-of": "?*"
+            "validationFailureAction": "Audit"
+        - "apiVersion": "kyverno.io/v1"
+          "kind": "ClusterPolicy"
+          "metadata":
+            "name": "disallow-latest-image-tag"
+          "spec":
+            "admission": true
+            "applyRules": "All"
+            "background": true
+            "emitWarning": false
+            "failurePolicy": "Fail"
+            "mutateExistingOnPolicyUpdate": false
+            "rules":
+            - "exclude":
+                "any":
+                - "resources":
+                    "namespaces":
+                    - "kube-system"
+                    - "argocd"
+                    - "cert-manager"
+                    - "external-dns"
+                    - "external-secrets"
+                    - "istio-system"
+                    - "istio-ingress"
+                    - "monitoring"
+                    - "loki"
+                    - "tracing"
+                    - "keda"
+                    - "kyverno"
+                    - "kubecost"
+                    - "velero"
+                    - "neuvector"
+              "match":
+                "any":
+                - "resources":
+                    "kinds":
+                    - "Pod"
+              "name": "containers-must-not-use-latest"
+              "skipBackgroundRequests": true
+              "validate":
+                "allowExistingViolations": true
+                "failureAction": "Audit"
+                "message": "Container images should be pinned and must not use the latest
+                  tag."
+                "pattern":
+                  "spec":
+                    "containers":
+                    - "image": "!*:latest"
+            "validationFailureAction": "Audit"
+        - "apiVersion": "kyverno.io/v1"
+          "kind": "ClusterPolicy"
+          "metadata":
+            "name": "require-container-resources"
+          "spec":
+            "admission": true
+            "applyRules": "All"
+            "background": true
+            "emitWarning": false
+            "failurePolicy": "Fail"
+            "mutateExistingOnPolicyUpdate": false
+            "rules":
+            - "exclude":
+                "any":
+                - "resources":
+                    "namespaces":
+                    - "kube-system"
+                    - "argocd"
+                    - "cert-manager"
+                    - "external-dns"
+                    - "external-secrets"
+                    - "istio-system"
+                    - "istio-ingress"
+                    - "monitoring"
+                    - "loki"
+                    - "tracing"
+                    - "keda"
+                    - "kyverno"
+                    - "kubecost"
+                    - "velero"
+                    - "neuvector"
+              "match":
+                "any":
+                - "resources":
+                    "kinds":
+                    - "Pod"
+              "name": "require-requests-and-memory-limit"
+              "skipBackgroundRequests": true
+              "validate":
+                "allowExistingViolations": true
+                "failureAction": "Audit"
+                "message": "Containers should define CPU and memory requests and a memory
+                  limit."
+                "pattern":
+                  "spec":
+                    "containers":
+                    - "resources":
+                        "limits":
+                          "memory": "?*"
+                        "requests":
+                          "cpu": "?*"
+                          "memory": "?*"
+            "validationFailureAction": "Audit"
+        - "apiVersion": "kyverno.io/v1"
+          "kind": "ClusterPolicy"
+          "metadata":
+            "name": "disallow-privileged-containers"
+          "spec":
+            "admission": true
+            "applyRules": "All"
+            "background": true
+            "emitWarning": false
+            "failurePolicy": "Fail"
+            "mutateExistingOnPolicyUpdate": false
+            "rules":
+            - "exclude":
+                "any":
+                - "resources":
+                    "namespaces":
+                    - "kube-system"
+                    - "argocd"
+                    - "cert-manager"
+                    - "external-dns"
+                    - "external-secrets"
+                    - "istio-system"
+                    - "istio-ingress"
+                    - "monitoring"
+                    - "loki"
+                    - "tracing"
+                    - "keda"
+                    - "kyverno"
+                    - "kubecost"
+                    - "velero"
+                    - "neuvector"
+              "match":
+                "any":
+                - "resources":
+                    "kinds":
+                    - "Pod"
+              "name": "privileged-must-be-false"
+              "skipBackgroundRequests": true
+              "validate":
+                "allowExistingViolations": true
+                "failureAction": "Audit"
+                "message": "Privileged containers are not allowed for application workloads."
+                "pattern":
+                  "spec":
+                    "containers":
+                    - "=(securityContext)":
+                        "=(privileged)": false
+            "validationFailureAction": "Audit"
+        - "apiVersion": "kyverno.io/v1"
+          "kind": "ClusterPolicy"
+          "metadata":
+            "name": "require-run-as-non-root"
+          "spec":
+            "admission": true
+            "applyRules": "All"
+            "background": true
+            "emitWarning": false
+            "failurePolicy": "Fail"
+            "mutateExistingOnPolicyUpdate": false
+            "rules":
+            - "exclude":
+                "any":
+                - "resources":
+                    "namespaces":
+                    - "kube-system"
+                    - "argocd"
+                    - "cert-manager"
+                    - "external-dns"
+                    - "external-secrets"
+                    - "istio-system"
+                    - "istio-ingress"
+                    - "monitoring"
+                    - "loki"
+                    - "tracing"
+                    - "keda"
+                    - "kyverno"
+                    - "kubecost"
+                    - "velero"
+                    - "neuvector"
+              "match":
+                "any":
+                - "resources":
+                    "kinds":
+                    - "Pod"
+              "name": "run-as-non-root"
+              "skipBackgroundRequests": true
+              "validate":
+                "allowExistingViolations": true
+                "anyPattern":
+                - "spec":
+                    "securityContext":
+                      "runAsNonRoot": true
+                - "spec":
+                    "containers":
+                    - "securityContext":
+                        "runAsNonRoot": true
+                "failureAction": "Audit"
+                "message": "Pods should run as non-root."
+            "validationFailureAction": "Audit"
+    "repoURL": "https://bedag.github.io/helm-charts/"
+    "targetRevision": "2.0.2"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+    - "SkipDryRunOnMissingResource=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "promtail"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "loki"
+    "server": "https://kubernetes.default.svc"
+  "project": "platform"
+  "source":
+    "chart": "promtail"
+    "helm":
+      "releaseName": "promtail"
+      "values": |
+        "config":
+          "clients":
+          - "url": "http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push"
+    "repoURL": "https://grafana.github.io/helm-charts"
+    "targetRevision": "6.17.1"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "upgrade-lab"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "upgrade-lab"
+    "server": "https://kubernetes.default.svc"
+  "project": "platform"
+  "source":
+    "helm":
+      "releaseName": "upgrade-lab"
+      "values": |
+        "externalSecrets":
+          "keys":
+            "clientCertificate": "lab-client-certificate"
+            "cosmosMongoUri": "lab-cosmos-mongo-uri"
+            "postgresDsn": "lab-postgres-dsn"
+            "redisUrl": "lab-redis-url"
+            "sqlServerJdbcUrl": "lab-sqlserver-jdbc-url"
+            "sqlServerPassword": "lab-sqlserver-password"
+            "sqlServerUsername": "lab-sqlserver-username"
+          "secretStoreName": "azure-keyvault"
+          "targetSecretName": "upgrade-lab-secrets"
+        "global":
+          "imagePullPolicy": "IfNotPresent"
+          "imageRegistry": "acrihsenaksfbd882.azurecr.io"
+          "imageTag": "0.1.4"
+        "ingress":
+          "gateway":
+            "name": "platform-gateway"
+            "namespace": "istio-ingress"
+          "host": "lab.aks.ihsenalaya.xyz"
+    "path": "gitops/charts/upgrade-lab"
+    "repoURL": "https://github.com/ihsenalaya/kubeupdate.git"
+    "targetRevision": "main"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+    - "SkipDryRunOnMissingResource=true"
+
+---
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "0"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "velero"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "velero"
+    "server": "https://kubernetes.default.svc"
+  "ignoreDifferences":
+  - "group": "apiextensions.k8s.io"
+    "jsonPointers":
+    - "/metadata/annotations"
+    - "/metadata/labels"
+    "kind": "CustomResourceDefinition"
+  "project": "platform"
+  "source":
+    "chart": "velero"
+    "helm":
+      "releaseName": "velero"
+      "values": |
+        "configuration":
+          "backupStorageLocation":
+          - "bucket": "velero"
+            "config":
+              "resourceGroup": "rg-ihsen-aks-mvp-we"
+              "storageAccount": "stvelerofbd882740d3"
+              "storageAccountURI": "https://stvelerofbd882740d3.blob.core.windows.net/"
+              "subscriptionId": "ec0e829d-64e1-43fd-b721-ecf5b5112773"
+              "useAAD": "true"
+            "default": true
+            "name": "default"
+            "provider": "azure"
+          "defaultBackupTTL": "168h"
+          "extraEnvVars":
+          - "name": "AZURE_SUBSCRIPTION_ID"
+            "value": "ec0e829d-64e1-43fd-b721-ecf5b5112773"
+          - "name": "AZURE_RESOURCE_GROUP"
+            "value": "mc-rg-ihsen-aks-mvp-we-aks-ihsen-mvp-we-westeurope"
+          - "name": "AZURE_CLOUD_NAME"
+            "value": "AzurePublicCloud"
+          "volumeSnapshotLocation":
+          - "config":
+              "resourceGroup": "mc-rg-ihsen-aks-mvp-we-aks-ihsen-mvp-we-westeurope"
+              "subscriptionId": "ec0e829d-64e1-43fd-b721-ecf5b5112773"
+            "name": "default"
+            "provider": "azure"
+        "credentials":
+          "useSecret": false
+        "deployNodeAgent": true
+        "initContainers":
+        - "image": "velero/velero-plugin-for-microsoft-azure:v1.13.0"
+          "name": "velero-plugin-for-microsoft-azure"
+          "volumeMounts":
+          - "mountPath": "/target"
+            "name": "plugins"
+        "metrics":
+          "serviceMonitor":
+            "enabled": true
+        "podLabels":
+          "azure.workload.identity/use": "true"
+        "schedules":
+          "daily":
+            "disabled": false
+            "schedule": "0 2 * * *"
+            "template":
+              "storageLocation": "default"
+              "ttl": "168h"
+        "serviceAccount":
+          "server":
+            "annotations":
+              "azure.workload.identity/client-id": "0e907237-2a5d-4f5f-8939-7e91a5dd4eea"
+            "name": "velero"
+    "repoURL": "https://vmware-tanzu.github.io/helm-charts"
+    "targetRevision": "12.0.3"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"
+    - "RespectIgnoreDifferences=true"
+    - "SkipDryRunOnMissingResource=true"

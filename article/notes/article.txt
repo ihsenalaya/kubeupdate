@@ -1,0 +1,241 @@
+Mais maintenant les critiques sévères
+Problème majeur 1 — 18 findings, c’est trop petit
+
+Le benchmark contient seulement :
+
+3 deprecated API
+2 workload availability
+1 readiness
+4 PDB
+3 admission webhook
+5 policy risk
+
+C’est très faible pour un papier Q1.
+
+Sur certaines familles, tu as à peine 1 ou 2 exemples. Par exemple, readiness a 1 seul finding. Workload availability en a 2. Ce n’est pas une évaluation robuste, c’est une démonstration contrôlée.
+
+Un reviewer dira :
+
+The benchmark is too small to support claims about detection accuracy.
+
+Même si tu as 1.0 de précision/rappel, sur 18 labels ce n’est pas convaincant.
+
+Problème majeur 2 — Le benchmark est probablement trop aligné avec tes checkers
+
+Les scénarios semblent construits pour correspondre directement aux règles de ton opérateur :
+
+- PDB bloquant ;
+- missing readinessProbe ;
+- failurePolicy=Fail ;
+- restricted namespace ;
+- privileged workload ;
+- deprecated API table.
+
+C’est utile pour tester le système, mais faible comme benchmark scientifique.
+
+Le risque reviewer :
+
+The authors evaluate the tool on scenarios designed to match its own rules.
+
+Pour rendre ça solide, il faut :
+
+- des scénarios créés indépendamment ;
+- des cas ambigus ;
+- des cas négatifs ;
+- des workloads sains ;
+- des variants non triviaux ;
+- une labellisation indépendante.
+
+Aujourd’hui, le 18/18 ressemble plus à un acceptance test qu’à un benchmark scientifique.
+
+Problème majeur 3 — 0 FP / 0 FN est suspect, pas impressionnant
+
+Dans un vrai benchmark réaliste, 0 FP et 0 FN sont rares.
+
+Ici, ce résultat indique probablement que :
+
+- les scénarios sont simples ;
+- les règles sont directes ;
+- la vérité terrain est alignée avec les règles ;
+- il manque des cas limites.
+
+Un reviewer ne va pas être impressionné par 1.0 F1 sur 18 findings. Il va demander :
+
+What happens on harder scenarios?
+
+Il faut ajouter :
+
+- PDB avec selector ambigu ;
+- PDB sans pods matchés ;
+- PDB maxUnavailable vs minAvailable ;
+- Deployment avec HPA ;
+- StatefulSet ;
+- DaemonSet ;
+- Job/CronJob ;
+- namespaceSelector subtil ;
+- webhook avec objectSelector ;
+- Pod Security warn/audit/enforce ;
+- Kyverno/Gatekeeper en audit vs enforce ;
+- modern manifests served via converted APIs ;
+- RBAC partiel.
+Problème majeur 4 — La comparaison Pluto/kubent est un peu injuste
+
+Tu compares KubeUpgrade Guardian à Pluto/kubent sur 18 findings, dont 15 sont hors scope pour Pluto/kubent.
+
+Tu expliques que Pluto/kubent sont des baselines API-deprecation, ce qui est honnête. Mais la table F1 globale peut être perçue comme injuste.
+
+Reviewer possible :
+
+Pluto and kubent are not designed to detect PDB, readiness, or policy risks. The global F1 comparison is therefore misleading.
+
+Tu dois présenter la comparaison en deux niveaux :
+
+API-deprecation subset only
+Là, Pluto/kubent et KubeUpgrade doivent être comparés sur les 3 API findings uniquement.
+broader readiness coverage
+Là, tu peux montrer que Pluto/kubent sont hors scope.
+
+Donc évite une lecture du type :
+
+KubeUpgrade Guardian bat Pluto/kubent.
+
+Écris plutôt :
+
+Pluto/kubent remain appropriate specialized baselines for API deprecations; our benchmark demonstrates that API-only tooling leaves non-API readiness risks uncovered.
+
+Problème majeur 5 — Toujours pas de validation AKS
+
+Le papier vise des clusters réels de production, ou au moins une readiness utilisable en contexte client. Mais l’évaluation réelle est uniquement Kind.
+
+Kind est utile, mais ne couvre pas :
+
+- node pools AKS ;
+- surge upgrades ;
+- Azure CNI ;
+- CSI drivers ;
+- managed identities ;
+- Azure Policy ;
+- AKS add-ons ;
+- real admission chains ;
+- private clusters ;
+- node image upgrades ;
+- cluster autoscaler ;
+- managed control plane constraints.
+
+Pour Q1, il faut au moins :
+
+1 cluster AKS minimal
+1 cluster AKS platform-like
+
+Même sans production, il faut une validation managée.
+
+Problème majeur 6 — Pas d’expert review
+
+Ton opérateur génère des UpgradePlan. Mais tu n’as pas encore prouvé que les actions sont réellement utiles.
+
+Un reviewer demandera :
+
+Are the generated actions correct and actionable for platform engineers?
+
+Il faut faire évaluer 10 à 20 plans par 2 ou 3 experts Kubernetes avec une grille :
+
+- correctness
+- actionability
+- prioritization
+- evidence support
+- remediation safety
+
+Sans ça, le UpgradePlan reste une sortie technique non validée.
+
+Problème majeur 7 — Le checker policy reste partiel
+
+Tu veux inclure admission/policy risks dans le cœur de l’évaluation. Mais la table II dit encore :
+
+Policy risks: Partially implemented
+
+C’est dangereux.
+
+Pour un papier Q1, si policy est une contribution majeure, il faut aller plus loin :
+
+- Pod Security enforce/warn/audit ;
+- privileged ;
+- hostPath ;
+- allowPrivilegeEscalation ;
+- runAsNonRoot ;
+- seccompProfile ;
+- capabilities ;
+- Kyverno policies en enforce/audit ;
+- Gatekeeper constraints ;
+- ValidatingAdmissionPolicy ;
+- dry-run admission si possible.
+
+Sinon, formule plus modestement :
+
+selected policy-risk indicators
+
+Pas :
+
+policy readiness assessment
+
+Problème majeur 8 — Deprecated API checker encore MVP
+
+La table III dit que le deprecated API checker utilise une MVP static table. Même si tu as ajouté le filtre last-applied source, ce checker reste limité.
+
+Or tu compares à Pluto/kubent, qui sont justement spécialisés sur les APIs dépréciées.
+
+Donc tu dois écrire explicitement :
+
+We do not aim to replace Pluto or kubent for exhaustive API-deprecation detection.
+
+Ton différenciateur est la combinaison evidence + plan + non-API risks, pas la couverture complète des APIs.
+
+Problème majeur 9 — Pas de cas négatifs visibles
+
+Je ne vois pas clairement une évaluation avec des scénarios sains ou quasi-sains où l’outil doit ne rien détecter.
+
+Pour mesurer les faux positifs, il faut des cas négatifs forts :
+
+- Deployment 3 replicas avec readinessProbe ;
+- PDB maxUnavailable=1 correct ;
+- webhook failurePolicy=Ignore ;
+- namespace restricted mais workload compliant ;
+- modern API manifest ;
+- policy engine présent mais non bloquant ;
+- HPA avec minReplicas correct ;
+- StatefulSet avec PDB correct.
+
+Si le benchmark contient seulement des risques injectés, alors 0 FP est peu significatif.
+
+Problème majeur 10 — Pas de coût runtime / RBAC réel
+
+Pour un opérateur destiné à des clusters réels, il faut mesurer :
+
+- temps d’assessment ;
+- mémoire ;
+- CPU ;
+- nombre de ressources listées ;
+- impact RBAC ;
+- nombre d’appels API ;
+- comportement sur 100 / 1 000 / 10 000 objets.
+
+Tu mentionnes resource-cost measurement comme futur, mais pour Q1 ce sera attendu.
+
+Problème majeur 11 — Le papier reste plus “artifact paper” que “TSE paper”
+
+Même avec le benchmark, le cœur reste :
+
+- voici un opérateur ;
+- voici ses checkers ;
+- voici un petit benchmark Kind ;
+- voici un protocole plus large.
+
+Pour TSE, il faut une contribution plus générale :
+
+- modèle validé ;
+- benchmark plus large ;
+- analyse d’erreurs ;
+- enseignements transférables ;
+- validation externe ;
+- implications pour software evolution / DevOps.
+
+Tu as commencé, mais ce n’est pas encore suffisamment profond.

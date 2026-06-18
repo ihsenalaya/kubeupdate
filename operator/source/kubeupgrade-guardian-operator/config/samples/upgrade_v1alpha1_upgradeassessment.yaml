@@ -1,0 +1,30 @@
+apiVersion: upgrade.guardian.io/v1alpha1
+kind: UpgradeAssessment
+metadata:
+  labels:
+    app.kubernetes.io/name: upgradeassessment
+    app.kubernetes.io/instance: upgradeassessment-sample
+    app.kubernetes.io/part-of: kubeupgrade-guardian-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: kubeupgrade-guardian-operator
+  name: prod-upgrade-assessment
+spec:
+  targetVersion: "1.32"
+  mode: ReadOnly
+  scope:
+    namespaces:
+      include:
+        - production
+        - platform
+        - monitoring
+      exclude:
+        - kube-system
+  checks:
+    deprecatedApis: true
+    workloadAvailability: true
+    pdb: true
+    readinessProbes: true
+    admissionWebhooks: true
+    policyRisks: true
+    capacity: true
+    observability: true

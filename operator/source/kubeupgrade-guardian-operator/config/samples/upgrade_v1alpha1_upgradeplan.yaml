@@ -1,0 +1,37 @@
+apiVersion: upgrade.guardian.io/v1alpha1
+kind: UpgradePlan
+metadata:
+  labels:
+    app.kubernetes.io/name: upgradeplan
+    app.kubernetes.io/instance: upgradeplan-sample
+    app.kubernetes.io/part-of: kubeupgrade-guardian-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: kubeupgrade-guardian-operator
+  name: prod-upgrade-assessment-plan
+spec:
+  assessmentRef:
+    name: prod-upgrade-assessment
+  decision: DoNotUpgrade
+  riskLevel: High
+  score: 25
+  summary:
+    totalFindings: 1
+    critical: 1
+  requiredActions:
+    - id: remediate-pdb-blocking-001
+      severity: Critical
+      category: PDB
+      resource:
+        apiVersion: apps/v1
+        kind: Deployment
+        namespace: production
+        name: payment-api
+      action: Increase replicas or relax the PodDisruptionBudget before upgrade.
+      evidenceRefs:
+        - PDB_BLOCKING_001
+  recommendedOrder:
+    - fix-critical-blockers
+    - fix-high-risk-workloads
+    - validate-admission-policies
+    - validate-observability
+    - proceed-with-controlled-upgrade

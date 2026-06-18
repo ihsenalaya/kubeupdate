@@ -1,0 +1,27 @@
+# permissions for end users to view upgradeassessments.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: upgradeassessment-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: kubeupgrade-guardian-operator
+    app.kubernetes.io/part-of: kubeupgrade-guardian-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: upgradeassessment-viewer-role
+rules:
+- apiGroups:
+  - upgrade.guardian.io
+  resources:
+  - upgradeassessments
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - upgrade.guardian.io
+  resources:
+  - upgradeassessments/status
+  verbs:
+  - get
