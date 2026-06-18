@@ -1,0 +1,4 @@
+# command: kubectl -n kubeupgrade-guardian-system get upgradeassessment -o wide
+NAME                         AGE
+kind-assessment              4s
+post-automation-assessment   2m16s

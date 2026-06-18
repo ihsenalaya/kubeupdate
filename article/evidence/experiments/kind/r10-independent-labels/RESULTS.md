@@ -26,11 +26,11 @@ not detect, and are documented as limitations.
 
 ## Execution
 
-- Harness: `kubeupgrade-guardian-operator` commit `250ca1e`.
-- Fixture directory: `experiments/kind/r10-independent-labels/fixtures`.
-- Expected labels: `experiments/kind/r10-independent-labels/expected-findings`.
-- Checker observations: `experiments/kind/r10-independent-labels/r10-checker-observations.json`.
-- Comparison summary: `experiments/kind/r10-independent-labels/results-summary.json`.
+- Harness: `operator/source/kubeupgrade-guardian-operator` commit `250ca1e`.
+- Fixture directory: `article/evidence/experiments/kind/r10-independent-labels/fixtures`.
+- Expected labels: `article/evidence/experiments/kind/r10-independent-labels/expected-findings`.
+- Checker observations: `article/evidence/experiments/kind/r10-independent-labels/r10-checker-observations.json`.
+- Comparison summary: `article/evidence/experiments/kind/r10-independent-labels/results-summary.json`.
 
 ## Result
 
@@ -68,16 +68,16 @@ not detect, and are documented as limitations.
 Run from the operator repository:
 
 ```bash
-R10_FIXTURE_DIR=/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/kind/r10-independent-labels/fixtures \
-R10_OUTPUT=/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/experiments/kind/r10-independent-labels/r10-checker-observations.json \
+R10_FIXTURE_DIR=/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/article/evidence/experiments/kind/r10-independent-labels/fixtures \
+R10_OUTPUT=/mnt/c/Users/IhsenAlaya/Documents/ihsen/aks/article/evidence/experiments/kind/r10-independent-labels/r10-checker-observations.json \
 go test ./internal/checkers -run TestR10FixtureRunner -count=1 -v
 ```
 
 Then run from this repository:
 
 ```bash
-python3 experiments/kind/r10-independent-labels/compare-labels.py \
-  --expected-dir experiments/kind/r10-independent-labels/expected-findings \
-  --findings-json experiments/kind/r10-independent-labels/r10-checker-observations.json \
-  --output experiments/kind/r10-independent-labels/results-summary.json
+python3 article/evidence/experiments/kind/r10-independent-labels/compare-labels.py \
+  --expected-dir article/evidence/experiments/kind/r10-independent-labels/expected-findings \
+  --findings-json article/evidence/experiments/kind/r10-independent-labels/r10-checker-observations.json \
+  --output article/evidence/experiments/kind/r10-independent-labels/results-summary.json
 ```

@@ -1,7 +1,7 @@
 # R06 Helm Static Baselines
 
 This package runs static analysis baselines on the rendered Helm corpus from
-`experiments/helm/r05-realistic-workloads`.
+`article/evidence/experiments/helm/r05-realistic-workloads`.
 
 ## Scope
 
@@ -27,7 +27,7 @@ manifests and provides a reproducible input for later manual or expert labeling.
 From the repository root:
 
 ```bash
-python3 experiments/helm/r06-static-baselines/run_helm_static_baselines.py
+python3 article/evidence/experiments/helm/r06-static-baselines/run_helm_static_baselines.py
 ```
 
 The runner uses the newest `r05-realistic-workloads/results/*` directory unless

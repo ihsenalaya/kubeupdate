@@ -1,0 +1,330 @@
+# command: kubectl -n kubeupgrade-guardian-system get upgradeplan/kind-assessment-plan -o json
+{
+    "apiVersion": "upgrade.guardian.io/v1alpha1",
+    "kind": "UpgradePlan",
+    "metadata": {
+        "creationTimestamp": "2026-06-18T14:04:15Z",
+        "generation": 1,
+        "name": "kind-assessment-plan",
+        "namespace": "kubeupgrade-guardian-system",
+        "ownerReferences": [
+            {
+                "apiVersion": "upgrade.guardian.io/v1alpha1",
+                "blockOwnerDeletion": true,
+                "controller": true,
+                "kind": "UpgradeAssessment",
+                "name": "kind-assessment",
+                "uid": "14a48cec-ea64-4b77-9797-0d541af759d2"
+            }
+        ],
+        "resourceVersion": "2863",
+        "uid": "1a5d1409-1d44-43bc-859d-aeb64cd08cc7"
+    },
+    "spec": {
+        "assessmentRef": {
+            "name": "kind-assessment",
+            "namespace": "kubeupgrade-guardian-system"
+        },
+        "blockingFindings": [
+            {
+                "category": "Capacity",
+                "classification": {
+                    "matchedRule": "DEFAULT_BLOCKING",
+                    "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+                    "status": "Blocking"
+                },
+                "id": "CAPACITY_DRAIN_RISK_ONE_NODE_LOSS",
+                "message": "Cluster may not have enough requested capacity headroom to tolerate one worker node loss.",
+                "recommendation": "Add capacity or reduce requests before upgrade. Estimated remaining capacity after one-node loss: 0m CPU.",
+                "resource": {},
+                "severity": "High",
+                "type": "CAPACITY_DRAIN_RISK"
+            },
+            {
+                "category": "ReadinessProbes",
+                "classification": {
+                    "matchedRule": "DEFAULT_BLOCKING",
+                    "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+                    "status": "Blocking"
+                },
+                "id": "MISSING_READINESS_PROBE_UPGRADE_LAB_DEPLOYMENT_SINGLE_REPLICA_API_APP",
+                "message": "Container app in Deployment upgrade-lab/single-replica-api has no readinessProbe.",
+                "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "single-replica-api",
+                    "namespace": "upgrade-lab"
+                },
+                "severity": "Medium",
+                "type": "MISSING_READINESS_PROBE"
+            },
+            {
+                "category": "Observability",
+                "classification": {
+                    "matchedRule": "DEFAULT_BLOCKING",
+                    "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+                    "status": "Blocking"
+                },
+                "id": "OBSERVABILITY_GAP_NAMESPACE",
+                "message": "No monitoring, prometheus, or observability namespace found.",
+                "recommendation": "Install or validate monitoring coverage before upgrade.",
+                "resource": {},
+                "severity": "Medium",
+                "type": "OBSERVABILITY_GAP"
+            },
+            {
+                "category": "Observability",
+                "classification": {
+                    "matchedRule": "DEFAULT_BLOCKING",
+                    "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+                    "status": "Blocking"
+                },
+                "id": "OBSERVABILITY_GAP_PROMETHEUS_CRD",
+                "message": "Prometheus CRD not detected; upgrade observability validation may be incomplete.",
+                "recommendation": "Install or validate monitoring coverage before upgrade.",
+                "resource": {},
+                "severity": "Low",
+                "type": "OBSERVABILITY_GAP"
+            },
+            {
+                "category": "PDB",
+                "classification": {
+                    "matchedRule": "DEFAULT_BLOCKING",
+                    "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+                    "status": "Blocking"
+                },
+                "id": "PDB_BLOCKING_RISK_UPGRADE_LAB_SINGLE_REPLICA_API_DEPLOYMENT_SINGLE_REPLICA_API_MINAVAILABLE",
+                "message": "PDB upgrade-lab/single-replica-api may block disruption for Deployment upgrade-lab/single-replica-api.",
+                "recommendation": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+                "resource": {
+                    "apiVersion": "policy/v1",
+                    "kind": "PodDisruptionBudget",
+                    "name": "single-replica-api",
+                    "namespace": "upgrade-lab"
+                },
+                "severity": "Critical",
+                "type": "PDB_BLOCKING_RISK"
+            },
+            {
+                "category": "PolicyRisk",
+                "classification": {
+                    "matchedRule": "DEFAULT_BLOCKING",
+                    "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+                    "status": "Blocking"
+                },
+                "id": "POLICY_RISK_UPGRADE_LAB_DEPLOYMENT_SINGLE_REPLICA_API_RUNASNONROOT_ABSENT_APP",
+                "message": "Deployment upgrade-lab/single-replica-api may violate restricted policy: runAsNonRoot absent.",
+                "recommendation": "Adjust the pod security context or namespace policy before upgrade.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "single-replica-api",
+                    "namespace": "upgrade-lab"
+                },
+                "severity": "High",
+                "type": "POLICY_RISK"
+            },
+            {
+                "category": "PolicyRisk",
+                "classification": {
+                    "matchedRule": "DEFAULT_BLOCKING",
+                    "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+                    "status": "Blocking"
+                },
+                "id": "POLICY_RISK_UPGRADE_LAB_RESTRICTED",
+                "message": "Namespace upgrade-lab enforces Pod Security restricted.",
+                "recommendation": "Validate all workloads in this namespace against the restricted Pod Security profile before upgrade.",
+                "resource": {
+                    "apiVersion": "v1",
+                    "kind": "Namespace",
+                    "name": "upgrade-lab"
+                },
+                "severity": "Medium",
+                "type": "POLICY_RISK"
+            },
+            {
+                "category": "WorkloadAvailability",
+                "classification": {
+                    "matchedRule": "DEFAULT_BLOCKING",
+                    "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+                    "status": "Blocking"
+                },
+                "id": "WORKLOAD_AVAILABILITY_RISK_UPGRADE_LAB_DEPLOYMENT_SINGLE_REPLICA_API",
+                "message": "Deployment upgrade-lab/single-replica-api has fewer than 2 replicas.",
+                "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "single-replica-api",
+                    "namespace": "upgrade-lab"
+                },
+                "severity": "High",
+                "type": "WORKLOAD_AVAILABILITY_RISK"
+            }
+        ],
+        "classificationSummary": {
+            "blocking": 8,
+            "total": 8
+        },
+        "decision": "DoNotUpgrade",
+        "rawSummary": {
+            "critical": 1,
+            "high": 3,
+            "low": 1,
+            "medium": 3,
+            "totalFindings": 8
+        },
+        "recommendedOrder": [
+            "fix-critical-blockers",
+            "review-accepted-risks",
+            "review-provider-managed-risks",
+            "execute-version-upgrade-path",
+            "validate-observability",
+            "proceed-with-controlled-upgrade"
+        ],
+        "requiredActions": [
+            {
+                "action": "Add capacity or reduce requests before upgrade. Estimated remaining capacity after one-node loss: 0m CPU.",
+                "category": "Capacity",
+                "evidenceRefs": [
+                    "CAPACITY_DRAIN_RISK_EVIDENCE_ONE_NODE_LOSS"
+                ],
+                "id": "remediate-capacity-drain-risk-one-node-loss",
+                "resource": {},
+                "severity": "High"
+            },
+            {
+                "action": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+                "category": "ReadinessProbes",
+                "evidenceRefs": [
+                    "MISSING_READINESS_PROBE_EVIDENCE_UPGRADE_LAB_DEPLOYMENT_SINGLE_REPLICA_API_APP"
+                ],
+                "id": "remediate-missing-readiness-probe-upgrade-lab-deployment-single-replica-api-app",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "single-replica-api",
+                    "namespace": "upgrade-lab"
+                },
+                "severity": "Medium"
+            },
+            {
+                "action": "Install or validate monitoring coverage before upgrade.",
+                "category": "Observability",
+                "id": "remediate-observability-gap-namespace",
+                "resource": {},
+                "severity": "Medium"
+            },
+            {
+                "action": "Install or validate monitoring coverage before upgrade.",
+                "category": "Observability",
+                "id": "remediate-observability-gap-prometheus-crd",
+                "resource": {},
+                "severity": "Low"
+            },
+            {
+                "action": "Increase workload replicas or relax the PodDisruptionBudget before upgrade.",
+                "category": "PDB",
+                "evidenceRefs": [
+                    "PDB_BLOCKING_RISK_EVIDENCE_UPGRADE_LAB_SINGLE_REPLICA_API_SINGLE_REPLICA_API"
+                ],
+                "id": "remediate-pdb-blocking-risk-upgrade-lab-single-replica-api-deployment-single-replica-api-minavailable",
+                "resource": {
+                    "apiVersion": "policy/v1",
+                    "kind": "PodDisruptionBudget",
+                    "name": "single-replica-api",
+                    "namespace": "upgrade-lab"
+                },
+                "severity": "Critical"
+            },
+            {
+                "action": "Adjust the pod security context or namespace policy before upgrade.",
+                "category": "PolicyRisk",
+                "evidenceRefs": [
+                    "POLICY_RISK_EVIDENCE_UPGRADE_LAB_DEPLOYMENT_SINGLE_REPLICA_API_APP"
+                ],
+                "id": "remediate-policy-risk-upgrade-lab-deployment-single-replica-api-runasnonroot-absent-app",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "single-replica-api",
+                    "namespace": "upgrade-lab"
+                },
+                "severity": "High"
+            },
+            {
+                "action": "Validate all workloads in this namespace against the restricted Pod Security profile before upgrade.",
+                "category": "PolicyRisk",
+                "evidenceRefs": [
+                    "POLICY_RISK_EVIDENCE_UPGRADE_LAB_RESTRICTED"
+                ],
+                "id": "remediate-policy-risk-upgrade-lab-restricted",
+                "resource": {
+                    "apiVersion": "v1",
+                    "kind": "Namespace",
+                    "name": "upgrade-lab"
+                },
+                "severity": "Medium"
+            },
+            {
+                "action": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+                "category": "WorkloadAvailability",
+                "evidenceRefs": [
+                    "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_UPGRADE_LAB_DEPLOYMENT_SINGLE_REPLICA_API"
+                ],
+                "id": "remediate-workload-availability-risk-upgrade-lab-deployment-single-replica-api",
+                "resource": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "name": "single-replica-api",
+                    "namespace": "upgrade-lab"
+                },
+                "severity": "High"
+            }
+        ],
+        "riskLevel": "Critical",
+        "score": 68,
+        "sourceVersion": "1.34",
+        "summary": {
+            "critical": 1,
+            "high": 3,
+            "low": 1,
+            "medium": 3,
+            "totalFindings": 8
+        },
+        "targetVersion": "1.35",
+        "upgradePath": [
+            {
+                "from": "1.34",
+                "phases": [
+                    {
+                        "description": "Verify blocking findings, accepted risks, provider-managed risks, capacity, observability, and backups before this version hop.",
+                        "name": "prechecks"
+                    },
+                    {
+                        "description": "Upgrade the Kubernetes control plane first.",
+                        "name": "control-plane-upgrade"
+                    },
+                    {
+                        "description": "Validate API server health, admission behavior, Argo CD sync state, and core platform controllers.",
+                        "name": "post-control-plane-validation"
+                    },
+                    {
+                        "description": "Upgrade system node pools with controlled drain and workload validation.",
+                        "name": "system-nodepool-upgrade"
+                    },
+                    {
+                        "description": "Upgrade application node pools by wave, starting with the lowest-risk workloads.",
+                        "name": "user-nodepool-upgrade"
+                    },
+                    {
+                        "description": "Validate application readiness, SLO dashboards, alerts, and rollback criteria before continuing.",
+                        "name": "application-validation"
+                    }
+                ],
+                "to": "1.35"
+            }
+        ]
+    }
+}

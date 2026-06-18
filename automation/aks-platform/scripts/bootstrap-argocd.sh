@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cluster_name="$(terraform output -raw cluster_name)"
-resource_group_name="$(terraform output -raw resource_group_name)"
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+repo_root="$(cd "${script_dir}/.." && pwd)"
 
-bootstrap_dir="build/bootstrap"
+cluster_name="$(terraform -chdir="${repo_root}" output -raw cluster_name)"
+resource_group_name="$(terraform -chdir="${repo_root}" output -raw resource_group_name)"
+
+bootstrap_dir="${repo_root}/build/bootstrap"
 az_extension_dir="$(mktemp -d)"
 trap 'rm -rf "${az_extension_dir}"' EXIT
 

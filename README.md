@@ -1,8 +1,15 @@
 # AKS Private Open Source Platform MVP
 
+## Structure
+
+- `automation/aks-platform/`: Terraform, scripts de deploiement, manifests GitOps et application Upgrade Lab.
+- `operator/source/kubeupgrade-guardian-operator/`: code Go de l'operateur.
+- `operator/helm/kubeupgrade-guardian-operator/`: chart Helm local de l'operateur.
+- `article/`: manuscrit, PDF et preuves experimentales sous `article/evidence/`.
+
 Terraform cree une plateforme AKS privee en West Europe avec Azure CNI Overlay, Cilium, Workload Identity, AKS Node Auto-Provisioning pour Karpenter, un node systeme initial, un Istio ingress interne et une VM Ubuntu jump host accessible en SSH.
 
-Argo CD est bootstrappe par `az aks command invoke`, puis l'application racine `kubeupdate-root` synchronise le chemin `gitops/argocd` du repository GitHub `https://github.com/ihsenalaya/kubeupdate.git`. Les manifests GitOps sont generes par Terraform pour reprendre les IDs Azure sans mettre de secrets dans Git.
+Argo CD est bootstrappe par `az aks command invoke`, puis l'application racine `kubeupdate-root` synchronise le chemin distant `gitops/argocd` du repository GitHub `https://github.com/ihsenalaya/kubeupdate.git`. Les manifests GitOps locaux sont generes sous `automation/aks-platform/gitops/` par Terraform pour reprendre les IDs Azure sans mettre de secrets dans Git.
 
 Add-ons installes par Argo CD :
 
@@ -39,20 +46,20 @@ Upgrade Lab utilise des services PaaS Azure provisionnes par Terraform :
 ## Deploiement
 
 ```bash
-./scripts/validate.sh
-./scripts/apply.sh
+automation/aks-platform/scripts/validate.sh
+automation/aks-platform/scripts/apply.sh
 ```
 
-`./scripts/apply.sh` applique Terraform, pousse `gitops/argocd/platform.yaml` vers `kubeupdate` depuis un checkout local ignore dans `.local/gitops-repo`, bootstrappe Argo CD via `az aks command invoke`, puis lance les controles de sante.
+`automation/aks-platform/scripts/apply.sh` applique Terraform depuis `automation/aks-platform`, pousse `automation/aks-platform/gitops/argocd/platform.yaml` vers `kubeupdate` depuis un checkout local ignore dans `automation/aks-platform/.local/gitops-repo`, bootstrappe Argo CD via `az aks command invoke`, puis lance les controles de sante.
 
-Le meme script construit et pousse les images operator/lab dans l'ACR Terraform, package les charts Helm en OCI dans ACR, puis synchronise tout le dossier `gitops/` vers le repository GitOps.
+Le meme script construit et pousse les images operator/lab dans l'ACR Terraform, package les charts Helm en OCI dans ACR, puis synchronise `automation/aks-platform/gitops/` et le chart `operator/helm/kubeupgrade-guardian-operator/` vers le repository GitOps.
 
 La couche applicative utilise des services PaaS Azure publics limites a l'IP NAT sortante AKS par firewall. Les secrets consommes par les pods ne sont jamais stockes dans Git: Terraform les ecrit dans Key Vault, External Secrets les synchronise dans `upgrade-lab`, puis les microservices les lisent via variables d'environnement ou fichier monte pour le certificat.
 
 La VM jump host est accessible en SSH direct. Les credentials generes sont dans un fichier local ignore par Git :
 
 ```bash
-cat secrets/jump-host-credentials.txt
+cat automation/aks-platform/secrets/jump-host-credentials.txt
 ssh ihsenadmin@<jump-host-public-ip>
 ```
 
@@ -72,14 +79,14 @@ Les dashboards sont exposes uniquement via l'Istio internal load balancer `10.42
 ## Verification
 
 ```bash
-./scripts/post-apply-check.sh
-terraform output
+automation/aks-platform/scripts/post-apply-check.sh
+terraform -chdir=automation/aks-platform output
 ```
 
 ## Destruction
 
 ```bash
-./scripts/destroy.sh
+automation/aks-platform/scripts/destroy.sh
 ```
 
 ## Notes Production

@@ -2,11 +2,25 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+
+find_repo_root() {
+  local dir="$1"
+  while [[ "${dir}" != "/" ]]; do
+    if [[ -d "${dir}/.git" ]]; then
+      printf '%s\n' "${dir}"
+      return 0
+    fi
+    dir="$(dirname "${dir}")"
+  done
+  return 1
+}
+
+ROOT_DIR="$(find_repo_root "${SCRIPT_DIR}")"
+EXPERIMENTS_DIR="${ROOT_DIR}/article/evidence/experiments"
 
 CLUSTER_NAME="${1:-$(kubectl config current-context)}"
 TARGET_VERSION="${2:-1.35}"
-ASSESSMENT_FILE="${3:-${ROOT_DIR}/experiments/aks/r03-aks-medium/assessment.yaml}"
+ASSESSMENT_FILE="${3:-${EXPERIMENTS_DIR}/aks/r03-aks-medium/assessment.yaml}"
 TIMEOUT_SECONDS="${TIMEOUT_SECONDS:-300}"
 
 if [[ ! -f "${ASSESSMENT_FILE}" ]]; then
@@ -15,7 +29,7 @@ if [[ ! -f "${ASSESSMENT_FILE}" ]]; then
 fi
 
 TIMESTAMP="$(date -u +%Y%m%dT%H%M%SZ)"
-RESULT_DIR="${ROOT_DIR}/experiments/aks/results/${CLUSTER_NAME}/${TIMESTAMP}"
+RESULT_DIR="${EXPERIMENTS_DIR}/aks/results/${CLUSTER_NAME}/${TIMESTAMP}"
 mkdir -p "${RESULT_DIR}"
 
 RENDERED="${RESULT_DIR}/assessment-rendered.yaml"

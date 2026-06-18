@@ -79,6 +79,13 @@ def command_output(cmd):
     }
 
 
+def find_repo_root(start):
+    for path in (start, *start.parents):
+        if (path / ".git").exists():
+            return path
+    return start
+
+
 def command_text(cmd):
     result = command_output(cmd)
     text = "\n".join(
@@ -525,13 +532,13 @@ def write_summary(result_dir, metadata, metrics, negative_observations):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--operator-repo", default="../kubeupgrade-guardian-operator")
+    parser.add_argument("--operator-repo", default="operator/source/kubeupgrade-guardian-operator")
     parser.add_argument("--restore-context", default=os.environ.get("KUG_RESTORE_CONTEXT", ""))
     parser.add_argument("--keep-cluster", action="store_true")
     args = parser.parse_args()
 
-    root = Path(__file__).resolve().parents[3]
     benchmark_dir = Path(__file__).resolve().parent
+    root = find_repo_root(benchmark_dir)
     manifest_dir = benchmark_dir / "manifests"
     operator_repo = (root / args.operator_repo).resolve()
     if not operator_repo.exists():

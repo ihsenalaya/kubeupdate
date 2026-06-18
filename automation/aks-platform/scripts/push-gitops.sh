@@ -1,14 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-repo_url="$(terraform output -raw gitops_repo_url)"
-target_revision="$(terraform output -raw gitops_target_revision)"
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+repo_root="$(cd "${script_dir}/.." && pwd)"
+workspace_root="$(cd "${repo_root}/../.." && pwd)"
+
+repo_url="$(terraform -chdir="${repo_root}" output -raw gitops_repo_url)"
+target_revision="$(terraform -chdir="${repo_root}" output -raw gitops_target_revision)"
 gitops_dir="gitops"
-gitops_file="gitops/argocd/platform.yaml"
-gitops_checkout_dir="${GITOPS_CHECKOUT_DIR:-.local/gitops-repo}"
+gitops_file="${repo_root}/gitops/argocd/platform.yaml"
+gitops_checkout_dir="${GITOPS_CHECKOUT_DIR:-${repo_root}/.local/gitops-repo}"
+operator_chart_dir="${OPERATOR_CHART_DIR:-${workspace_root}/operator/helm/kubeupgrade-guardian-operator}"
 
 if [[ ! -f "${gitops_file}" ]]; then
   echo "Missing ${gitops_file}; run terraform apply first."
+  exit 1
+fi
+
+if [[ ! -d "${operator_chart_dir}" ]]; then
+  echo "Missing operator chart directory: ${operator_chart_dir}"
   exit 1
 fi
 
@@ -50,7 +60,9 @@ if git -C "${gitops_checkout_dir}" show-ref --verify --quiet "refs/remotes/origi
 fi
 
 mkdir -p "${gitops_checkout_dir}/${gitops_dir}"
-rsync -a --delete "${gitops_dir}/" "${gitops_checkout_dir}/${gitops_dir}/"
+rsync -a --delete "${repo_root}/${gitops_dir}/" "${gitops_checkout_dir}/${gitops_dir}/"
+mkdir -p "${gitops_checkout_dir}/${gitops_dir}/charts/kubeupgrade-guardian-operator"
+rsync -a --delete "${operator_chart_dir}/" "${gitops_checkout_dir}/${gitops_dir}/charts/kubeupgrade-guardian-operator/"
 
 git -C "${gitops_checkout_dir}" add -f "${gitops_dir}"
 

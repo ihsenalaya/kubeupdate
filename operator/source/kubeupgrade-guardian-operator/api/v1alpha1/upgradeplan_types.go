@@ -22,13 +22,22 @@ import (
 
 // UpgradePlanSpec defines the desired state of UpgradePlan
 type UpgradePlanSpec struct {
-	AssessmentRef    AssessmentReference `json:"assessmentRef"`
-	Decision         Decision            `json:"decision"`
-	RiskLevel        RiskLevel           `json:"riskLevel"`
-	Score            int                 `json:"score,omitempty"`
-	Summary          FindingSummary      `json:"summary,omitempty"`
-	RequiredActions  []RequiredAction    `json:"requiredActions,omitempty"`
-	RecommendedOrder []string            `json:"recommendedOrder,omitempty"`
+	AssessmentRef         AssessmentReference    `json:"assessmentRef"`
+	Decision              Decision               `json:"decision"`
+	RiskLevel             RiskLevel              `json:"riskLevel"`
+	Score                 int                    `json:"score,omitempty"`
+	Summary               FindingSummary         `json:"summary,omitempty"`
+	RawSummary            FindingSummary         `json:"rawSummary,omitempty"`
+	ClassificationSummary ClassificationSummary  `json:"classificationSummary,omitempty"`
+	SourceVersion         string                 `json:"sourceVersion,omitempty"`
+	TargetVersion         string                 `json:"targetVersion,omitempty"`
+	UpgradePath           []UpgradePathStep      `json:"upgradePath,omitempty"`
+	RequiredActions       []RequiredAction       `json:"requiredActions,omitempty"`
+	BlockingFindings      []ClassifiedFindingRef `json:"blockingFindings,omitempty"`
+	AcceptedRisks         []ClassifiedFindingRef `json:"acceptedRisks,omitempty"`
+	ProviderManagedRisks  []ClassifiedFindingRef `json:"providerManagedRisks,omitempty"`
+	InformationalFindings []ClassifiedFindingRef `json:"informationalFindings,omitempty"`
+	RecommendedOrder      []string               `json:"recommendedOrder,omitempty"`
 }
 
 // UpgradePlanStatus defines the observed state of UpgradePlan

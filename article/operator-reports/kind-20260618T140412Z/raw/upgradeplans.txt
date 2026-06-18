@@ -1,0 +1,3 @@
+# command: kubectl -n kubeupgrade-guardian-system get upgradeplan -o wide
+NAME                   AGE
+kind-assessment-plan   4s

@@ -16,7 +16,7 @@ multiple `UpgradeAssessment` variants:
 - full set without admission-webhook checks;
 - full set without policy-risk checks.
 
-Each variant is scored against `experiments/kind/r01-benchmark/ground-truth.json`
+Each variant is scored against `article/evidence/experiments/kind/r01-benchmark/ground-truth.json`
 using the same matching semantics as the R01 benchmark runner.
 
 ## Limits
@@ -31,8 +31,8 @@ on the individual checker families rather than on one monolithic detector.
 From the repository root:
 
 ```bash
-python3 experiments/kind/r04-ablation-smoke/run_ablation_smoke.py \
-  --operator-repo ../kubeupgrade-guardian-operator
+python3 article/evidence/experiments/kind/r04-ablation-smoke/run_ablation_smoke.py \
+  --operator-repo operator/source/kubeupgrade-guardian-operator
 ```
 
 The runner writes a timestamped directory under `results/` with raw

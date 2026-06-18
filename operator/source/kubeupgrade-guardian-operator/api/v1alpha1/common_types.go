@@ -27,6 +27,16 @@ const (
 	AssessmentModeReadOnly AssessmentMode = "ReadOnly"
 )
 
+// AssessmentProfile tunes how non-universal findings are interpreted.
+// +kubebuilder:validation:Enum=lab;staging;production
+type AssessmentProfile string
+
+const (
+	AssessmentProfileLab        AssessmentProfile = "lab"
+	AssessmentProfileStaging    AssessmentProfile = "staging"
+	AssessmentProfileProduction AssessmentProfile = "production"
+)
+
 // AssessmentPhase describes the observed lifecycle of an assessment.
 // +kubebuilder:validation:Enum=Pending;Running;Completed;Failed
 type AssessmentPhase string
@@ -61,6 +71,17 @@ const (
 	DecisionAssessmentIncomplete Decision = "AssessmentIncomplete"
 )
 
+// FindingClassificationStatus states how a finding is used for decisioning.
+// +kubebuilder:validation:Enum=Blocking;AcceptedRisk;ProviderManaged;Informational
+type FindingClassificationStatus string
+
+const (
+	FindingClassificationBlocking        FindingClassificationStatus = "Blocking"
+	FindingClassificationAcceptedRisk    FindingClassificationStatus = "AcceptedRisk"
+	FindingClassificationProviderManaged FindingClassificationStatus = "ProviderManaged"
+	FindingClassificationInformational   FindingClassificationStatus = "Informational"
+)
+
 const (
 	FindingTypeRBACAssessmentGap       = "RBAC_ASSESSMENT_GAP"
 	FindingTypeWorkloadAvailability    = "WORKLOAD_AVAILABILITY_RISK"
@@ -83,6 +104,13 @@ type ResourceRef struct {
 	Name       string `json:"name,omitempty"`
 }
 
+// FindingClassification records the rule that determined whether a finding is blocking.
+type FindingClassification struct {
+	Status      FindingClassificationStatus `json:"status"`
+	Reason      string                      `json:"reason,omitempty"`
+	MatchedRule string                      `json:"matchedRule,omitempty"`
+}
+
 // Evidence is an observable fact collected from the cluster.
 type Evidence struct {
 	ID          string            `json:"id"`
@@ -93,14 +121,15 @@ type Evidence struct {
 
 // Finding is a risk or an assessment gap backed by observable evidence.
 type Finding struct {
-	ID             string       `json:"id"`
-	Type           string       `json:"type"`
-	Severity       RiskLevel    `json:"severity"`
-	Category       string       `json:"category"`
-	Resource       *ResourceRef `json:"resource,omitempty"`
-	Message        string       `json:"message"`
-	Evidence       []Evidence   `json:"evidence,omitempty"`
-	Recommendation string       `json:"recommendation,omitempty"`
+	ID             string                 `json:"id"`
+	Type           string                 `json:"type"`
+	Severity       RiskLevel              `json:"severity"`
+	Category       string                 `json:"category"`
+	Resource       *ResourceRef           `json:"resource,omitempty"`
+	Message        string                 `json:"message"`
+	Evidence       []Evidence             `json:"evidence,omitempty"`
+	Recommendation string                 `json:"recommendation,omitempty"`
+	Classification *FindingClassification `json:"classification,omitempty"`
 }
 
 // RequiredAction is a recommended non-mutating remediation step in an UpgradePlan.
@@ -111,6 +140,18 @@ type RequiredAction struct {
 	Resource     ResourceRef `json:"resource,omitempty"`
 	Action       string      `json:"action"`
 	EvidenceRefs []string    `json:"evidenceRefs,omitempty"`
+}
+
+// ClassifiedFindingRef is a compact finding reference published in an UpgradePlan.
+type ClassifiedFindingRef struct {
+	ID             string                `json:"id"`
+	Type           string                `json:"type,omitempty"`
+	Severity       RiskLevel             `json:"severity,omitempty"`
+	Category       string                `json:"category,omitempty"`
+	Resource       ResourceRef           `json:"resource,omitempty"`
+	Message        string                `json:"message,omitempty"`
+	Recommendation string                `json:"recommendation,omitempty"`
+	Classification FindingClassification `json:"classification"`
 }
 
 // AssessmentReference points an UpgradePlan back to its source UpgradeAssessment.
@@ -124,6 +165,13 @@ type PlanReference struct {
 	Name string `json:"name"`
 }
 
+// ArtifactReference points an UpgradeAssessment status to the generated human-readable artifact.
+type ArtifactReference struct {
+	Name      string `json:"name"`
+	Namespace string `json:"namespace,omitempty"`
+	Kind      string `json:"kind,omitempty"`
+}
+
 // FindingSummary stores aggregate finding counts.
 type FindingSummary struct {
 	TotalFindings int `json:"totalFindings"`
@@ -132,6 +180,28 @@ type FindingSummary struct {
 	Medium        int `json:"medium"`
 	Low           int `json:"low"`
 	Info          int `json:"info,omitempty"`
+}
+
+// ClassificationSummary stores aggregate counts by finding classification.
+type ClassificationSummary struct {
+	Total           int `json:"total"`
+	Blocking        int `json:"blocking"`
+	AcceptedRisk    int `json:"acceptedRisk,omitempty"`
+	ProviderManaged int `json:"providerManaged,omitempty"`
+	Informational   int `json:"informational,omitempty"`
+}
+
+// UpgradePhase describes a non-executing step in the recommended upgrade chronology.
+type UpgradePhase struct {
+	Name        string `json:"name"`
+	Description string `json:"description,omitempty"`
+}
+
+// UpgradePathStep describes one Kubernetes minor-version hop.
+type UpgradePathStep struct {
+	From   string         `json:"from"`
+	To     string         `json:"to"`
+	Phases []UpgradePhase `json:"phases,omitempty"`
 }
 
 // Condition helpers.

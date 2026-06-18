@@ -44,7 +44,7 @@ def write_json(path, data):
 
 
 def latest_r05_result(root, requested):
-    base = root / "experiments" / "helm" / "r05-realistic-workloads" / "results"
+    base = root / "article" / "evidence" / "experiments" / "helm" / "r05-realistic-workloads" / "results"
     if requested:
         result = base / requested
         if not result.exists():
@@ -243,13 +243,13 @@ def main():
     parser.add_argument("--restore-context", default=os.environ.get("KUG_RESTORE_CONTEXT", ""))
     args = parser.parse_args()
 
-    root = Path(__file__).resolve().parents[3]
+    experiment_dir = Path(__file__).resolve().parent
+    root = next((path for path in (experiment_dir, *experiment_dir.parents) if (path / ".git").exists()), experiment_dir)
     r05_result = latest_r05_result(root, args.r05_run_id)
     manifests = sorted((r05_result / "manifests").glob("*.yaml"))
     if not manifests:
         raise SystemExit(f"no manifests found in {r05_result / 'manifests'}")
 
-    experiment_dir = Path(__file__).resolve().parent
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     run_dir = experiment_dir / "results" / run_id
     work_dir = run_dir / "generated"

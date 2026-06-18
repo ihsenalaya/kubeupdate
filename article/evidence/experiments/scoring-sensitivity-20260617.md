@@ -4,8 +4,8 @@ Date: 2026-06-17
 
 Scope: deterministic sensitivity check over archived `UpgradeAssessment` findings from:
 
-- Kind run `experiments/kind/r01-benchmark/results/20260617T091703Z`
-- AKS run `experiments/aks/r02-managed-validation/results/20260617T101556Z`
+- Kind run `article/evidence/experiments/kind/r01-benchmark/results/20260617T091703Z`
+- AKS run `article/evidence/experiments/aks/r02-managed-validation/results/20260617T101556Z`
 
 This is not a production calibration study. It checks whether the final decision changes under simple alternative severity weights.
 

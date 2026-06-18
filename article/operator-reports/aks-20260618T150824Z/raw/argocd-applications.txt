@@ -1,0 +1,22 @@
+NAME                            SYNC STATUS   HEALTH STATUS
+cert-manager                    Synced        Healthy
+external-dns                    Synced        Healthy
+external-secrets                Synced        Healthy
+istio-base                      Synced        Healthy
+istio-ingress                   Synced        Healthy
+istiod                          Synced        Healthy
+jaeger                          Synced        Healthy
+keda                            Synced        Healthy
+kubecost                        Synced        Healthy
+kubeupdate-root                 Synced        Healthy
+kubeupgrade-guardian-operator   Synced        Healthy
+kyverno                         Synced        Healthy
+loki                            Synced        Healthy
+monitoring                      Synced        Healthy
+neuvector                       Synced        Healthy
+opentelemetry-collector         Synced        Healthy
+platform-config                 Synced        Degraded
+promtail                        Synced        Healthy
+upgrade-lab                     Synced        Healthy
+velero                          Synced        Healthy
+

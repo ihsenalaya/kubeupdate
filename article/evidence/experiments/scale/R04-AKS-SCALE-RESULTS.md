@@ -2,7 +2,7 @@
 
 Date: 2026-06-17
 
-This run used `aks-medium` with Kubernetes `1.34.8`, AKS cluster autoscaler enabled on the default node pool (`min=3`, `max=8`), and the patched local controller from `kubeupgrade-guardian-operator`. The controller bounds `UpgradeAssessment.status.findings` and generated `UpgradePlan` actions to 200 entries while preserving full aggregate counts in `status.summary`.
+This run used `aks-medium` with Kubernetes `1.34.8`, AKS cluster autoscaler enabled on the default node pool (`min=3`, `max=8`), and the patched local controller from `operator/source/kubeupgrade-guardian-operator`. The controller bounds `UpgradeAssessment.status.findings` and generated `UpgradePlan` actions to 200 entries while preserving full aggregate counts in `status.summary`.
 
 ## Result Summary
 
@@ -13,7 +13,7 @@ This run used `aks-medium` with Kubernetes `1.34.8`, AKS cluster autoscaler enab
 | 5,000 | 10 | 10 | 13.5s | 17.3s | 327.535 MiB | 4 | Completed with bounded status output. |
 | 10,000 | 10 | 10 | 19.5s | 37.0s | 726.073 MiB | 3 | Completed with bounded status output. |
 
-Aggregated metrics are in `experiments/scale/r04-scalability-summary.json`. Raw per-run files are under `experiments/scale/r04-scale-*/run-*`.
+Aggregated metrics are in `article/evidence/experiments/scale/r04-scalability-summary.json`. Raw per-run files are under `article/evidence/experiments/scale/r04-scale-*/run-*`.
 
 ## Truncation Evidence
 
@@ -37,7 +37,7 @@ SIZES="100 1000 5000 10000" \
 RUNS=10 \
 LOCAL_CONTROLLER_PID=<controller-pid> \
 CONTROLLER_METRICS_URL=http://127.0.0.1:18084/metrics \
-experiments/scale/run-scale-study.sh
+article/evidence/experiments/scale/run-scale-study.sh
 
 # Clean per-run mode used for the 100-pair rerun:
 KUBECONFIG=/home/ihsen/.kube/config-aks-b \
@@ -48,7 +48,7 @@ CLEAN_BEFORE_RUN=true \
 CLEAN_AFTER_RUN=true \
 LOCAL_CONTROLLER_PID=<controller-pid> \
 CONTROLLER_METRICS_URL=http://127.0.0.1:18084/metrics \
-experiments/scale/run-scale-study.sh
+article/evidence/experiments/scale/run-scale-study.sh
 
-python3 experiments/scale/aggregate-results.py
+python3 article/evidence/experiments/scale/aggregate-results.py
 ```

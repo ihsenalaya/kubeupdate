@@ -47,8 +47,8 @@ From the repository root:
 
 ```bash
 PATH=/tmp/kug-r01-tools/bin:$PATH \
-python3 experiments/kind/r01-benchmark/run_kind_benchmark.py \
-  --operator-repo ../kubeupgrade-guardian-operator \
+python3 article/evidence/experiments/kind/r01-benchmark/run_kind_benchmark.py \
+  --operator-repo operator/source/kubeupgrade-guardian-operator \
   --restore-context aks-ihsen-mvp-we-admin
 ```
 

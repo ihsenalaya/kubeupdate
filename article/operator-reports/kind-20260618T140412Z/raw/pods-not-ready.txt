@@ -1,0 +1,2 @@
+# command: kubectl get pods -A --field-selector=status.phase\!=Running\,status.phase\!=Succeeded -o wide
+No resources found

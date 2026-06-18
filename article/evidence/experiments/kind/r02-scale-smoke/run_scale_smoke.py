@@ -541,15 +541,15 @@ def write_summary(result_dir, metadata, rows, aggregates):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--operator-repo", default="../kubeupgrade-guardian-operator")
+    parser.add_argument("--operator-repo", default="operator/source/kubeupgrade-guardian-operator")
     parser.add_argument("--sizes", default="100,500,1000")
     parser.add_argument("--repetitions", type=int, default=1)
     parser.add_argument("--keep-cluster", action="store_true")
     parser.add_argument("--restore-context", default=os.environ.get("KUG_RESTORE_CONTEXT", ""))
     args = parser.parse_args()
 
-    root = Path(__file__).resolve().parents[3]
     experiment_dir = Path(__file__).resolve().parent
+    root = next((path for path in (experiment_dir, *experiment_dir.parents) if (path / ".git").exists()), experiment_dir)
     operator_repo = (root / args.operator_repo).resolve()
     if not operator_repo.exists():
         raise SystemExit(f"operator repo not found: {operator_repo}")

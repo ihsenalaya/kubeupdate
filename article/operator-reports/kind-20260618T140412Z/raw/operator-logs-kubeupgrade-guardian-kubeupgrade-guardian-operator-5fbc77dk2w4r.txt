@@ -1,0 +1,501 @@
+# command: kubectl -n kubeupgrade-guardian-system logs kubeupgrade-guardian-kubeupgrade-guardian-operator-5fbc77dk2w4r --all-containers --tail=500
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:17Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "b5f66fb8-1a76-45b8-9ab9-e57741dcdfb1", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:17Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "58f4e4f3-3b36-4ccc-93d5-6fbe91a813a1", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:17Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "58f4e4f3-3b36-4ccc-93d5-6fbe91a813a1", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:17Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "e69f1cec-74bc-49c8-9725-e1e27b102a73", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:17Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "e69f1cec-74bc-49c8-9725-e1e27b102a73", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:17Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "f1b4d043-dbca-45be-997e-5de2b5d6c20f", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:17Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "f1b4d043-dbca-45be-997e-5de2b5d6c20f", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:17Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "48a76ffe-adb0-4a53-8672-c0bb95f247de", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:17Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "48a76ffe-adb0-4a53-8672-c0bb95f247de", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:17Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "a2d2c7a6-6967-4567-acb2-b40d065f5d17", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:17Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "a2d2c7a6-6967-4567-acb2-b40d065f5d17", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:17Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "a92b9b6d-25f8-4992-bdfa-a56a2278636c", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:17Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "a92b9b6d-25f8-4992-bdfa-a56a2278636c", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:17Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "15a72c07-4d58-4c34-a460-953020c970c8", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "15a72c07-4d58-4c34-a460-953020c970c8", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "b4db7b5f-bd78-46b1-88e7-b03fa296a193", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "b4db7b5f-bd78-46b1-88e7-b03fa296a193", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "99675fb5-34de-44bf-ac66-e2e55170e75a", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "99675fb5-34de-44bf-ac66-e2e55170e75a", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "70ab2f30-1353-4e9b-9f15-03e11b0d1bbc", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "70ab2f30-1353-4e9b-9f15-03e11b0d1bbc", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "95015429-1689-4786-ac69-b7d9d7c951c4", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "95015429-1689-4786-ac69-b7d9d7c951c4", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "c7cc32a1-fb94-4787-9c1f-54163ab12160", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "c7cc32a1-fb94-4787-9c1f-54163ab12160", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "6e6ea1e3-f21b-4838-9907-fab1d4440272", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "6e6ea1e3-f21b-4838-9907-fab1d4440272", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "b52bd0ed-65e3-43b9-b592-692b1d3a85e8", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "b52bd0ed-65e3-43b9-b592-692b1d3a85e8", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "c56e65b9-48f9-488c-ba16-8be0e84824b1", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "c56e65b9-48f9-488c-ba16-8be0e84824b1", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "436a6881-92a3-42fa-a23c-cabb6e3d568d", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:18Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "436a6881-92a3-42fa-a23c-cabb6e3d568d", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "53958f13-563e-4d4d-90d2-5dddef6fa3d6", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "53958f13-563e-4d4d-90d2-5dddef6fa3d6", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "5e7b719d-3da5-4af4-8231-c6ad26567511", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "5e7b719d-3da5-4af4-8231-c6ad26567511", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "4f69249a-9563-4672-9996-d1f65bfef425", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "4f69249a-9563-4672-9996-d1f65bfef425", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "804c9542-6f09-4ffd-bb34-f4c1c12386cf", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "804c9542-6f09-4ffd-bb34-f4c1c12386cf", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "a6531935-b5b7-46a4-b1cd-5fdf7b732e6b", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "a6531935-b5b7-46a4-b1cd-5fdf7b732e6b", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "b25f68bb-8097-47e7-ad0e-4fce48b31cfb", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "b25f68bb-8097-47e7-ad0e-4fce48b31cfb", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "e427a379-c5d2-4437-8776-2c0b93cfda73", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "e427a379-c5d2-4437-8776-2c0b93cfda73", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "7d567a03-4b43-4bd6-ab18-2575b1819b64", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "7d567a03-4b43-4bd6-ab18-2575b1819b64", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "25dff7ee-93f7-43f0-bab4-73ce892dcfde", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "25dff7ee-93f7-43f0-bab4-73ce892dcfde", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "145b015d-dce0-4da9-8479-aab6e302381f", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:19Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "145b015d-dce0-4da9-8479-aab6e302381f", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:20Z	ERROR	assessment failed	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "63d4ad94-d705-4cd7-b93d-00a448d4ecbd", "error": "Namespace \"cert-manager\" not found"}
+github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/controller.(*UpgradeAssessmentReconciler).Reconcile
+	/workspace/internal/controller/upgradeassessment_controller.go:89
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Reconcile
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:119
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:316
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227
+2026-06-18T14:04:20Z	ERROR	Reconciler error	{"controller": "upgradeassessment", "controllerGroup": "upgrade.guardian.io", "controllerKind": "UpgradeAssessment", "UpgradeAssessment": {"name":"post-automation-assessment","namespace":"kubeupgrade-guardian-system"}, "namespace": "kubeupgrade-guardian-system", "name": "post-automation-assessment", "reconcileID": "63d4ad94-d705-4cd7-b93d-00a448d4ecbd", "error": "Namespace \"cert-manager\" not found"}
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).reconcileHandler
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:329
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).processNextWorkItem
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:266
+sigs.k8s.io/controller-runtime/pkg/internal/controller.(*Controller).Start.func2.2
+	/go/pkg/mod/sigs.k8s.io/controller-runtime@v0.17.0/pkg/internal/controller/controller.go:227

@@ -1,0 +1,34 @@
+apiVersion: upgrade.guardian.io/v1alpha1
+kind: UpgradeAssessment
+metadata:
+  name: post-automation-assessment
+  namespace: kubeupgrade-guardian-system
+  labels:
+    app.kubernetes.io/managed-by: operator-report-export
+spec:
+  sourceVersion: "1.34"
+  targetVersion: "1.35"
+  profile: production
+  mode: ReadOnly
+  scope:
+    namespaces:
+      exclude:
+        - kube-system
+      include:
+        - cert-manager
+        - external-secrets
+        - istio-ingress
+        - kubeupgrade-guardian-system
+        - kyverno
+        - monitoring
+        - neuvector
+        - upgrade-lab
+  checks:
+    deprecatedApis: true
+    workloadAvailability: true
+    pdb: true
+    readinessProbes: true
+    admissionWebhooks: true
+    policyRisks: true
+    capacity: true
+    observability: true

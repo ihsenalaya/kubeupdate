@@ -28,7 +28,7 @@ hand-written fixtures and realistic public manifests.
 From the repository root:
 
 ```bash
-python3 experiments/helm/r05-realistic-workloads/render_helm_workloads.py
+python3 article/evidence/experiments/helm/r05-realistic-workloads/render_helm_workloads.py
 ```
 
 The runner writes a timestamped directory under `results/` with one manifest per

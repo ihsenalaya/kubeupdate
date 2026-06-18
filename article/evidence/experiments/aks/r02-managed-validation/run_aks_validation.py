@@ -67,6 +67,13 @@ def command_text(cmd):
     return text if text else f"{cmd[0]}: returncode={result.returncode}"
 
 
+def find_repo_root(start):
+    for path in (start, *start.parents):
+        if (path / ".git").exists():
+            return path
+    return start
+
+
 def install_crds(context, operator_repo):
     kubectl(context, ["apply", "-k", str(operator_repo / "config" / "crd")], timeout=120)
     kubectl(
@@ -604,7 +611,7 @@ def write_summary(result_dir, metadata, metrics, negative_observations, process_
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--context", required=True)
-    parser.add_argument("--operator-repo", default="../kubeupgrade-guardian-operator")
+    parser.add_argument("--operator-repo", default="operator/source/kubeupgrade-guardian-operator")
     parser.add_argument("--resource-group", default="")
     parser.add_argument("--cluster-name", default="")
     parser.add_argument("--restore-context", default=os.environ.get("KUG_RESTORE_CONTEXT", ""))
@@ -612,7 +619,7 @@ def main():
     args = parser.parse_args()
 
     benchmark_dir = Path(__file__).resolve().parent
-    root = Path(__file__).resolve().parents[3]
+    root = find_repo_root(benchmark_dir)
     manifest_dir = benchmark_dir / "manifests"
     operator_repo = (root / args.operator_repo).resolve()
     if not operator_repo.exists():

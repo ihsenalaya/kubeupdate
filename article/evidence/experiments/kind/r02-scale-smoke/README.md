@@ -29,8 +29,8 @@ It does not replace:
 From the repository root:
 
 ```bash
-python3 experiments/kind/r02-scale-smoke/run_scale_smoke.py \
-  --operator-repo ../kubeupgrade-guardian-operator \
+python3 article/evidence/experiments/kind/r02-scale-smoke/run_scale_smoke.py \
+  --operator-repo operator/source/kubeupgrade-guardian-operator \
   --sizes 100,500,1000 \
   --repetitions 1
 ```

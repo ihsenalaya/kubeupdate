@@ -1,0 +1,13 @@
+NAME                                                                 READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                                                             SELECTOR
+deployment.apps/kubeupgrade-guardian-kubeupgrade-guardian-operator   2/2     2            2           23m   manager      acrihsenaksfbd882.azurecr.io/kubeupgrade-guardian-operator:0.1.3   app.kubernetes.io/instance=kubeupgrade-guardian,app.kubernetes.io/name=kubeupgrade-guardian-operator
+
+NAME                                                                  READY   STATUS    RESTARTS   AGE   IP              NODE                             NOMINATED NODE   READINESS GATES
+pod/kubeupgrade-guardian-kubeupgrade-guardian-operator-5f866b598nxx   1/1     Running   0          23m   192.168.0.149   aks-system-80681013-vmss000000   <none>           <none>
+pod/kubeupgrade-guardian-kubeupgrade-guardian-operator-5f866b5ltvdh   1/1     Running   0          23m   192.168.0.184   aks-system-80681013-vmss000000   <none>           <none>
+
+NAME                                                         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE   SELECTOR
+service/kubeupgrade-guardian-kubeupgrade-guardian-operator   ClusterIP   10.43.140.237   <none>        8080/TCP   23m   app.kubernetes.io/instance=kubeupgrade-guardian,app.kubernetes.io/name=kubeupgrade-guardian-operator
+
+NAME                                                                            MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
+poddisruptionbudget.policy/kubeupgrade-guardian-kubeupgrade-guardian-operator   1               N/A               1                     23m
+

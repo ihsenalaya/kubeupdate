@@ -605,7 +605,11 @@ locals {
       tag        = var.artifact_tag
       pullPolicy = "IfNotPresent"
     }
-    replicaCount = 1
+    replicaCount = 2
+    podDisruptionBudget = {
+      enabled      = true
+      minAvailable = 1
+    }
     resources = {
       requests = {
         cpu    = "50m"

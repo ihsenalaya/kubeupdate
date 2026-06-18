@@ -1,0 +1,2263 @@
+{
+  "apiVersion": "upgrade.guardian.io/v1alpha1",
+  "kind": "UpgradeAssessment",
+  "metadata": {
+    "name": "aks-assessment",
+    "namespace": "kubeupgrade-guardian-system",
+    "creationTimestamp": "2026-06-18T15:07:20Z"
+  },
+  "spec": {
+    "checks": {
+      "admissionWebhooks": true,
+      "capacity": true,
+      "deprecatedApis": true,
+      "observability": true,
+      "pdb": true,
+      "policyRisks": true,
+      "readinessProbes": true,
+      "workloadAvailability": true
+    },
+    "mode": "ReadOnly",
+    "profile": "production",
+    "scope": {
+      "namespaces": {
+        "exclude": [
+          "kube-system"
+        ],
+        "include": [
+          "cert-manager",
+          "external-secrets",
+          "istio-ingress",
+          "kubeupgrade-guardian-system",
+          "kyverno",
+          "monitoring",
+          "neuvector",
+          "upgrade-lab"
+        ]
+      }
+    },
+    "sourceVersion": "1.34",
+    "targetVersion": "1.35"
+  },
+  "status": {
+    "artifactRef": {
+      "kind": "ConfigMap",
+      "name": "aks-assessment-artifact",
+      "namespace": "kubeupgrade-guardian-system"
+    },
+    "classificationSummary": {
+      "blocking": 66,
+      "informational": 5,
+      "providerManaged": 6,
+      "total": 77
+    },
+    "conditions": [
+      {
+        "lastTransitionTime": "2026-06-18T15:07:23Z",
+        "message": "Assessment is not running.",
+        "observedGeneration": 1,
+        "reason": "Completed",
+        "status": "False",
+        "type": "AssessmentRunning"
+      },
+      {
+        "lastTransitionTime": "2026-06-18T15:07:23Z",
+        "message": "Assessment completed successfully.",
+        "observedGeneration": 1,
+        "reason": "Completed",
+        "status": "True",
+        "type": "AssessmentCompleted"
+      },
+      {
+        "lastTransitionTime": "2026-06-18T15:07:23Z",
+        "message": "All findings and plan actions are published.",
+        "observedGeneration": 1,
+        "reason": "WithinLimit",
+        "status": "False",
+        "type": "AssessmentOutputTruncated"
+      }
+    ],
+    "findings": [
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "PROVIDER_MANAGED_WEBHOOK",
+          "reason": "Admission webhook appears to be managed by the Kubernetes provider.",
+          "status": "ProviderManaged"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_NODE_MUTATING_WEBHOOK_AKS_NODE_MUTATING_WEBHOOK_AZMK8S_IO",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "aks-node-mutating-webhook.azmk8s.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_AKS_NODE_MUTATING_WEBHOOK_AKS_NODE_MUTATING_WEBHOOK_AZMK8S_IO_FAILUREPOLICY=FAIL",
+        "message": "MutatingWebhookConfiguration aks-node-mutating-webhook webhook aks-node-mutating-webhook.azmk8s.io has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "aks-node-mutating-webhook"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "PROVIDER_MANAGED_WEBHOOK",
+          "reason": "Admission webhook appears to be managed by the Kubernetes provider.",
+          "status": "ProviderManaged"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_NODE_MUTATING_WEBHOOK_AKS_NODE_MUTATING_WEBHOOK_AZMK8S_IO",
+            "observed": {
+              "reason": "namespaceSelector is absent",
+              "webhookName": "aks-node-mutating-webhook.azmk8s.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_AKS_NODE_MUTATING_WEBHOOK_AKS_NODE_MUTATING_WEBHOOK_AZMK8S_IO_NAMESPACESELECTOR_IS_ABSENT",
+        "message": "MutatingWebhookConfiguration aks-node-mutating-webhook webhook aks-node-mutating-webhook.azmk8s.io has risk: namespaceSelector is absent.",
+        "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "aks-node-mutating-webhook"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "PROVIDER_MANAGED_WEBHOOK",
+          "reason": "Admission webhook appears to be managed by the Kubernetes provider.",
+          "status": "ProviderManaged"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_WEBHOOK_ADMISSION_CONTROLLER_AKS_WEBHOOK_ADMISSION_CONTROLLER_AZMK8S_IO",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "aks-webhook-admission-controller.azmk8s.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_AKS_WEBHOOK_ADMISSION_CONTROLLER_AKS_WEBHOOK_ADMISSION_CONTROLLER_AZMK8S_IO_FAILUREPOLICY=FAIL",
+        "message": "MutatingWebhookConfiguration aks-webhook-admission-controller webhook aks-webhook-admission-controller.azmk8s.io has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "aks-webhook-admission-controller"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "PROVIDER_MANAGED_WEBHOOK",
+          "reason": "Admission webhook appears to be managed by the Kubernetes provider.",
+          "status": "ProviderManaged"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AKS_WEBHOOK_ADMISSION_CONTROLLER_AKS_WEBHOOK_ADMISSION_CONTROLLER_AZMK8S_IO",
+            "observed": {
+              "reason": "namespaceSelector is absent",
+              "webhookName": "aks-webhook-admission-controller.azmk8s.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_AKS_WEBHOOK_ADMISSION_CONTROLLER_AKS_WEBHOOK_ADMISSION_CONTROLLER_AZMK8S_IO_NAMESPACESELECTOR_IS_ABSENT",
+        "message": "MutatingWebhookConfiguration aks-webhook-admission-controller webhook aks-webhook-admission-controller.azmk8s.io has risk: namespaceSelector is absent.",
+        "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "aks-webhook-admission-controller"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AZURE_WI_WEBHOOK_MUTATING_WEBHOOK_CONFIGURATION_MUTATION_AZURE_WORKLOAD_IDENTITY_IO",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "mutation.azure-workload-identity.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_AZURE_WI_WEBHOOK_MUTATING_WEBHOOK_CONFIGURATION_MUTATION_AZURE_WORKLOAD_IDENTITY_IO_FAILUREPOLICY=FAIL",
+        "message": "MutatingWebhookConfiguration azure-wi-webhook-mutating-webhook-configuration webhook mutation.azure-workload-identity.io has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "azure-wi-webhook-mutating-webhook-configuration"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_AZURE_WI_WEBHOOK_MUTATING_WEBHOOK_CONFIGURATION_MUTATION_AZURE_WORKLOAD_IDENTITY_IO",
+            "observed": {
+              "reason": "namespaceSelector is absent",
+              "webhookName": "mutation.azure-workload-identity.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_AZURE_WI_WEBHOOK_MUTATING_WEBHOOK_CONFIGURATION_MUTATION_AZURE_WORKLOAD_IDENTITY_IO_NAMESPACESELECTOR_IS_ABSENT",
+        "message": "MutatingWebhookConfiguration azure-wi-webhook-mutating-webhook-configuration webhook mutation.azure-workload-identity.io has risk: namespaceSelector is absent.",
+        "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "azure-wi-webhook-mutating-webhook-configuration"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_CERT_MANAGER_WEBHOOK_WEBHOOK_CERT_MANAGER_IO",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "webhook.cert-manager.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_CERT_MANAGER_WEBHOOK_WEBHOOK_CERT_MANAGER_IO_FAILUREPOLICY=FAIL",
+        "message": "MutatingWebhookConfiguration cert-manager-webhook webhook webhook.cert-manager.io has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "cert-manager-webhook"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_ISTIO_SIDECAR_INJECTOR_NAMESPACE_SIDECAR_INJECTOR_ISTIO_IO",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "namespace.sidecar-injector.istio.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_ISTIO_SIDECAR_INJECTOR_NAMESPACE_SIDECAR_INJECTOR_ISTIO_IO_FAILUREPOLICY=FAIL",
+        "message": "MutatingWebhookConfiguration istio-sidecar-injector webhook namespace.sidecar-injector.istio.io has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "istio-sidecar-injector"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_ISTIO_SIDECAR_INJECTOR_OBJECT_SIDECAR_INJECTOR_ISTIO_IO",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "object.sidecar-injector.istio.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_ISTIO_SIDECAR_INJECTOR_OBJECT_SIDECAR_INJECTOR_ISTIO_IO_FAILUREPOLICY=FAIL",
+        "message": "MutatingWebhookConfiguration istio-sidecar-injector webhook object.sidecar-injector.istio.io has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "istio-sidecar-injector"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_ISTIO_SIDECAR_INJECTOR_REV_NAMESPACE_SIDECAR_INJECTOR_ISTIO_IO",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "rev.namespace.sidecar-injector.istio.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_ISTIO_SIDECAR_INJECTOR_REV_NAMESPACE_SIDECAR_INJECTOR_ISTIO_IO_FAILUREPOLICY=FAIL",
+        "message": "MutatingWebhookConfiguration istio-sidecar-injector webhook rev.namespace.sidecar-injector.istio.io has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "istio-sidecar-injector"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_ISTIO_SIDECAR_INJECTOR_REV_OBJECT_SIDECAR_INJECTOR_ISTIO_IO",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "rev.object.sidecar-injector.istio.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_ISTIO_SIDECAR_INJECTOR_REV_OBJECT_SIDECAR_INJECTOR_ISTIO_IO_FAILUREPOLICY=FAIL",
+        "message": "MutatingWebhookConfiguration istio-sidecar-injector webhook rev.object.sidecar-injector.istio.io has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "istio-sidecar-injector"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_KYVERNO_POLICY_MUTATING_WEBHOOK_CFG_MUTATE_POLICY_KYVERNO_SVC",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "mutate-policy.kyverno.svc"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_KYVERNO_POLICY_MUTATING_WEBHOOK_CFG_MUTATE_POLICY_KYVERNO_SVC_FAILUREPOLICY=FAIL",
+        "message": "MutatingWebhookConfiguration kyverno-policy-mutating-webhook-cfg webhook mutate-policy.kyverno.svc has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "kyverno-policy-mutating-webhook-cfg"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_KYVERNO_POLICY_MUTATING_WEBHOOK_CFG_MUTATE_POLICY_KYVERNO_SVC",
+            "observed": {
+              "reason": "namespaceSelector is absent",
+              "webhookName": "mutate-policy.kyverno.svc"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_KYVERNO_POLICY_MUTATING_WEBHOOK_CFG_MUTATE_POLICY_KYVERNO_SVC_NAMESPACESELECTOR_IS_ABSENT",
+        "message": "MutatingWebhookConfiguration kyverno-policy-mutating-webhook-cfg webhook mutate-policy.kyverno.svc has risk: namespaceSelector is absent.",
+        "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "kyverno-policy-mutating-webhook-cfg"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_MUTATINGWEBHOOKCONFIGURATION_KYVERNO_VERIFY_MUTATING_WEBHOOK_CFG_MONITOR_WEBHOOKS_KYVERNO_SVC",
+            "observed": {
+              "reason": "namespaceSelector is absent",
+              "webhookName": "monitor-webhooks.kyverno.svc"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_MUTATINGWEBHOOKCONFIGURATION_KYVERNO_VERIFY_MUTATING_WEBHOOK_CFG_MONITOR_WEBHOOKS_KYVERNO_SVC_NAMESPACESELECTOR_IS_ABSENT",
+        "message": "MutatingWebhookConfiguration kyverno-verify-mutating-webhook-cfg webhook monitor-webhooks.kyverno.svc has risk: namespaceSelector is absent.",
+        "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "MutatingWebhookConfiguration",
+          "name": "kyverno-verify-mutating-webhook-cfg"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "PROVIDER_MANAGED_WEBHOOK",
+          "reason": "Admission webhook appears to be managed by the Kubernetes provider.",
+          "status": "ProviderManaged"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_AKS_NODE_VALIDATING_WEBHOOK_AKS_NODE_VALIDATING_WEBHOOK_AZMK8S_IO",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "aks-node-validating-webhook.azmk8s.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_AKS_NODE_VALIDATING_WEBHOOK_AKS_NODE_VALIDATING_WEBHOOK_AZMK8S_IO_FAILUREPOLICY=FAIL",
+        "message": "ValidatingWebhookConfiguration aks-node-validating-webhook webhook aks-node-validating-webhook.azmk8s.io has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "aks-node-validating-webhook"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "PROVIDER_MANAGED_WEBHOOK",
+          "reason": "Admission webhook appears to be managed by the Kubernetes provider.",
+          "status": "ProviderManaged"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_AKS_NODE_VALIDATING_WEBHOOK_AKS_NODE_VALIDATING_WEBHOOK_AZMK8S_IO",
+            "observed": {
+              "reason": "namespaceSelector is absent",
+              "webhookName": "aks-node-validating-webhook.azmk8s.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_AKS_NODE_VALIDATING_WEBHOOK_AKS_NODE_VALIDATING_WEBHOOK_AZMK8S_IO_NAMESPACESELECTOR_IS_ABSENT",
+        "message": "ValidatingWebhookConfiguration aks-node-validating-webhook webhook aks-node-validating-webhook.azmk8s.io has risk: namespaceSelector is absent.",
+        "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "aks-node-validating-webhook"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_CERT_MANAGER_WEBHOOK_WEBHOOK_CERT_MANAGER_IO",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "webhook.cert-manager.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_CERT_MANAGER_WEBHOOK_WEBHOOK_CERT_MANAGER_IO_FAILUREPOLICY=FAIL",
+        "message": "ValidatingWebhookConfiguration cert-manager-webhook webhook webhook.cert-manager.io has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "cert-manager-webhook"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_EXTERNALSECRET_VALIDATE_VALIDATE_EXTERNALSECRET_EXTERNAL_SECRETS_IO",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "validate.externalsecret.external-secrets.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_EXTERNALSECRET_VALIDATE_VALIDATE_EXTERNALSECRET_EXTERNAL_SECRETS_IO_FAILUREPOLICY=FAIL",
+        "message": "ValidatingWebhookConfiguration externalsecret-validate webhook validate.externalsecret.external-secrets.io has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "externalsecret-validate"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_ISTIOD_DEFAULT_VALIDATOR_VALIDATION_ISTIO_IO",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "validation.istio.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_ISTIOD_DEFAULT_VALIDATOR_VALIDATION_ISTIO_IO_FAILUREPOLICY=FAIL",
+        "message": "ValidatingWebhookConfiguration istiod-default-validator webhook validation.istio.io has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "istiod-default-validator"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_ISTIO_VALIDATOR_ISTIO_SYSTEM_REV_VALIDATION_ISTIO_IO",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "rev.validation.istio.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_ISTIO_VALIDATOR_ISTIO_SYSTEM_REV_VALIDATION_ISTIO_IO_FAILUREPOLICY=FAIL",
+        "message": "ValidatingWebhookConfiguration istio-validator-istio-system webhook rev.validation.istio.io has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "istio-validator-istio-system"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_CEL_EXCEPTION_VALIDATING_WEBHOOK_CFG_KYVERNO_SVC_KYVERNO_SVC",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "kyverno-svc.kyverno.svc"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_CEL_EXCEPTION_VALIDATING_WEBHOOK_CFG_KYVERNO_SVC_KYVERNO_SVC_FAILUREPOLICY=FAIL",
+        "message": "ValidatingWebhookConfiguration kyverno-cel-exception-validating-webhook-cfg webhook kyverno-svc.kyverno.svc has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "kyverno-cel-exception-validating-webhook-cfg"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_CEL_EXCEPTION_VALIDATING_WEBHOOK_CFG_KYVERNO_SVC_KYVERNO_SVC",
+            "observed": {
+              "reason": "namespaceSelector is absent",
+              "webhookName": "kyverno-svc.kyverno.svc"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_CEL_EXCEPTION_VALIDATING_WEBHOOK_CFG_KYVERNO_SVC_KYVERNO_SVC_NAMESPACESELECTOR_IS_ABSENT",
+        "message": "ValidatingWebhookConfiguration kyverno-cel-exception-validating-webhook-cfg webhook kyverno-svc.kyverno.svc has risk: namespaceSelector is absent.",
+        "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "kyverno-cel-exception-validating-webhook-cfg"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_CLEANUP_VALIDATING_WEBHOOK_CFG_KYVERNO_CLEANUP_CONTROLLER_KYVERNO_SVC",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "kyverno-cleanup-controller.kyverno.svc"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_CLEANUP_VALIDATING_WEBHOOK_CFG_KYVERNO_CLEANUP_CONTROLLER_KYVERNO_SVC_FAILUREPOLICY=FAIL",
+        "message": "ValidatingWebhookConfiguration kyverno-cleanup-validating-webhook-cfg webhook kyverno-cleanup-controller.kyverno.svc has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "kyverno-cleanup-validating-webhook-cfg"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_CLEANUP_VALIDATING_WEBHOOK_CFG_KYVERNO_CLEANUP_CONTROLLER_KYVERNO_SVC",
+            "observed": {
+              "reason": "namespaceSelector is absent",
+              "webhookName": "kyverno-cleanup-controller.kyverno.svc"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_CLEANUP_VALIDATING_WEBHOOK_CFG_KYVERNO_CLEANUP_CONTROLLER_KYVERNO_SVC_NAMESPACESELECTOR_IS_ABSENT",
+        "message": "ValidatingWebhookConfiguration kyverno-cleanup-validating-webhook-cfg webhook kyverno-cleanup-controller.kyverno.svc has risk: namespaceSelector is absent.",
+        "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "kyverno-cleanup-validating-webhook-cfg"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_EXCEPTION_VALIDATING_WEBHOOK_CFG_KYVERNO_SVC_KYVERNO_SVC",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "kyverno-svc.kyverno.svc"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_EXCEPTION_VALIDATING_WEBHOOK_CFG_KYVERNO_SVC_KYVERNO_SVC_FAILUREPOLICY=FAIL",
+        "message": "ValidatingWebhookConfiguration kyverno-exception-validating-webhook-cfg webhook kyverno-svc.kyverno.svc has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "kyverno-exception-validating-webhook-cfg"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_EXCEPTION_VALIDATING_WEBHOOK_CFG_KYVERNO_SVC_KYVERNO_SVC",
+            "observed": {
+              "reason": "namespaceSelector is absent",
+              "webhookName": "kyverno-svc.kyverno.svc"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_EXCEPTION_VALIDATING_WEBHOOK_CFG_KYVERNO_SVC_KYVERNO_SVC_NAMESPACESELECTOR_IS_ABSENT",
+        "message": "ValidatingWebhookConfiguration kyverno-exception-validating-webhook-cfg webhook kyverno-svc.kyverno.svc has risk: namespaceSelector is absent.",
+        "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "kyverno-exception-validating-webhook-cfg"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_GLOBAL_CONTEXT_VALIDATING_WEBHOOK_CFG_KYVERNO_SVC_KYVERNO_SVC",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "kyverno-svc.kyverno.svc"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_GLOBAL_CONTEXT_VALIDATING_WEBHOOK_CFG_KYVERNO_SVC_KYVERNO_SVC_FAILUREPOLICY=FAIL",
+        "message": "ValidatingWebhookConfiguration kyverno-global-context-validating-webhook-cfg webhook kyverno-svc.kyverno.svc has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "kyverno-global-context-validating-webhook-cfg"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_GLOBAL_CONTEXT_VALIDATING_WEBHOOK_CFG_KYVERNO_SVC_KYVERNO_SVC",
+            "observed": {
+              "reason": "namespaceSelector is absent",
+              "webhookName": "kyverno-svc.kyverno.svc"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_GLOBAL_CONTEXT_VALIDATING_WEBHOOK_CFG_KYVERNO_SVC_KYVERNO_SVC_NAMESPACESELECTOR_IS_ABSENT",
+        "message": "ValidatingWebhookConfiguration kyverno-global-context-validating-webhook-cfg webhook kyverno-svc.kyverno.svc has risk: namespaceSelector is absent.",
+        "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "kyverno-global-context-validating-webhook-cfg"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_POLICY_VALIDATING_WEBHOOK_CFG_VALIDATE_POLICY_KYVERNO_SVC",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "validate-policy.kyverno.svc"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_POLICY_VALIDATING_WEBHOOK_CFG_VALIDATE_POLICY_KYVERNO_SVC_FAILUREPOLICY=FAIL",
+        "message": "ValidatingWebhookConfiguration kyverno-policy-validating-webhook-cfg webhook validate-policy.kyverno.svc has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "kyverno-policy-validating-webhook-cfg"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_POLICY_VALIDATING_WEBHOOK_CFG_VALIDATE_POLICY_KYVERNO_SVC",
+            "observed": {
+              "reason": "namespaceSelector is absent",
+              "webhookName": "validate-policy.kyverno.svc"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_POLICY_VALIDATING_WEBHOOK_CFG_VALIDATE_POLICY_KYVERNO_SVC_NAMESPACESELECTOR_IS_ABSENT",
+        "message": "ValidatingWebhookConfiguration kyverno-policy-validating-webhook-cfg webhook validate-policy.kyverno.svc has risk: namespaceSelector is absent.",
+        "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "kyverno-policy-validating-webhook-cfg"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_RESOURCE_VALIDATING_WEBHOOK_CFG_VALIDATE_KYVERNO_SVC_FAIL",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "validate.kyverno.svc-fail"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_RESOURCE_VALIDATING_WEBHOOK_CFG_VALIDATE_KYVERNO_SVC_FAIL_FAILUREPOLICY=FAIL",
+        "message": "ValidatingWebhookConfiguration kyverno-resource-validating-webhook-cfg webhook validate.kyverno.svc-fail has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "kyverno-resource-validating-webhook-cfg"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_TTL_VALIDATING_WEBHOOK_CFG_KYVERNO_CLEANUP_CONTROLLER_KYVERNO_SVC",
+            "observed": {
+              "reason": "namespaceSelector is absent",
+              "webhookName": "kyverno-cleanup-controller.kyverno.svc"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_KYVERNO_TTL_VALIDATING_WEBHOOK_CFG_KYVERNO_CLEANUP_CONTROLLER_KYVERNO_SVC_NAMESPACESELECTOR_IS_ABSENT",
+        "message": "ValidatingWebhookConfiguration kyverno-ttl-validating-webhook-cfg webhook kyverno-cleanup-controller.kyverno.svc has risk: namespaceSelector is absent.",
+        "recommendation": "Constrain webhook scope with namespaceSelector/objectSelector where possible.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "kyverno-ttl-validating-webhook-cfg"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_SECRETSTORE_VALIDATE_VALIDATE_CLUSTERSECRETSTORE_EXTERNAL_SECRETS_IO",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "validate.clustersecretstore.external-secrets.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_SECRETSTORE_VALIDATE_VALIDATE_CLUSTERSECRETSTORE_EXTERNAL_SECRETS_IO_FAILUREPOLICY=FAIL",
+        "message": "ValidatingWebhookConfiguration secretstore-validate webhook validate.clustersecretstore.external-secrets.io has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "secretstore-validate"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "AdmissionWebhook",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Admission webhook configuration risk.",
+            "id": "ADMISSION_WEBHOOK_RISK_EVIDENCE_VALIDATINGWEBHOOKCONFIGURATION_SECRETSTORE_VALIDATE_VALIDATE_SECRETSTORE_EXTERNAL_SECRETS_IO",
+            "observed": {
+              "reason": "failurePolicy=Fail",
+              "webhookName": "validate.secretstore.external-secrets.io"
+            }
+          }
+        ],
+        "id": "ADMISSION_WEBHOOK_RISK_VALIDATINGWEBHOOKCONFIGURATION_SECRETSTORE_VALIDATE_VALIDATE_SECRETSTORE_EXTERNAL_SECRETS_IO_FAILUREPOLICY=FAIL",
+        "message": "ValidatingWebhookConfiguration secretstore-validate webhook validate.secretstore.external-secrets.io has risk: failurePolicy=Fail.",
+        "recommendation": "Set failurePolicy to Ignore during controlled upgrade windows if the webhook is not upgrade-critical.",
+        "resource": {
+          "apiVersion": "admissionregistration.k8s.io/v1",
+          "kind": "ValidatingWebhookConfiguration",
+          "name": "secretstore-validate"
+        },
+        "severity": "High",
+        "type": "ADMISSION_WEBHOOK_RISK"
+      },
+      {
+        "category": "Capacity",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Conservative capacity estimate using node allocatable minus the largest node.",
+            "id": "CAPACITY_DRAIN_RISK_EVIDENCE_ONE_NODE_LOSS",
+            "observed": {
+              "remainingCPU": "1900m",
+              "remainingMemory": "2861560Ki",
+              "requestedCPU": "4450m",
+              "requestedMemory": "9618Mi",
+              "totalCPU": "5760m",
+              "totalMemory": "16839292Ki"
+            }
+          }
+        ],
+        "id": "CAPACITY_DRAIN_RISK_ONE_NODE_LOSS",
+        "message": "Cluster may not have enough requested capacity headroom to tolerate one worker node loss.",
+        "recommendation": "Add capacity or reduce requests before upgrade. Estimated remaining capacity after one-node loss: 1900m CPU.",
+        "severity": "High",
+        "type": "CAPACITY_DRAIN_RISK"
+      },
+      {
+        "category": "ReadinessProbes",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Container readinessProbe is absent.",
+            "id": "MISSING_READINESS_PROBE_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CAINJECTOR_CERT_MANAGER_CAINJECTOR",
+            "observed": {
+              "containerName": "cert-manager-cainjector"
+            }
+          }
+        ],
+        "id": "MISSING_READINESS_PROBE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CAINJECTOR_CERT_MANAGER_CAINJECTOR",
+        "message": "Container cert-manager-cainjector in Deployment cert-manager/cert-manager-cainjector has no readinessProbe.",
+        "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "cert-manager-cainjector",
+          "namespace": "cert-manager"
+        },
+        "severity": "Medium",
+        "type": "MISSING_READINESS_PROBE"
+      },
+      {
+        "category": "ReadinessProbes",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Container readinessProbe is absent.",
+            "id": "MISSING_READINESS_PROBE_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CERT_MANAGER_CONTROLLER",
+            "observed": {
+              "containerName": "cert-manager-controller"
+            }
+          }
+        ],
+        "id": "MISSING_READINESS_PROBE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CERT_MANAGER_CONTROLLER",
+        "message": "Container cert-manager-controller in Deployment cert-manager/cert-manager has no readinessProbe.",
+        "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "cert-manager",
+          "namespace": "cert-manager"
+        },
+        "severity": "Medium",
+        "type": "MISSING_READINESS_PROBE"
+      },
+      {
+        "category": "ReadinessProbes",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Container readinessProbe is absent.",
+            "id": "MISSING_READINESS_PROBE_EVIDENCE_EXTERNAL_SECRETS_DEPLOYMENT_EXTERNAL_SECRETS_EXTERNAL_SECRETS",
+            "observed": {
+              "containerName": "external-secrets"
+            }
+          }
+        ],
+        "id": "MISSING_READINESS_PROBE_EXTERNAL_SECRETS_DEPLOYMENT_EXTERNAL_SECRETS_EXTERNAL_SECRETS",
+        "message": "Container external-secrets in Deployment external-secrets/external-secrets has no readinessProbe.",
+        "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "external-secrets",
+          "namespace": "external-secrets"
+        },
+        "severity": "Medium",
+        "type": "MISSING_READINESS_PROBE"
+      },
+      {
+        "category": "ReadinessProbes",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Container readinessProbe is absent.",
+            "id": "MISSING_READINESS_PROBE_EVIDENCE_ISTIO_INGRESS_DEPLOYMENT_ISTIO_INGRESS_ISTIO_PROXY",
+            "observed": {
+              "containerName": "istio-proxy"
+            }
+          }
+        ],
+        "id": "MISSING_READINESS_PROBE_ISTIO_INGRESS_DEPLOYMENT_ISTIO_INGRESS_ISTIO_PROXY",
+        "message": "Container istio-proxy in Deployment istio-ingress/istio-ingress has no readinessProbe.",
+        "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "istio-ingress",
+          "namespace": "istio-ingress"
+        },
+        "severity": "Medium",
+        "type": "MISSING_READINESS_PROBE"
+      },
+      {
+        "category": "ReadinessProbes",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Container readinessProbe is absent.",
+            "id": "MISSING_READINESS_PROBE_EVIDENCE_KYVERNO_DEPLOYMENT_KYVERNO_BACKGROUND_CONTROLLER_CONTROLLER",
+            "observed": {
+              "containerName": "controller"
+            }
+          }
+        ],
+        "id": "MISSING_READINESS_PROBE_KYVERNO_DEPLOYMENT_KYVERNO_BACKGROUND_CONTROLLER_CONTROLLER",
+        "message": "Container controller in Deployment kyverno/kyverno-background-controller has no readinessProbe.",
+        "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "kyverno-background-controller",
+          "namespace": "kyverno"
+        },
+        "severity": "Medium",
+        "type": "MISSING_READINESS_PROBE"
+      },
+      {
+        "category": "ReadinessProbes",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Container readinessProbe is absent.",
+            "id": "MISSING_READINESS_PROBE_EVIDENCE_KYVERNO_DEPLOYMENT_KYVERNO_REPORTS_CONTROLLER_CONTROLLER",
+            "observed": {
+              "containerName": "controller"
+            }
+          }
+        ],
+        "id": "MISSING_READINESS_PROBE_KYVERNO_DEPLOYMENT_KYVERNO_REPORTS_CONTROLLER_CONTROLLER",
+        "message": "Container controller in Deployment kyverno/kyverno-reports-controller has no readinessProbe.",
+        "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "kyverno-reports-controller",
+          "namespace": "kyverno"
+        },
+        "severity": "Medium",
+        "type": "MISSING_READINESS_PROBE"
+      },
+      {
+        "category": "ReadinessProbes",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Container readinessProbe is absent.",
+            "id": "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA_GRAFANA_SC_DASHBOARD",
+            "observed": {
+              "containerName": "grafana-sc-dashboard"
+            }
+          }
+        ],
+        "id": "MISSING_READINESS_PROBE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA_GRAFANA_SC_DASHBOARD",
+        "message": "Container grafana-sc-dashboard in Deployment monitoring/kube-prometheus-stack-grafana has no readinessProbe.",
+        "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "kube-prometheus-stack-grafana",
+          "namespace": "monitoring"
+        },
+        "severity": "Medium",
+        "type": "MISSING_READINESS_PROBE"
+      },
+      {
+        "category": "ReadinessProbes",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Container readinessProbe is absent.",
+            "id": "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA_GRAFANA_SC_DATASOURCES",
+            "observed": {
+              "containerName": "grafana-sc-datasources"
+            }
+          }
+        ],
+        "id": "MISSING_READINESS_PROBE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA_GRAFANA_SC_DATASOURCES",
+        "message": "Container grafana-sc-datasources in Deployment monitoring/kube-prometheus-stack-grafana has no readinessProbe.",
+        "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "kube-prometheus-stack-grafana",
+          "namespace": "monitoring"
+        },
+        "severity": "Medium",
+        "type": "MISSING_READINESS_PROBE"
+      },
+      {
+        "category": "ReadinessProbes",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Container readinessProbe is absent.",
+            "id": "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_STATEFULSET_ALERTMANAGER_KUBE_PROMETHEUS_STACK_ALERTMANAGER_CONFIG_RELOADER",
+            "observed": {
+              "containerName": "config-reloader"
+            }
+          }
+        ],
+        "id": "MISSING_READINESS_PROBE_MONITORING_STATEFULSET_ALERTMANAGER_KUBE_PROMETHEUS_STACK_ALERTMANAGER_CONFIG_RELOADER",
+        "message": "Container config-reloader in StatefulSet monitoring/alertmanager-kube-prometheus-stack-alertmanager has no readinessProbe.",
+        "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "StatefulSet",
+          "name": "alertmanager-kube-prometheus-stack-alertmanager",
+          "namespace": "monitoring"
+        },
+        "severity": "Medium",
+        "type": "MISSING_READINESS_PROBE"
+      },
+      {
+        "category": "ReadinessProbes",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Container readinessProbe is absent.",
+            "id": "MISSING_READINESS_PROBE_EVIDENCE_MONITORING_STATEFULSET_PROMETHEUS_KUBE_PROMETHEUS_STACK_PROMETHEUS_CONFIG_RELOADER",
+            "observed": {
+              "containerName": "config-reloader"
+            }
+          }
+        ],
+        "id": "MISSING_READINESS_PROBE_MONITORING_STATEFULSET_PROMETHEUS_KUBE_PROMETHEUS_STACK_PROMETHEUS_CONFIG_RELOADER",
+        "message": "Container config-reloader in StatefulSet monitoring/prometheus-kube-prometheus-stack-prometheus has no readinessProbe.",
+        "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "StatefulSet",
+          "name": "prometheus-kube-prometheus-stack-prometheus",
+          "namespace": "monitoring"
+        },
+        "severity": "Medium",
+        "type": "MISSING_READINESS_PROBE"
+      },
+      {
+        "category": "ReadinessProbes",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Container readinessProbe is absent.",
+            "id": "MISSING_READINESS_PROBE_EVIDENCE_NEUVECTOR_DAEMONSET_NEUVECTOR_ENFORCER_POD_NEUVECTOR_ENFORCER_POD",
+            "observed": {
+              "containerName": "neuvector-enforcer-pod"
+            }
+          }
+        ],
+        "id": "MISSING_READINESS_PROBE_NEUVECTOR_DAEMONSET_NEUVECTOR_ENFORCER_POD_NEUVECTOR_ENFORCER_POD",
+        "message": "Container neuvector-enforcer-pod in DaemonSet neuvector/neuvector-enforcer-pod has no readinessProbe.",
+        "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "DaemonSet",
+          "name": "neuvector-enforcer-pod",
+          "namespace": "neuvector"
+        },
+        "severity": "Medium",
+        "type": "MISSING_READINESS_PROBE"
+      },
+      {
+        "category": "ReadinessProbes",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Container readinessProbe is absent.",
+            "id": "MISSING_READINESS_PROBE_EVIDENCE_NEUVECTOR_DEPLOYMENT_NEUVECTOR_MANAGER_POD_NEUVECTOR_MANAGER_POD",
+            "observed": {
+              "containerName": "neuvector-manager-pod"
+            }
+          }
+        ],
+        "id": "MISSING_READINESS_PROBE_NEUVECTOR_DEPLOYMENT_NEUVECTOR_MANAGER_POD_NEUVECTOR_MANAGER_POD",
+        "message": "Container neuvector-manager-pod in Deployment neuvector/neuvector-manager-pod has no readinessProbe.",
+        "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "neuvector-manager-pod",
+          "namespace": "neuvector"
+        },
+        "severity": "Medium",
+        "type": "MISSING_READINESS_PROBE"
+      },
+      {
+        "category": "ReadinessProbes",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Container readinessProbe is absent.",
+            "id": "MISSING_READINESS_PROBE_EVIDENCE_NEUVECTOR_DEPLOYMENT_NEUVECTOR_SCANNER_POD_NEUVECTOR_SCANNER_POD",
+            "observed": {
+              "containerName": "neuvector-scanner-pod"
+            }
+          }
+        ],
+        "id": "MISSING_READINESS_PROBE_NEUVECTOR_DEPLOYMENT_NEUVECTOR_SCANNER_POD_NEUVECTOR_SCANNER_POD",
+        "message": "Container neuvector-scanner-pod in Deployment neuvector/neuvector-scanner-pod has no readinessProbe.",
+        "recommendation": "Add a readinessProbe that reflects whether the container can safely receive traffic.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "neuvector-scanner-pod",
+          "namespace": "neuvector"
+        },
+        "severity": "Medium",
+        "type": "MISSING_READINESS_PROBE"
+      },
+      {
+        "category": "Observability",
+        "classification": {
+          "matchedRule": "INFORMATIONAL_SEVERITY",
+          "reason": "Info findings are useful context but do not block upgrades.",
+          "status": "Informational"
+        },
+        "evidence": [
+          {
+            "description": "Monitoring capability CRD exists.",
+            "id": "OBSERVABILITY_CAPABILITY_DETECTED_EVIDENCE_PODMONITORS_MONITORING_COREOS_COM",
+            "observed": {
+              "category": "podmonitors",
+              "crd": "podmonitors.monitoring.coreos.com"
+            }
+          }
+        ],
+        "id": "OBSERVABILITY_CAPABILITY_DETECTED_PODMONITORS_MONITORING_COREOS_COM",
+        "message": "Observability CRD detected: podmonitors.monitoring.coreos.com",
+        "recommendation": "Use existing observability to validate workload health before and after upgrade.",
+        "resource": {
+          "apiVersion": "apiextensions.k8s.io/v1",
+          "kind": "CustomResourceDefinition",
+          "name": "podmonitors.monitoring.coreos.com"
+        },
+        "severity": "Info",
+        "type": "OBSERVABILITY_CAPABILITY_DETECTED"
+      },
+      {
+        "category": "Observability",
+        "classification": {
+          "matchedRule": "INFORMATIONAL_SEVERITY",
+          "reason": "Info findings are useful context but do not block upgrades.",
+          "status": "Informational"
+        },
+        "evidence": [
+          {
+            "description": "Monitoring capability CRD exists.",
+            "id": "OBSERVABILITY_CAPABILITY_DETECTED_EVIDENCE_PROMETHEUSES_MONITORING_COREOS_COM",
+            "observed": {
+              "category": "prometheuses",
+              "crd": "prometheuses.monitoring.coreos.com"
+            }
+          }
+        ],
+        "id": "OBSERVABILITY_CAPABILITY_DETECTED_PROMETHEUSES_MONITORING_COREOS_COM",
+        "message": "Observability CRD detected: prometheuses.monitoring.coreos.com",
+        "recommendation": "Use existing observability to validate workload health before and after upgrade.",
+        "resource": {
+          "apiVersion": "apiextensions.k8s.io/v1",
+          "kind": "CustomResourceDefinition",
+          "name": "prometheuses.monitoring.coreos.com"
+        },
+        "severity": "Info",
+        "type": "OBSERVABILITY_CAPABILITY_DETECTED"
+      },
+      {
+        "category": "Observability",
+        "classification": {
+          "matchedRule": "INFORMATIONAL_SEVERITY",
+          "reason": "Info findings are useful context but do not block upgrades.",
+          "status": "Informational"
+        },
+        "evidence": [
+          {
+            "description": "Monitoring capability CRD exists.",
+            "id": "OBSERVABILITY_CAPABILITY_DETECTED_EVIDENCE_SERVICEMONITORS_MONITORING_COREOS_COM",
+            "observed": {
+              "category": "servicemonitors",
+              "crd": "servicemonitors.monitoring.coreos.com"
+            }
+          }
+        ],
+        "id": "OBSERVABILITY_CAPABILITY_DETECTED_SERVICEMONITORS_MONITORING_COREOS_COM",
+        "message": "Observability CRD detected: servicemonitors.monitoring.coreos.com",
+        "recommendation": "Use existing observability to validate workload health before and after upgrade.",
+        "resource": {
+          "apiVersion": "apiextensions.k8s.io/v1",
+          "kind": "CustomResourceDefinition",
+          "name": "servicemonitors.monitoring.coreos.com"
+        },
+        "severity": "Info",
+        "type": "OBSERVABILITY_CAPABILITY_DETECTED"
+      },
+      {
+        "category": "PolicyRisk",
+        "classification": {
+          "matchedRule": "INFORMATIONAL_SEVERITY",
+          "reason": "Info findings are useful context but do not block upgrades.",
+          "status": "Informational"
+        },
+        "evidence": [
+          {
+            "description": "Policy engine CRD exists in the cluster.",
+            "id": "POLICY_ENGINE_DETECTED_EVIDENCE_KYVERNO_CLUSTERPOLICIES_KYVERNO_IO",
+            "observed": {
+              "crd": "clusterpolicies.kyverno.io",
+              "engine": "Kyverno"
+            }
+          }
+        ],
+        "id": "POLICY_ENGINE_DETECTED_KYVERNO_CLUSTERPOLICIES_KYVERNO_IO",
+        "message": "Kyverno policy engine CRD detected.",
+        "recommendation": "Review policy reports and admission behavior before upgrade.",
+        "resource": {
+          "apiVersion": "apiextensions.k8s.io/v1",
+          "kind": "CustomResourceDefinition",
+          "name": "clusterpolicies.kyverno.io"
+        },
+        "severity": "Info",
+        "type": "POLICY_ENGINE_DETECTED"
+      },
+      {
+        "category": "PolicyRisk",
+        "classification": {
+          "matchedRule": "INFORMATIONAL_SEVERITY",
+          "reason": "Info findings are useful context but do not block upgrades.",
+          "status": "Informational"
+        },
+        "evidence": [
+          {
+            "description": "Policy engine CRD exists in the cluster.",
+            "id": "POLICY_ENGINE_DETECTED_EVIDENCE_KYVERNO_POLICIES_KYVERNO_IO",
+            "observed": {
+              "crd": "policies.kyverno.io",
+              "engine": "Kyverno"
+            }
+          }
+        ],
+        "id": "POLICY_ENGINE_DETECTED_KYVERNO_POLICIES_KYVERNO_IO",
+        "message": "Kyverno policy engine CRD detected.",
+        "recommendation": "Review policy reports and admission behavior before upgrade.",
+        "resource": {
+          "apiVersion": "apiextensions.k8s.io/v1",
+          "kind": "CustomResourceDefinition",
+          "name": "policies.kyverno.io"
+        },
+        "severity": "Info",
+        "type": "POLICY_ENGINE_DETECTED"
+      },
+      {
+        "category": "PolicyRisk",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Workload pod template has a restricted policy incompatibility.",
+            "id": "POLICY_RISK_EVIDENCE_UPGRADE_LAB_DEPLOYMENT_UPGRADE_LAB_UPGRADE_LAB_CATALOG_CATALOG",
+            "observed": {
+              "reason": "runAsNonRoot absent",
+              "subject": "catalog"
+            }
+          }
+        ],
+        "id": "POLICY_RISK_UPGRADE_LAB_DEPLOYMENT_UPGRADE_LAB_UPGRADE_LAB_CATALOG_RUNASNONROOT_ABSENT_CATALOG",
+        "message": "Deployment upgrade-lab/upgrade-lab-upgrade-lab-catalog may violate restricted policy: runAsNonRoot absent.",
+        "recommendation": "Adjust the pod security context or namespace policy before upgrade.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "upgrade-lab-upgrade-lab-catalog",
+          "namespace": "upgrade-lab"
+        },
+        "severity": "High",
+        "type": "POLICY_RISK"
+      },
+      {
+        "category": "PolicyRisk",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Workload pod template has a restricted policy incompatibility.",
+            "id": "POLICY_RISK_EVIDENCE_UPGRADE_LAB_DEPLOYMENT_UPGRADE_LAB_UPGRADE_LAB_EDGE_EDGE",
+            "observed": {
+              "reason": "runAsNonRoot absent",
+              "subject": "edge"
+            }
+          }
+        ],
+        "id": "POLICY_RISK_UPGRADE_LAB_DEPLOYMENT_UPGRADE_LAB_UPGRADE_LAB_EDGE_RUNASNONROOT_ABSENT_EDGE",
+        "message": "Deployment upgrade-lab/upgrade-lab-upgrade-lab-edge may violate restricted policy: runAsNonRoot absent.",
+        "recommendation": "Adjust the pod security context or namespace policy before upgrade.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "upgrade-lab-upgrade-lab-edge",
+          "namespace": "upgrade-lab"
+        },
+        "severity": "High",
+        "type": "POLICY_RISK"
+      },
+      {
+        "category": "PolicyRisk",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Workload pod template has a restricted policy incompatibility.",
+            "id": "POLICY_RISK_EVIDENCE_UPGRADE_LAB_DEPLOYMENT_UPGRADE_LAB_UPGRADE_LAB_ORDERS_ORDERS",
+            "observed": {
+              "reason": "runAsNonRoot absent",
+              "subject": "orders"
+            }
+          }
+        ],
+        "id": "POLICY_RISK_UPGRADE_LAB_DEPLOYMENT_UPGRADE_LAB_UPGRADE_LAB_ORDERS_RUNASNONROOT_ABSENT_ORDERS",
+        "message": "Deployment upgrade-lab/upgrade-lab-upgrade-lab-orders may violate restricted policy: runAsNonRoot absent.",
+        "recommendation": "Adjust the pod security context or namespace policy before upgrade.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "upgrade-lab-upgrade-lab-orders",
+          "namespace": "upgrade-lab"
+        },
+        "severity": "High",
+        "type": "POLICY_RISK"
+      },
+      {
+        "category": "PolicyRisk",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Workload pod template has a restricted policy incompatibility.",
+            "id": "POLICY_RISK_EVIDENCE_UPGRADE_LAB_DEPLOYMENT_UPGRADE_LAB_UPGRADE_LAB_SIGNALS_SIGNALS",
+            "observed": {
+              "reason": "runAsNonRoot absent",
+              "subject": "signals"
+            }
+          }
+        ],
+        "id": "POLICY_RISK_UPGRADE_LAB_DEPLOYMENT_UPGRADE_LAB_UPGRADE_LAB_SIGNALS_RUNASNONROOT_ABSENT_SIGNALS",
+        "message": "Deployment upgrade-lab/upgrade-lab-upgrade-lab-signals may violate restricted policy: runAsNonRoot absent.",
+        "recommendation": "Adjust the pod security context or namespace policy before upgrade.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "upgrade-lab-upgrade-lab-signals",
+          "namespace": "upgrade-lab"
+        },
+        "severity": "High",
+        "type": "POLICY_RISK"
+      },
+      {
+        "category": "PolicyRisk",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Pod Security Admission namespace label.",
+            "id": "POLICY_RISK_EVIDENCE_UPGRADE_LAB_RESTRICTED",
+            "observed": {
+              "pod-security.kubernetes.io/enforce": "restricted"
+            }
+          }
+        ],
+        "id": "POLICY_RISK_UPGRADE_LAB_RESTRICTED",
+        "message": "Namespace upgrade-lab enforces Pod Security restricted.",
+        "recommendation": "Validate all workloads in this namespace against the restricted Pod Security profile before upgrade.",
+        "resource": {
+          "apiVersion": "v1",
+          "kind": "Namespace",
+          "name": "upgrade-lab"
+        },
+        "severity": "Medium",
+        "type": "POLICY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER",
+        "message": "Deployment cert-manager/cert-manager has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "cert-manager",
+          "namespace": "cert-manager"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CAINJECTOR",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_CAINJECTOR",
+        "message": "Deployment cert-manager/cert-manager-cainjector has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "cert-manager-cainjector",
+          "namespace": "cert-manager"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_WEBHOOK",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_CERT_MANAGER_DEPLOYMENT_CERT_MANAGER_WEBHOOK",
+        "message": "Deployment cert-manager/cert-manager-webhook has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "cert-manager-webhook",
+          "namespace": "cert-manager"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_EXTERNAL_SECRETS_DEPLOYMENT_EXTERNAL_SECRETS",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_EXTERNAL_SECRETS_DEPLOYMENT_EXTERNAL_SECRETS",
+        "message": "Deployment external-secrets/external-secrets has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "external-secrets",
+          "namespace": "external-secrets"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_EXTERNAL_SECRETS_DEPLOYMENT_EXTERNAL_SECRETS_CERT_CONTROLLER",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_EXTERNAL_SECRETS_DEPLOYMENT_EXTERNAL_SECRETS_CERT_CONTROLLER",
+        "message": "Deployment external-secrets/external-secrets-cert-controller has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "external-secrets-cert-controller",
+          "namespace": "external-secrets"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_EXTERNAL_SECRETS_DEPLOYMENT_EXTERNAL_SECRETS_WEBHOOK",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_EXTERNAL_SECRETS_DEPLOYMENT_EXTERNAL_SECRETS_WEBHOOK",
+        "message": "Deployment external-secrets/external-secrets-webhook has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "external-secrets-webhook",
+          "namespace": "external-secrets"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_ISTIO_INGRESS_DEPLOYMENT_ISTIO_INGRESS",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_ISTIO_INGRESS_DEPLOYMENT_ISTIO_INGRESS",
+        "message": "Deployment istio-ingress/istio-ingress has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "istio-ingress",
+          "namespace": "istio-ingress"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_KYVERNO_DEPLOYMENT_KYVERNO_ADMISSION_CONTROLLER",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_KYVERNO_DEPLOYMENT_KYVERNO_ADMISSION_CONTROLLER",
+        "message": "Deployment kyverno/kyverno-admission-controller has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "kyverno-admission-controller",
+          "namespace": "kyverno"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_KYVERNO_DEPLOYMENT_KYVERNO_BACKGROUND_CONTROLLER",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_KYVERNO_DEPLOYMENT_KYVERNO_BACKGROUND_CONTROLLER",
+        "message": "Deployment kyverno/kyverno-background-controller has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "kyverno-background-controller",
+          "namespace": "kyverno"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_KYVERNO_DEPLOYMENT_KYVERNO_CLEANUP_CONTROLLER",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_KYVERNO_DEPLOYMENT_KYVERNO_CLEANUP_CONTROLLER",
+        "message": "Deployment kyverno/kyverno-cleanup-controller has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "kyverno-cleanup-controller",
+          "namespace": "kyverno"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_KYVERNO_DEPLOYMENT_KYVERNO_REPORTS_CONTROLLER",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_KYVERNO_DEPLOYMENT_KYVERNO_REPORTS_CONTROLLER",
+        "message": "Deployment kyverno/kyverno-reports-controller has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "kyverno-reports-controller",
+          "namespace": "kyverno"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_GRAFANA",
+        "message": "Deployment monitoring/kube-prometheus-stack-grafana has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "kube-prometheus-stack-grafana",
+          "namespace": "monitoring"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_KUBE_STATE_METRICS",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_KUBE_STATE_METRICS",
+        "message": "Deployment monitoring/kube-prometheus-stack-kube-state-metrics has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "kube-prometheus-stack-kube-state-metrics",
+          "namespace": "monitoring"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_OPERATOR",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_MONITORING_DEPLOYMENT_KUBE_PROMETHEUS_STACK_OPERATOR",
+        "message": "Deployment monitoring/kube-prometheus-stack-operator has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "kube-prometheus-stack-operator",
+          "namespace": "monitoring"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_STATEFULSET_ALERTMANAGER_KUBE_PROMETHEUS_STACK_ALERTMANAGER",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_MONITORING_STATEFULSET_ALERTMANAGER_KUBE_PROMETHEUS_STACK_ALERTMANAGER",
+        "message": "StatefulSet monitoring/alertmanager-kube-prometheus-stack-alertmanager has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "StatefulSet",
+          "name": "alertmanager-kube-prometheus-stack-alertmanager",
+          "namespace": "monitoring"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_MONITORING_STATEFULSET_PROMETHEUS_KUBE_PROMETHEUS_STACK_PROMETHEUS",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_MONITORING_STATEFULSET_PROMETHEUS_KUBE_PROMETHEUS_STACK_PROMETHEUS",
+        "message": "StatefulSet monitoring/prometheus-kube-prometheus-stack-prometheus has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "StatefulSet",
+          "name": "prometheus-kube-prometheus-stack-prometheus",
+          "namespace": "monitoring"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_NEUVECTOR_DEPLOYMENT_NEUVECTOR_CONTROLLER_POD",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_NEUVECTOR_DEPLOYMENT_NEUVECTOR_CONTROLLER_POD",
+        "message": "Deployment neuvector/neuvector-controller-pod has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "neuvector-controller-pod",
+          "namespace": "neuvector"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_NEUVECTOR_DEPLOYMENT_NEUVECTOR_MANAGER_POD",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_NEUVECTOR_DEPLOYMENT_NEUVECTOR_MANAGER_POD",
+        "message": "Deployment neuvector/neuvector-manager-pod has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "neuvector-manager-pod",
+          "namespace": "neuvector"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      },
+      {
+        "category": "WorkloadAvailability",
+        "classification": {
+          "matchedRule": "DEFAULT_BLOCKING",
+          "reason": "Finding can affect upgrade safety and has not been accepted or classified as provider-managed.",
+          "status": "Blocking"
+        },
+        "evidence": [
+          {
+            "description": "Replica count observed on the workload spec.",
+            "id": "WORKLOAD_AVAILABILITY_RISK_EVIDENCE_NEUVECTOR_DEPLOYMENT_NEUVECTOR_SCANNER_POD",
+            "observed": {
+              "replicas": "1"
+            }
+          }
+        ],
+        "id": "WORKLOAD_AVAILABILITY_RISK_NEUVECTOR_DEPLOYMENT_NEUVECTOR_SCANNER_POD",
+        "message": "Deployment neuvector/neuvector-scanner-pod has fewer than 2 replicas.",
+        "recommendation": "Increase replicas to at least 2 or document why this workload can tolerate disruption.",
+        "resource": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "neuvector-scanner-pod",
+          "namespace": "neuvector"
+        },
+        "severity": "High",
+        "type": "WORKLOAD_AVAILABILITY_RISK"
+      }
+    ],
+    "generatedPlanRef": {
+      "name": "aks-assessment-plan"
+    },
+    "phase": "Completed",
+    "rawSummary": {
+      "critical": 0,
+      "high": 58,
+      "info": 5,
+      "low": 0,
+      "medium": 14,
+      "totalFindings": 77
+    },
+    "riskLevel": "Critical",
+    "score": 576,
+    "summary": {
+      "critical": 0,
+      "high": 52,
+      "low": 0,
+      "medium": 14,
+      "totalFindings": 66
+    }
+  }
+}
+

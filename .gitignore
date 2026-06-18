@@ -1,4 +1,4 @@
-.terraform/
+**/.terraform/
 .terraform.lock.hcl.*
 terraform.tfstate
 terraform.tfstate.backup
@@ -17,11 +17,10 @@ override.tf.json
 .terraform.tfstate.lock.info
 tfplan.*
 kubeconfig*
-build/
+automation/aks-platform/build/
 article/generated/
-secrets/
-.local/
-gitops/
-__pycache__/
+automation/aks-platform/secrets/
+automation/aks-platform/.local/
+**/__pycache__/
 *.pyc
-experiments/aks/**/apiserver-metrics-*.txt
+article/evidence/experiments/aks/**/apiserver-metrics-*.txt

@@ -3,7 +3,7 @@
   "target_version": "1.35",
   "controller_image_observation": {
     "in_cluster_image": "ghcr.io/ihsenalaya/kubeupgrade-guardian-operator:main",
-    "completed_exports_controller": "patched local controller from ../kubeupgrade-guardian-operator working tree",
+    "completed_exports_controller": "patched local controller from operator/source/kubeupgrade-guardian-operator working tree",
     "reason": "the in-cluster image produced findings and pod RSS, but an idempotency bug could leave assessment phase Running after plan requeues; the patched controller produced stable Completed exports.",
     "patched_operator_commit": "4a2c14f"
   },

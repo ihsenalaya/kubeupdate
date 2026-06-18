@@ -1,0 +1,8 @@
+# command: kubectl -n kubeupgrade-guardian-system logs kubeupgrade-guardian-kubeupgrade-guardian-operator-5fbc77dj5qpc --all-containers --tail=500
+2026-06-18T14:01:25Z	INFO	setup	starting manager
+2026-06-18T14:01:25Z	INFO	starting server	{"kind": "health probe", "addr": "[::]:8081"}
+I0618 14:01:25.285935       1 leaderelection.go:250] attempting to acquire leader lease kubeupgrade-guardian-system/77b88f98.guardian.io...
+2026-06-18T14:01:25Z	INFO	controller-runtime.metrics	Starting metrics server
+2026-06-18T14:01:25Z	INFO	controller-runtime.metrics	Serving metrics server	{"bindAddress": ":8080", "secure": false}
+E0618 14:01:56.002904       1 leaderelection.go:332] error retrieving resource lock kubeupgrade-guardian-system/77b88f98.guardian.io: Get "https://10.96.0.1:443/apis/coordination.k8s.io/v1/namespaces/kubeupgrade-guardian-system/leases/77b88f98.guardian.io": dial tcp 10.96.0.1:443: i/o timeout
+E0618 14:02:30.020900       1 leaderelection.go:332] error retrieving resource lock kubeupgrade-guardian-system/77b88f98.guardian.io: Get "https://10.96.0.1:443/apis/coordination.k8s.io/v1/namespaces/kubeupgrade-guardian-system/leases/77b88f98.guardian.io": dial tcp 10.96.0.1:443: i/o timeout

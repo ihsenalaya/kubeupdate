@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cluster_name="$(terraform output -raw cluster_name 2>/dev/null || true)"
-resource_group_name="$(terraform output -raw resource_group_name 2>/dev/null || true)"
-jump_host_name="$(terraform output -raw jump_host_name 2>/dev/null || true)"
-jump_host_admin_username="$(terraform output -raw jump_host_ssh_command 2>/dev/null | sed -E 's#^ssh ([^@]+)@.*#\1#' || true)"
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+repo_root="$(cd "${script_dir}/.." && pwd)"
+
+cluster_name="$(terraform -chdir="${repo_root}" output -raw cluster_name 2>/dev/null || true)"
+resource_group_name="$(terraform -chdir="${repo_root}" output -raw resource_group_name 2>/dev/null || true)"
+jump_host_name="$(terraform -chdir="${repo_root}" output -raw jump_host_name 2>/dev/null || true)"
+jump_host_admin_username="$(terraform -chdir="${repo_root}" output -raw jump_host_ssh_command 2>/dev/null | sed -E 's#^ssh ([^@]+)@.*#\1#' || true)"
 remote_script="$(mktemp)"
 trap 'rm -f "${remote_script}"' EXIT
 
@@ -51,4 +54,4 @@ EOF
     -o tsv
 fi
 
-terraform destroy -auto-approve
+terraform -chdir="${repo_root}" destroy -auto-approve

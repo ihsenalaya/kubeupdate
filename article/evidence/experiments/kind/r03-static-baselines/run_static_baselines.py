@@ -259,9 +259,9 @@ def write_summary(run_dir, metadata, rows):
 
 
 def main():
-    root = Path(__file__).resolve().parents[3]
     experiment_dir = Path(__file__).resolve().parent
-    manifests_dir = root / "experiments" / "kind" / "r01-benchmark" / "manifests"
+    root = next((path for path in (experiment_dir, *experiment_dir.parents) if (path / ".git").exists()), experiment_dir)
+    manifests_dir = root / "article" / "evidence" / "experiments" / "kind" / "r01-benchmark" / "manifests"
     input_manifest = manifests_dir / "00-scenarios.yaml"
     if not input_manifest.exists():
         raise SystemExit(f"missing input manifest: {input_manifest}")

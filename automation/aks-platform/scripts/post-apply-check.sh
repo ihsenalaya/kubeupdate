@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-resource_group_name="$(terraform output -raw resource_group_name)"
-ingress_private_ip="$(terraform output -raw istio_private_ip)"
-jump_host_name="$(terraform output -raw jump_host_name)"
-jump_host_admin_username="$(terraform output -raw jump_host_ssh_command | sed -E 's#^ssh ([^@]+)@.*#\1#')"
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+repo_root="$(cd "${script_dir}/.." && pwd)"
+
+resource_group_name="$(terraform -chdir="${repo_root}" output -raw resource_group_name)"
+ingress_private_ip="$(terraform -chdir="${repo_root}" output -raw istio_private_ip)"
+jump_host_name="$(terraform -chdir="${repo_root}" output -raw jump_host_name)"
+jump_host_admin_username="$(terraform -chdir="${repo_root}" output -raw jump_host_ssh_command | sed -E 's#^ssh ([^@]+)@.*#\1#')"
 remote_script="$(mktemp)"
 trap 'rm -f "${remote_script}"' EXIT
 

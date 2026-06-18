@@ -1,0 +1,4 @@
+NAMESPACE     NAME                                       READY   STATUS   RESTARTS   AGE     IP              NODE                      NOMINATED NODE   READINESS GATES
+aks-command   command-06dcdbdd894843068d5b5354937e5827   0/1     Error    0          6m40s   192.168.1.200   aks-platform-apps-xkj96   <none>           <none>
+aks-command   command-b358c349b6fb4652b5af83196019ec04   0/1     Error    0          11m     192.168.1.188   aks-platform-apps-xkj96   <none>           <none>
+

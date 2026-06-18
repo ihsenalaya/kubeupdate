@@ -14,9 +14,27 @@ spec:
   decision: DoNotUpgrade
   riskLevel: High
   score: 25
+  sourceVersion: "1.31"
+  targetVersion: "1.32"
   summary:
     totalFindings: 1
     critical: 1
+  rawSummary:
+    totalFindings: 1
+    critical: 1
+  classificationSummary:
+    total: 1
+    blocking: 1
+  upgradePath:
+    - from: "1.31"
+      to: "1.32"
+      phases:
+        - name: prechecks
+        - name: control-plane-upgrade
+        - name: post-control-plane-validation
+        - name: system-nodepool-upgrade
+        - name: user-nodepool-upgrade
+        - name: application-validation
   requiredActions:
     - id: remediate-pdb-blocking-001
       severity: Critical
@@ -29,6 +47,22 @@ spec:
       action: Increase replicas or relax the PodDisruptionBudget before upgrade.
       evidenceRefs:
         - PDB_BLOCKING_001
+  blockingFindings:
+    - id: PDB_BLOCKING_001
+      type: PDB_BLOCKING_RISK
+      severity: Critical
+      category: PDB
+      resource:
+        apiVersion: apps/v1
+        kind: Deployment
+        namespace: production
+        name: payment-api
+      message: PDB production/payment-api may block disruption.
+      recommendation: Increase replicas or relax the PodDisruptionBudget before upgrade.
+      classification:
+        status: Blocking
+        matchedRule: DEFAULT_BLOCKING
+        reason: Finding can affect upgrade safety and has not been accepted or classified as provider-managed.
   recommendedOrder:
     - fix-critical-blockers
     - fix-high-risk-workloads

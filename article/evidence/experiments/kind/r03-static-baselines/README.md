@@ -8,7 +8,7 @@ precision/recall comparison and not an independent benchmark.
 
 The runner audits:
 
-- `experiments/kind/r01-benchmark/manifests/00-scenarios.yaml`
+- `article/evidence/experiments/kind/r01-benchmark/manifests/00-scenarios.yaml`
 
 It deliberately excludes `10-assessment.yaml` because that file contains the
 KubeUpgrade Guardian custom resource used to trigger the assessment, not a
@@ -38,7 +38,7 @@ executed on the existing R01 manifest and archived reproducibly.
 From the repository root:
 
 ```bash
-python3 experiments/kind/r03-static-baselines/run_static_baselines.py
+python3 article/evidence/experiments/kind/r03-static-baselines/run_static_baselines.py
 ```
 
 The runner writes a timestamped directory under `results/` with raw outputs,

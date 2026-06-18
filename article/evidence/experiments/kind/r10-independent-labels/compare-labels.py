@@ -162,9 +162,9 @@ def cohens_kappa(labelers_by_key):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--expected-dir", default="experiments/kind/r10-independent-labels/expected-findings")
+    parser.add_argument("--expected-dir", default="article/evidence/experiments/kind/r10-independent-labels/expected-findings")
     parser.add_argument("--findings-json", required=True)
-    parser.add_argument("--output", default="experiments/kind/r10-independent-labels/results-summary.json")
+    parser.add_argument("--output", default="article/evidence/experiments/kind/r10-independent-labels/results-summary.json")
     args = parser.parse_args()
 
     expected, labelers_by_key = load_expected(args.expected_dir)

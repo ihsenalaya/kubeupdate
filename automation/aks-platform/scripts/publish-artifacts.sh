@@ -2,7 +2,9 @@
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "$0")/.." && pwd)"
-operator_dir="${OPERATOR_DIR:-$(cd "${repo_root}/.." && pwd)/kubeupgrade-guardian-operator}"
+workspace_root="$(cd "${repo_root}/../.." && pwd)"
+operator_dir="${OPERATOR_DIR:-${workspace_root}/operator/source/kubeupgrade-guardian-operator}"
+operator_chart_dir="${OPERATOR_CHART_DIR:-${workspace_root}/operator/helm/kubeupgrade-guardian-operator}"
 
 acr_name="$(terraform -chdir="${repo_root}" output -raw acr_name)"
 acr_login_server="$(terraform -chdir="${repo_root}" output -raw acr_login_server)"
@@ -17,6 +19,11 @@ if [[ ! -d "${operator_dir}" ]]; then
   exit 1
 fi
 
+if [[ ! -d "${operator_chart_dir}" ]]; then
+  echo "Missing operator chart directory: ${operator_chart_dir}"
+  exit 1
+fi
+
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "${tmpdir}"' EXIT
 
@@ -25,7 +32,7 @@ bundle_file="${tmpdir}/artifact-sources.tgz"
 blob_name="source-${artifact_tag}-$(date +%s).tgz"
 remote_script="${tmpdir}/publish-on-jump-host.sh"
 
-mkdir -p "${bundle_dir}/kubeupdate" "${bundle_dir}/kubeupgrade-guardian-operator"
+mkdir -p "${bundle_dir}/kubeupdate" "${bundle_dir}/kubeupgrade-guardian-operator" "${bundle_dir}/operator-chart"
 rsync -a \
   --exclude '.git' \
   --exclude '.terraform' \
@@ -33,13 +40,17 @@ rsync -a \
   --exclude 'build' \
   --exclude 'secrets' \
   --exclude 'tfplan' \
+  --exclude 'tfplan.*' \
+  --exclude '*.tfstate' \
+  --exclude '*.tfstate.*' \
   "${repo_root}/" "${bundle_dir}/kubeupdate/"
 rsync -a \
   --exclude '.git' \
   --exclude 'bin' \
   --exclude 'dist' \
   "${operator_dir}/" "${bundle_dir}/kubeupgrade-guardian-operator/"
-tar -C "${bundle_dir}" -czf "${bundle_file}" kubeupdate kubeupgrade-guardian-operator
+rsync -a "${operator_chart_dir}/" "${bundle_dir}/operator-chart/"
+tar -C "${bundle_dir}" -czf "${bundle_file}" kubeupdate kubeupgrade-guardian-operator operator-chart
 
 storage_account_key="$(az storage account keys list \
   --resource-group "${resource_group_name}" \
@@ -151,14 +162,19 @@ build_and_push "\${workdir}/kubeupdate/apps/upgrade-lab/services/signals-service
 rm -rf "\${workdir}/chart-packages"
 mkdir -p "\${workdir}/chart-packages"
 
-for chart in kubeupgrade-guardian-operator upgrade-lab; do
-  helm lint "\${workdir}/kubeupdate/gitops/charts/\${chart}"
-  helm package "\${workdir}/kubeupdate/gitops/charts/\${chart}" \
-    --version '${artifact_tag}' \
-    --app-version '${artifact_tag}' \
-    --destination "\${workdir}/chart-packages"
-  helm push "\${workdir}/chart-packages/\${chart}-${artifact_tag}.tgz" "oci://${acr_login_server}/helm"
-done
+helm lint "\${workdir}/operator-chart"
+helm package "\${workdir}/operator-chart" \
+  --version '${artifact_tag}' \
+  --app-version '${artifact_tag}' \
+  --destination "\${workdir}/chart-packages"
+helm push "\${workdir}/chart-packages/kubeupgrade-guardian-operator-${artifact_tag}.tgz" "oci://${acr_login_server}/helm"
+
+helm lint "\${workdir}/kubeupdate/gitops/charts/upgrade-lab"
+helm package "\${workdir}/kubeupdate/gitops/charts/upgrade-lab" \
+  --version '${artifact_tag}' \
+  --app-version '${artifact_tag}' \
+  --destination "\${workdir}/chart-packages"
+helm push "\${workdir}/chart-packages/upgrade-lab-${artifact_tag}.tgz" "oci://${acr_login_server}/helm"
 SCRIPT
 
 az vm run-command invoke \

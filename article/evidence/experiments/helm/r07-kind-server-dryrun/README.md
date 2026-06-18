@@ -1,7 +1,7 @@
 # R07 Helm Kind Server Dry-Run
 
 This package validates the rendered Helm corpus from
-`experiments/helm/r05-realistic-workloads` against a real Kubernetes API server.
+`article/evidence/experiments/helm/r05-realistic-workloads` against a real Kubernetes API server.
 
 ## Scope
 
@@ -22,7 +22,7 @@ the rendered corpus.
 From the repository root:
 
 ```bash
-python3 experiments/helm/r07-kind-server-dryrun/run_kind_server_dryrun.py \
+python3 article/evidence/experiments/helm/r07-kind-server-dryrun/run_kind_server_dryrun.py \
   --r05-run-id 20260617T133841Z
 ```
 

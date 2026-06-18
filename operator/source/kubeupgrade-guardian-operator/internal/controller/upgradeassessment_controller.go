@@ -20,7 +20,9 @@ import (
 	"context"
 	"fmt"
 	"sort"
+	"time"
 
+	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -33,7 +35,9 @@ import (
 
 	upgradev1alpha1 "github.com/ihsenalaya/kubeupgrade-guardian-operator/api/v1alpha1"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/checkers"
+	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/classifier"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/planner"
+	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/reporting"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/scoring"
 )
 
@@ -54,6 +58,7 @@ type UpgradeAssessmentReconciler struct {
 //+kubebuilder:rbac:groups=upgrade.guardian.io,resources=upgradeassessments/finalizers,verbs=update
 //+kubebuilder:rbac:groups=upgrade.guardian.io,resources=upgradeplans,verbs=get;list;watch;create;update;patch
 //+kubebuilder:rbac:groups=upgrade.guardian.io,resources=upgradeplans/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups="",resources=configmaps,verbs=get;list;watch;create;update;patch
 //+kubebuilder:rbac:groups="",resources=namespaces;nodes;pods;services,verbs=get;list;watch
 //+kubebuilder:rbac:groups=apps,resources=deployments;statefulsets;daemonsets,verbs=get;list;watch
 //+kubebuilder:rbac:groups=policy,resources=poddisruptionbudgets,verbs=get;list;watch
@@ -79,7 +84,7 @@ func (r *UpgradeAssessmentReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		return ctrl.Result{}, err
 	}
 
-	findings, err := r.runCheckers(ctx, &assessment)
+	rawFindings, err := r.runCheckers(ctx, &assessment)
 	if err != nil {
 		logger.Error(err, "assessment failed")
 		if statusErr := r.markFailed(ctx, &assessment, err); statusErr != nil {
@@ -88,16 +93,20 @@ func (r *UpgradeAssessmentReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		return ctrl.Result{}, err
 	}
 
-	sort.SliceStable(findings, func(i, j int) bool {
-		return findings[i].ID < findings[j].ID
+	sort.SliceStable(rawFindings, func(i, j int) bool {
+		return rawFindings[i].ID < rawFindings[j].ID
 	})
 
-	score, summary := scoring.Score(findings)
+	classified := classifier.Classify(rawFindings, assessment.Spec, time.Now())
+	effectiveFindings := classified.BlockingFindings()
+	score, summary := scoring.Score(effectiveFindings)
+	_, rawSummary := scoring.Score(classified.Findings)
 	riskLevel := scoring.RiskLevel(score)
-	decision := scoring.Decision(score, summary, findings)
+	decision := scoring.Decision(score, summary, effectiveFindings)
 
 	planName := assessment.Name + "-plan"
-	planSpec := planner.BuildSpec(&assessment, decision, riskLevel, score, summary, boundedFindings(findings, maxPlanActions))
+	artifactName := reporting.ArtifactName(&assessment)
+	planSpec := planner.BuildSpec(&assessment, decision, riskLevel, score, summary, rawSummary, classified.Summary, boundedFindings(classified.Findings, maxPlanActions))
 	if err := r.upsertPlan(ctx, &assessment, planName, planSpec); err != nil {
 		if statusErr := r.markFailed(ctx, &assessment, err); statusErr != nil {
 			return ctrl.Result{}, statusErr
@@ -105,7 +114,14 @@ func (r *UpgradeAssessmentReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		return ctrl.Result{}, err
 	}
 
-	return ctrl.Result{}, r.markCompleted(ctx, &assessment, planName, riskLevel, score, summary, findings)
+	if err := r.upsertArtifact(ctx, &assessment, planName, artifactName, riskLevel, score, summary, rawSummary, classified.Summary, classified.Findings, planSpec); err != nil {
+		if statusErr := r.markFailed(ctx, &assessment, err); statusErr != nil {
+			return ctrl.Result{}, statusErr
+		}
+		return ctrl.Result{}, err
+	}
+
+	return ctrl.Result{}, r.markCompleted(ctx, &assessment, planName, artifactName, riskLevel, score, summary, rawSummary, classified.Summary, classified.Findings)
 }
 
 // SetupWithManager sets up the controller with the Manager.
@@ -176,9 +192,12 @@ func (r *UpgradeAssessmentReconciler) markCompleted(
 	ctx context.Context,
 	assessment *upgradev1alpha1.UpgradeAssessment,
 	planName string,
+	artifactName string,
 	riskLevel upgradev1alpha1.RiskLevel,
 	score int,
 	summary upgradev1alpha1.FindingSummary,
+	rawSummary upgradev1alpha1.FindingSummary,
+	classificationSummary upgradev1alpha1.ClassificationSummary,
 	findings []upgradev1alpha1.Finding,
 ) error {
 	return retry.RetryOnConflict(retry.DefaultRetry, func() error {
@@ -190,8 +209,15 @@ func (r *UpgradeAssessmentReconciler) markCompleted(
 		latest.Status.RiskLevel = riskLevel
 		latest.Status.Score = score
 		latest.Status.Summary = summary
+		latest.Status.RawSummary = rawSummary
+		latest.Status.ClassificationSummary = classificationSummary
 		latest.Status.Findings = boundedFindings(findings, maxPublishedFindings)
 		latest.Status.GeneratedPlanRef = &upgradev1alpha1.PlanReference{Name: planName}
+		latest.Status.ArtifactRef = &upgradev1alpha1.ArtifactReference{
+			Kind:      "ConfigMap",
+			Name:      artifactName,
+			Namespace: latest.Namespace,
+		}
 		setCondition(latest, metav1.Condition{
 			Type:               upgradev1alpha1.ConditionAssessmentCompleted,
 			Status:             metav1.ConditionTrue,
@@ -209,6 +235,62 @@ func (r *UpgradeAssessmentReconciler) markCompleted(
 		setTruncationCondition(latest, findings)
 		return r.Status().Update(ctx, latest)
 	})
+}
+
+func (r *UpgradeAssessmentReconciler) upsertArtifact(
+	ctx context.Context,
+	assessment *upgradev1alpha1.UpgradeAssessment,
+	planName string,
+	artifactName string,
+	riskLevel upgradev1alpha1.RiskLevel,
+	score int,
+	summary upgradev1alpha1.FindingSummary,
+	rawSummary upgradev1alpha1.FindingSummary,
+	classificationSummary upgradev1alpha1.ClassificationSummary,
+	findings []upgradev1alpha1.Finding,
+	planSpec upgradev1alpha1.UpgradePlanSpec,
+) error {
+	renderedAssessment := assessment.DeepCopy()
+	renderedAssessment.Status.Phase = upgradev1alpha1.AssessmentPhaseCompleted
+	renderedAssessment.Status.RiskLevel = riskLevel
+	renderedAssessment.Status.Score = score
+	renderedAssessment.Status.Summary = summary
+	renderedAssessment.Status.RawSummary = rawSummary
+	renderedAssessment.Status.ClassificationSummary = classificationSummary
+	renderedAssessment.Status.Findings = boundedFindings(findings, maxPublishedFindings)
+	renderedAssessment.Status.GeneratedPlanRef = &upgradev1alpha1.PlanReference{Name: planName}
+	renderedAssessment.Status.ArtifactRef = &upgradev1alpha1.ArtifactReference{
+		Kind:      "ConfigMap",
+		Name:      artifactName,
+		Namespace: assessment.Namespace,
+	}
+
+	renderedPlan := &upgradev1alpha1.UpgradePlan{}
+	renderedPlan.Namespace = assessment.Namespace
+	renderedPlan.Name = planName
+	renderedPlan.Spec = planSpec
+
+	configMap := &corev1.ConfigMap{}
+	configMap.Namespace = assessment.Namespace
+	configMap.Name = artifactName
+
+	_, err := controllerutil.CreateOrUpdate(ctx, r.Client, configMap, func() error {
+		if err := controllerutil.SetControllerReference(assessment, configMap, r.Scheme); err != nil {
+			return err
+		}
+		if configMap.Labels == nil {
+			configMap.Labels = map[string]string{}
+		}
+		configMap.Labels["app.kubernetes.io/name"] = "kubeupgrade-guardian-operator"
+		configMap.Labels["app.kubernetes.io/component"] = "assessment-artifact"
+		configMap.Labels["upgrade.guardian.io/assessment"] = assessment.Name
+		configMap.Data = map[string]string{
+			reporting.AssessmentMarkdownKey: reporting.AssessmentMarkdown(renderedAssessment),
+			reporting.PlanMarkdownKey:       reporting.PlanMarkdown(renderedPlan),
+		}
+		return nil
+	})
+	return err
 }
 
 func (r *UpgradeAssessmentReconciler) upsertPlan(ctx context.Context, assessment *upgradev1alpha1.UpgradeAssessment, planName string, spec upgradev1alpha1.UpgradePlanSpec) error {

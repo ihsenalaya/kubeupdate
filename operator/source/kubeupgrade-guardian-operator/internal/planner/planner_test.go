@@ -27,6 +27,10 @@ import (
 func TestBuildSpecGeneratesRequiredActions(t *testing.T) {
 	assessment := &upgradev1alpha1.UpgradeAssessment{
 		ObjectMeta: metav1.ObjectMeta{Name: "prod-upgrade-assessment", Namespace: "platform"},
+		Spec: upgradev1alpha1.UpgradeAssessmentSpec{
+			SourceVersion: "1.34",
+			TargetVersion: "1.35",
+		},
 	}
 	findings := []upgradev1alpha1.Finding{
 		{
@@ -52,6 +56,8 @@ func TestBuildSpecGeneratesRequiredActions(t *testing.T) {
 		upgradev1alpha1.RiskLevelHigh,
 		25,
 		upgradev1alpha1.FindingSummary{TotalFindings: 2, Critical: 1, Info: 1},
+		upgradev1alpha1.FindingSummary{TotalFindings: 2, Critical: 1, Info: 1},
+		upgradev1alpha1.ClassificationSummary{Total: 2, Blocking: 1, Informational: 1},
 		findings,
 	)
 
@@ -73,5 +79,24 @@ func TestBuildSpecGeneratesRequiredActions(t *testing.T) {
 	}
 	if len(spec.RecommendedOrder) != len(defaultRecommendedOrder) {
 		t.Fatalf("unexpected recommended order: %#v", spec.RecommendedOrder)
+	}
+	if spec.SourceVersion != "1.34" || spec.TargetVersion != "1.35" {
+		t.Fatalf("unexpected version fields: %#v", spec)
+	}
+	if len(spec.UpgradePath) != 1 || spec.UpgradePath[0].From != "1.34" || spec.UpgradePath[0].To != "1.35" {
+		t.Fatalf("unexpected upgrade path: %#v", spec.UpgradePath)
+	}
+}
+
+func TestBuildUpgradePathCreatesMinorVersionHops(t *testing.T) {
+	path := BuildUpgradePath("1.30", "1.32")
+	if len(path) != 2 {
+		t.Fatalf("expected two version hops, got %#v", path)
+	}
+	if path[0].From != "1.30" || path[0].To != "1.31" || path[1].From != "1.31" || path[1].To != "1.32" {
+		t.Fatalf("unexpected path: %#v", path)
+	}
+	if len(path[0].Phases) == 0 {
+		t.Fatalf("expected phases in path: %#v", path)
 	}
 }

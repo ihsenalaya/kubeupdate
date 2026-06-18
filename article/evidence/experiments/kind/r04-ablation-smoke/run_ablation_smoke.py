@@ -91,7 +91,7 @@ def write_json(path, data):
 
 
 def load_r01_module(root):
-    path = root / "experiments" / "kind" / "r01-benchmark" / "run_kind_benchmark.py"
+    path = root / "article" / "evidence" / "experiments" / "kind" / "r01-benchmark" / "run_kind_benchmark.py"
     spec = importlib.util.spec_from_file_location("r01_benchmark", path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -393,14 +393,14 @@ def write_summary(result_dir, metadata, rows):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--operator-repo", default="../kubeupgrade-guardian-operator")
+    parser.add_argument("--operator-repo", default="operator/source/kubeupgrade-guardian-operator")
     parser.add_argument("--restore-context", default=os.environ.get("KUG_RESTORE_CONTEXT", ""))
     parser.add_argument("--keep-cluster", action="store_true")
     args = parser.parse_args()
 
-    root = Path(__file__).resolve().parents[3]
     experiment_dir = Path(__file__).resolve().parent
-    r01_dir = root / "experiments" / "kind" / "r01-benchmark"
+    root = next((path for path in (experiment_dir, *experiment_dir.parents) if (path / ".git").exists()), experiment_dir)
+    r01_dir = root / "article" / "evidence" / "experiments" / "kind" / "r01-benchmark"
     manifest_dir = r01_dir / "manifests"
     operator_repo = (root / args.operator_repo).resolve()
     if not operator_repo.exists():

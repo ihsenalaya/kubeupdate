@@ -43,8 +43,23 @@ type AssessmentChecks struct {
 	Observability        bool `json:"observability,omitempty"`
 }
 
+// AcceptedRisk documents a human-approved exception for a specific finding.
+type AcceptedRisk struct {
+	FindingID  string       `json:"findingId,omitempty"`
+	Type       string       `json:"type,omitempty"`
+	Resource   *ResourceRef `json:"resource,omitempty"`
+	Reason     string       `json:"reason"`
+	ApprovedBy string       `json:"approvedBy"`
+	ExpiresAt  *metav1.Time `json:"expiresAt,omitempty"`
+}
+
 // UpgradeAssessmentSpec defines the desired state of UpgradeAssessment
 type UpgradeAssessmentSpec struct {
+	// SourceVersion is the current Kubernetes minor version, for example "1.34".
+	// When omitted, the generated plan uses "current" as the source.
+	// +kubebuilder:validation:Pattern=`^(|1\.[0-9]+)$`
+	SourceVersion string `json:"sourceVersion,omitempty"`
+
 	// TargetVersion is the Kubernetes minor version being assessed, for example "1.32".
 	// +kubebuilder:validation:Pattern=`^1\.[0-9]+$`
 	TargetVersion string `json:"targetVersion"`
@@ -53,18 +68,26 @@ type UpgradeAssessmentSpec struct {
 	// +kubebuilder:default=ReadOnly
 	Mode AssessmentMode `json:"mode,omitempty"`
 
-	Scope  AssessmentScope  `json:"scope,omitempty"`
-	Checks AssessmentChecks `json:"checks,omitempty"`
+	// Profile tunes how non-universal findings are interpreted.
+	// +kubebuilder:default=production
+	Profile AssessmentProfile `json:"profile,omitempty"`
+
+	Scope         AssessmentScope  `json:"scope,omitempty"`
+	Checks        AssessmentChecks `json:"checks,omitempty"`
+	AcceptedRisks []AcceptedRisk   `json:"acceptedRisks,omitempty"`
 }
 
 // UpgradeAssessmentStatus defines the observed state of UpgradeAssessment
 type UpgradeAssessmentStatus struct {
-	Phase            AssessmentPhase `json:"phase,omitempty"`
-	RiskLevel        RiskLevel       `json:"riskLevel,omitempty"`
-	Score            int             `json:"score,omitempty"`
-	Summary          FindingSummary  `json:"summary,omitempty"`
-	Findings         []Finding       `json:"findings,omitempty"`
-	GeneratedPlanRef *PlanReference  `json:"generatedPlanRef,omitempty"`
+	Phase                 AssessmentPhase       `json:"phase,omitempty"`
+	RiskLevel             RiskLevel             `json:"riskLevel,omitempty"`
+	Score                 int                   `json:"score,omitempty"`
+	Summary               FindingSummary        `json:"summary,omitempty"`
+	RawSummary            FindingSummary        `json:"rawSummary,omitempty"`
+	ClassificationSummary ClassificationSummary `json:"classificationSummary,omitempty"`
+	Findings              []Finding             `json:"findings,omitempty"`
+	GeneratedPlanRef      *PlanReference        `json:"generatedPlanRef,omitempty"`
+	ArtifactRef           *ArtifactReference    `json:"artifactRef,omitempty"`
 
 	// +patchMergeKey=type
 	// +patchStrategy=merge

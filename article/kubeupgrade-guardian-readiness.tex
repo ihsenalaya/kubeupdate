@@ -9,11 +9,13 @@
 \usepackage{lmodern}
 \usepackage{booktabs}
 \usepackage{array}
+\usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{enumitem}
 \usepackage{tikz}
+\usepackage{xcolor}
 \usepackage[hidelinks]{hyperref}
-\usetikzlibrary{arrows.meta,fit,positioning,shapes.geometric}
+\usetikzlibrary{arrows.meta,fit,positioning,shapes.geometric,calc,backgrounds}
 
 \newcommand{\tool}{\textsc{KubeUpgrade Guardian}}
 \newcommand{\crd}[1]{\texttt{#1}}
@@ -33,14 +35,14 @@ We evaluate on a controlled Kind conformance suite (31 labeled findings, 5 negat
 \end{abstract}
 
 \section*{Index Terms}
-Kubernetes, software evolution, upgrade readiness, cloud-native systems, DevOps, operators, impact analysis, evidence-guided maintenance, empirical software engineering, AIOps.
+Kubernetes, software evolution, upgrade readiness, cloud-native systems, DevOps, operators, impact analysis, evidence-guided maintenance, reproducible evaluation, empirical software engineering.
 
 \section{Introduction}
 Kubernetes has become a common substrate for operating cloud-native software systems, but a production cluster is not merely an execution platform. It is a continuously evolving socio-technical system composed of workloads, controllers, custom resources, admission policies, resource constraints, identity rules, observability pipelines, and managed-provider services. Upgrading such a system is a software evolution problem: a platform version change can alter the validity, behavior, or operational assumptions of dependent artifacts \cite{lehman1980,mens2008,bohner1996}. The practical challenge is not only whether the target Kubernetes version exists. The challenge is whether the specific cluster can be upgraded without exposing application availability, policy, capacity, compatibility, or observability gaps.
 
-The Kubernetes ecosystem already provides authoritative upgrade primitives and policies. The Kubernetes documentation defines API deprecation, removed APIs, version-skew constraints, API-initiated eviction, PodDisruptionBudget behavior, admission webhooks, ValidatingAdmissionPolicy, custom resources, RBAC, and the operator pattern \cite{kubernetesDeprecationPolicy,kubernetesDeprecationGuide,kubernetesVersionSkew,kubernetesEviction,kubernetesDisruptions,kubernetesAdmissionWebhooks,kubernetesValidatingAdmissionPolicy,kubernetesCustomResources,kubernetesRbac,kubernetesOperatorPattern}. Managed platforms such as AKS add provider-specific upgrade options, node-image mechanics, upgrade channels, and day-2 practices \cite{aksUpgradeOptions,aksNodeImage,aksDay2}. These documents are necessary, but they do not by themselves turn a live cluster into a structured, evidence-backed readiness assessment.
+The Kubernetes ecosystem already provides authoritative upgrade primitives and policies. The Kubernetes documentation defines API deprecation, removed APIs, version-skew constraints, API-initiated eviction, PodDisruptionBudget behavior, health probes, admission webhooks, ValidatingAdmissionPolicy, Pod Security Admission and Standards, custom resources, RBAC, storage abstractions, scheduling/eviction behavior, and the operator pattern \cite{kubernetesDeprecationPolicy,kubernetesDeprecationGuide,kubernetesVersionSkew,kubernetesEviction,kubernetesDisruptions,kubernetesPdbTask,kubernetesProbes,kubernetesAdmissionWebhooks,kubernetesAdmissionWebhooksGoodPractices,kubernetesValidatingAdmissionPolicy,kubernetesPodSecurityAdmission,kubernetesPodSecurityStandards,kubernetesCustomResources,kubernetesRbac,kubernetesRbacGoodPractices,kubernetesPersistentVolumes,kubernetesSchedulingEviction,kubernetesOperatorPattern}. Managed platforms such as AKS add provider-specific upgrade options, node-image mechanics, upgrade channels, and day-2 practices \cite{aksUpgradeOptions,aksNodeImage,aksDay2}. These documents are necessary, but they do not by themselves turn a live cluster into a structured, evidence-backed readiness assessment.
 
-Operational teams often complement official guidance with tools such as Pluto, kube-no-trouble (kubent), Helm API migration documentation, and Helm metadata repair tools \cite{pluto,kubent,helmKubernetesApis,helmMapKubeApis}. These tools are valuable, especially for API removals, but they focus on a subset of readiness risk. A cluster can have no removed API versions and still fail operationally because a single-replica workload is disrupted, a PodDisruptionBudget blocks node drain, an admission webhook is unavailable, a restricted namespace rejects recreated pods, a node pool lacks one-node-loss headroom, or RBAC prevents the platform team from collecting the evidence needed to make a decision.
+Operational teams often complement official guidance with tools such as Pluto, kube-no-trouble (kubent), Helm API migration documentation, Helm metadata repair tools, static Kubernetes linters, policy engines, and cluster sanitizers \cite{pluto,kubent,helmKubernetesApis,helmMapKubeApis,kubeScore,kubeLinter,polaris,popeye,kubeBench,opa,gatekeeper,kyverno}. These tools are valuable, especially for API removals, but they focus on a subset of readiness risk. A cluster can have no removed API versions and still fail operationally because a single-replica workload is disrupted, a PodDisruptionBudget blocks node drain, an admission webhook is unavailable, a restricted namespace rejects recreated pods, a node pool lacks one-node-loss headroom, or RBAC prevents the platform team from collecting the evidence needed to make a decision.
 
 This paper argues that Kubernetes upgrade readiness should be treated as evidence-guided impact analysis over live cluster state. Rather than producing only warnings or checklist items, an assessment should generate findings that identify affected resources, observable evidence, severity, operational impact, and a non-executing remediation recommendation. Those findings should be materialized in a Kubernetes-native artifact so that platform engineers can review, audit, store, and compare assessments before upgrade execution.
 
@@ -51,11 +53,11 @@ This paper investigates five research questions:
 \begin{description}[leftmargin=*,style=nextline]
   \item[RQ1 --- Detection Coverage.]\label{rq:detection} To what extent does \tool{} detect upgrade-readiness risks across controlled and realistic Kubernetes configurations?
   \item[RQ2 --- Comparative Value.]\label{rq:comparison} How does \tool{} compare with existing Kubernetes analysis tools across different risk families?
-  \item[RQ3 --- Actionability.]\label{rq:actionability} How complete and evidence-backed are the generated upgrade plans, measured by structural plan metrics?
+  \item[RQ3 --- Structural Plan Completeness.]\label{rq:plan-completeness} To what extent do generated \crd{UpgradePlan} artifacts contain structurally complete, evidence-linked, non-executing remediation actions?
   \item[RQ4 --- Scalability.]\label{rq:scalability} How does \tool{} behave as the number of Kubernetes objects increases?
   \item[RQ5 --- Managed Kubernetes Portability.]\label{rq:portability} Can the approach be applied to managed Kubernetes environments without requiring destructive privileges?
 \end{description}
-RQ1 and RQ2 are addressed by the controlled evaluation (Section~\ref{sec:rq1}) and baseline comparison (Section~\ref{sec:rq2}). RQ3 is addressed by structural plan metrics computed from archived \crd{UpgradePlan} outputs (Section~\ref{sec:rq3}). RQ4 is addressed by the scale smoke study (Section~\ref{sec:rq4}). RQ5 is addressed by the AKS validation (Section~\ref{sec:rq5}).
+RQ1 and RQ2 are addressed by the controlled evaluation (Section~\ref{sec:rq1}) and baseline comparison (Section~\ref{sec:rq2}). RQ3 is addressed by objective structural metrics computed from archived \crd{UpgradePlan} outputs, including action count, resource references, evidence references, recommendation presence, and non-executing remediation ordering (Section~\ref{sec:rq3}). RQ4 is addressed by the scale smoke study (Section~\ref{sec:rq4}). RQ5 is addressed by the AKS validation (Section~\ref{sec:rq5}).
 
 The paper makes four scoped contributions.
 \begin{enumerate}[leftmargin=*]
@@ -73,7 +75,7 @@ Software evolution research frames long-lived software as a system that must cha
 DevOps and continuous delivery literature emphasizes fast, reliable, automated change delivery, but also documents adoption barriers and the need for reliable feedback loops \cite{humbleFarley2010,chen2015,shahin2017,smeds2015,leite2019,forsgren2018}. SRE practice similarly emphasizes measurable reliability, production readiness, and operational learning \cite{beyer2016,nygard2018}. In a Kubernetes upgrade, readiness assessment is one such feedback loop: it should convert cluster state into evidence that engineers can act on before scheduling disruptive work.
 
 \subsection{Kubernetes-Specific Upgrade Mechanics}
-Kubernetes upgrades are constrained by API deprecation and removal schedules, component version skew, eviction behavior, PodDisruptionBudgets, admission control, RBAC, and resource scheduling. The Kubernetes deprecation guide documents removed APIs by release, while the deprecation policy explains the compatibility process \cite{kubernetesDeprecationPolicy,kubernetesDeprecationGuide}. Version-skew policy constrains how far cluster components may differ during upgrades \cite{kubernetesVersionSkew}. API-initiated eviction, including the behavior used by \code{kubectl drain}, interacts with PodDisruptionBudgets and termination behavior \cite{kubernetesEviction,kubernetesDisruptions}. Admission webhooks and ValidatingAdmissionPolicy can reject newly created or updated objects during post-upgrade reconciliation \cite{kubernetesAdmissionWebhooks,kubernetesValidatingAdmissionPolicy}. Pod Security Admission and Pod Security Standards add another policy layer that may reject workload templates after platform or policy changes \cite{kubernetesPodSecurityAdmission}.
+Kubernetes upgrades are constrained by API deprecation and removal schedules, component version skew, eviction behavior, PodDisruptionBudgets, admission control, RBAC, and resource scheduling. The Kubernetes deprecation guide documents removed APIs by release, while the deprecation policy explains the compatibility process \cite{kubernetesDeprecationPolicy,kubernetesDeprecationGuide}. Version-skew policy constrains how far cluster components may differ during upgrades \cite{kubernetesVersionSkew}. API-initiated eviction, including the behavior used by \code{kubectl drain}, interacts with PodDisruptionBudgets and termination behavior \cite{kubernetesEviction,kubernetesDisruptions,kubernetesPdbTask}. Readiness and startup probes determine whether recreated Pods can safely receive traffic after rescheduling \cite{kubernetesProbes,kubernetesPodLifecycle}. Admission webhooks and ValidatingAdmissionPolicy can reject newly created or updated objects during post-upgrade reconciliation \cite{kubernetesAdmissionWebhooks,kubernetesAdmissionWebhooksGoodPractices,kubernetesValidatingAdmissionPolicy}. Pod Security Admission and Pod Security Standards add another policy layer that may reject workload templates after platform or policy changes \cite{kubernetesPodSecurityAdmission,kubernetesPodSecurityStandards}. Capacity and storage risks are additionally shaped by scheduler placement, node-pressure eviction, persistent-volume binding, node-pool upgrade settings, and provider support constraints \cite{kubernetesSchedulingEviction,kubernetesNodePressureEviction,kubernetesPersistentVolumes,aksUpgradeOptions,aksNodeImage,aksSupportPolicies,aksNodePools}.
 
 \subsection{Problem Statement}
 The problem addressed by this paper is:
@@ -83,7 +85,7 @@ The problem addressed by this paper is:
 This paper evaluates the bounded artifact at three levels. First, implementation fidelity is checked by mapping claims to the actual CRDs, controller behavior, deterministic checkers, score computation, and generated plan resources. Second, controlled detection behavior is measured against version-pinned Kind scenarios with labeled positive findings and explicit negative controls. Third, a minimal managed AKS validation checks Kubernetes-modern scenarios and provider-managed admission observations on a real AKS control plane. The study does not claim production-cluster generalization; it reports reproducible scenario-level and managed-cluster smoke-test evidence for the implemented artifact.
 
 \subsection{Scope and Non-Claims}
-The empirical scope is intentionally bounded. The Kind benchmark is the only environment used for removed/deprecated API fixtures because modern managed API servers reject APIs that have already been removed. The AKS validation uses Kubernetes \code{1.34.8}, Azure CNI overlay, workload identity, one single-node scenario cluster, and two three-node evaluation clusters: \code{aks-medium} and \code{aks-policy}. The multi-cluster AKS runs include ingress-nginx, cert-manager, kube-prometheus-stack, PDB-protected Deployments, an HPA, and a StatefulSet with PVCs; \code{aks-policy} additionally enables the AKS Azure Policy add-on. The runs validate managed-control-plane feasibility and real add-on observation, but they do not evaluate customer traffic, private-cluster DNS, autoscaler decisions, node-image upgrades, or actual surge-upgrade execution. The generated \crd{UpgradePlan} is inspected for structure and evidence linkage, but this paper does not claim external expert actionability ratings. Expert review remains a required next validation step before claiming human operational usefulness.
+The empirical scope is intentionally bounded. The Kind benchmark is the only environment used for removed/deprecated API fixtures because modern managed API servers reject APIs that have already been removed. The AKS validation uses Kubernetes \code{1.34.8}, Azure CNI overlay, workload identity, one single-node scenario cluster, and two three-node evaluation clusters: \code{aks-medium} and \code{aks-policy}. The multi-cluster AKS runs include ingress-nginx, cert-manager, kube-prometheus-stack, PDB-protected Deployments, an HPA, and a StatefulSet with PVCs; \code{aks-policy} additionally enables the AKS Azure Policy add-on. The runs validate managed-control-plane feasibility and real add-on observation, but they do not evaluate customer traffic, private-cluster DNS, autoscaler decisions, node-image upgrades, or actual surge-upgrade execution. The generated \crd{UpgradePlan} is evaluated only for objective structural completeness: whether actions reference named resources, carry evidence links, include non-empty recommendations, and remain non-executing. This paper does not evaluate human-perceived usefulness or operational decision quality; it restricts plan claims to reproducible structural properties of the generated artifacts.
 
 \section{Kubernetes Upgrade Readiness Risk Families}
 Upgrade readiness is not a single property. It is a set of risk families that interact during upgrade preparation and execution. Table~\ref{tab:risk-taxonomy} summarizes the risk taxonomy used by \tool.
@@ -127,30 +129,39 @@ The model is organized around four concepts.
 \paragraph{Formal notation.}
 Let $R$ be the set of Kubernetes resource objects in the assessed cluster, $V$ the target minor version (e.g., \code{1.32}), and $\mathcal{F}$ the set of finding types. A checker $c$ produces a set of findings $F_c(R,V) \subseteq \mathcal{F}$. The aggregate finding set is $F = \bigcup_c F_c(R,V)$. The heuristic priority score is $S = \sum_{f \in F} w(f)$, where $w(\text{Critical}) = 25$, $w(\text{High}) = 10$, $w(\text{Medium}) = 4$, $w(\text{Low}) = 1$, and $w(\text{Info}) = 0$. The non-executing decision $\Delta$ is determined by: $\Delta = \textsc{DoNotUpgrade}$ if $\exists f \in F$ with $f.\mathit{severity} = \text{Critical}$; $\Delta = \textsc{ProceedWithCaution}$ if $S > 30$; and $\Delta = \textsc{Proceed}$ otherwise. These thresholds are heuristic and not calibrated against production outcomes; $S$ is a deterministic sort key, not a probability of failure.
 
+
 \begin{figure*}[t]
   \centering
+  \resizebox{0.92\textwidth}{!}{%
   \begin{tikzpicture}[
-    node distance=6mm and 8mm,
-    box/.style={draw, rounded corners=2pt, align=center, font=\footnotesize, minimum height=8mm, text width=2.75cm},
-    wide/.style={draw, rounded corners=2pt, align=center, font=\footnotesize, minimum height=8mm, text width=3.25cm},
+    font=\footnotesize,
+    node distance=8mm and 8mm,
+    box/.style={draw, rounded corners=2pt, align=center, minimum height=8.5mm, text width=2.95cm, fill=gray!6},
+    wide/.style={draw, rounded corners=2pt, align=center, minimum height=9mm, text width=3.30cm, fill=gray!4},
+    guard/.style={draw, rounded corners=2pt, align=center, minimum height=8.5mm, text width=3.45cm, fill=gray!12},
     arrow/.style={-{Latex[length=2mm]}, thick}
   ]
-    \node[wide] (obs) {Kubernetes API\\observation\\{\scriptsize objects, RBAC responses}};
-    \node[wide, right=of obs] (evidence) {Evidence record\\{\scriptsize source, value, resource ref}};
-    \node[wide, right=of evidence] (finding) {Finding\\{\scriptsize category, severity, evidence ids}};
-    \node[box, below=of finding] (score) {Finding sort key\\{\scriptsize deterministic weights}};
-    \node[box, left=of score] (decision) {Decision\\{\scriptsize proceed, caution, block}};
-    \node[wide, left=of decision] (action) {Required action\\{\scriptsize non-executing remediation}};
-    \node[wide, below=of action] (plan) {\crd{UpgradePlan}\\{\scriptsize ordered actions + summary}};
+    \node[wide] (api) {Kubernetes API\\{\scriptsize objects, events, RBAC responses}};
+    \node[wide, right=of api] (evidence) {Evidence records\\{\scriptsize source, observed value, resource ref}};
+    \node[wide, right=of evidence] (finding) {Findings\\{\scriptsize category, severity, evidence ids}};
+    \node[box, below=10mm of finding] (score) {Heuristic sort key\\{\scriptsize severity weights, deterministic order}};
+    \node[box, left=of score] (decision) {Decision label\\{\scriptsize proceed, caution, block}};
+    \node[wide, left=of decision] (action) {Required actions\\{\scriptsize reviewable, non-mutating steps}};
+    \node[guard, below=10mm of action] (plan) {\crd{UpgradePlan}\\{\scriptsize ordered actions, summary, evidence links}};
 
-    \draw[arrow] (obs) -- (evidence);
+    \draw[arrow] (api) -- (evidence);
     \draw[arrow] (evidence) -- (finding);
     \draw[arrow] (finding) -- (score);
     \draw[arrow] (score) -- (decision);
     \draw[arrow] (decision) -- (action);
     \draw[arrow] (action) -- (plan);
-  \end{tikzpicture}
-  \caption{Evidence pipeline used by the assessment model. Each finding is traceable to collected evidence, and each generated action remains non-executing.}
+
+    \begin{scope}[on background layer]
+      \node[draw, dashed, rounded corners=3pt, fit=(api)(evidence)(finding)(score)(decision)(action)(plan), inner sep=6pt, label={[font=\scriptsize]below:bounded-write boundary: assessed resources are read, only assessment status and plan artifacts are written}] {};
+    \end{scope}
+  \end{tikzpicture}%
+  }
+  \caption{Evidence pipeline used by the assessment model. Cluster observations become evidence records, findings, deterministic ordering signals, and non-executing plan actions inside a bounded-write assessment boundary.}
   \label{fig:evidence-pipeline}
 \end{figure*}
 
@@ -179,41 +190,48 @@ Findings and evidence are embedded structured fields. They are not standalone CR
 \subsection{Reconciliation Flow}
 The controller watches \crd{UpgradeAssessment} resources and owns generated \crd{UpgradePlan} resources. Reconciliation marks the assessment running, executes selected checkers, sorts findings deterministically, computes score and decision, upserts an idempotent plan, and then writes completed assessment status. The controller is a Kubernetes operator in the sense of the Kubernetes operator pattern: it links custom resources to controller behavior without modifying Kubernetes itself \cite{kubernetesOperatorPattern,kubernetesCustomResources,cncfOperatorWhitepaper}.
 
+
+
+
 \begin{figure*}[t]
   \centering
+  \resizebox{0.96\textwidth}{!}{%
   \begin{tikzpicture}[
-    node distance=5mm and 5mm,
-    box/.style={draw, rounded corners=2pt, align=center, font=\footnotesize, minimum height=8mm, text width=2.45cm},
-    small/.style={draw, rounded corners=2pt, align=center, font=\scriptsize, minimum height=6mm, text width=2.05cm},
+    font=\footnotesize,
+    x=1cm,y=1cm,
+    box/.style={draw, rounded corners=2pt, align=center, minimum height=0.78cm, text width=2.65cm, fill=gray!5},
+    small/.style={draw, rounded corners=2pt, align=center, font=\scriptsize, minimum height=0.58cm, text width=2.00cm, fill=gray!3},
     group/.style={draw, rounded corners=3pt, inner sep=4pt, dashed},
     arrow/.style={-{Latex[length=2mm]}, thick}
   ]
-    \node[box] (assessment) {{\scriptsize \crd{UpgradeAssessment}}\\{\scriptsize scope, target, checks}};
-    \node[box, right=of assessment] (reconciler) {Controller\\reconciler};
-    \node[box, right=of reconciler] (engine) {Checker engine\\{\scriptsize deterministic dispatch}};
-    \node[box, right=of engine] (model) {Findings + evidence\\{\scriptsize embedded status model}};
-    \node[box, below=of model] (planner) {Planner\\{\scriptsize required actions}};
-    \node[box, left=of planner] (status) {Status writer\\{\scriptsize score, phase, conditions}};
-    \node[box, left=of status] (plan) {{\scriptsize \crd{UpgradePlan}}\\{\scriptsize owned generated resource}};
+    \node[box] (assessment) at (0,3.00) {\crd{UpgradeAssessment}\\{\scriptsize scope, target, checks}};
+    \node[box] (reconciler) at (3.05,3.00) {Controller\\reconciler};
+    \node[box] (engine) at (6.10,3.00) {Checker engine\\{\scriptsize deterministic dispatch}};
+    \node[box] (model) at (9.15,3.00) {Embedded status model\\{\scriptsize findings + evidence}};
+    \node[box] (status) at (12.20,3.00) {Status writer\\{\scriptsize score, phase, conditions}};
 
-    \node[small, below=12mm of engine, xshift=-18mm] (workload) {Workload\\readiness};
-    \node[small, right=2mm of workload] (pdb) {PDB /\\eviction};
-    \node[small, right=2mm of pdb] (admission) {Admission /\\policy};
-    \node[small, right=2mm of admission] (api) {Deprecated\\APIs};
-    \node[small, right=2mm of api] (gaps) {RBAC /\\evidence gaps};
-    \node[group, fit=(workload)(pdb)(admission)(api)(gaps), label={[font=\scriptsize]below:core checker families for empirical study}] (checkerbox) {};
+    \node[small] (workload) at (3.75,1.45) {Workload\\availability};
+    \node[small] (readiness) at (6.05,1.45) {Readiness\\probes};
+    \node[small] (pdb) at (8.35,1.45) {PDB /\\eviction};
+    \node[small] (admission) at (3.75,0.55) {Admission /\\policy};
+    \node[small] (api) at (6.05,0.55) {API\\evolution};
+    \node[small] (gaps) at (8.35,0.55) {RBAC /\\evidence gaps};
+    \node[group, fit=(workload)(readiness)(pdb)(admission)(api)(gaps), label={[font=\scriptsize]below:deterministic checker families exercised by the empirical study}] (checkerbox) {};
+
+    \node[box] (planner) at (9.15,-0.85) {Planner\\{\scriptsize required actions}};
+    \node[box] (plan) at (12.20,-0.85) {\crd{UpgradePlan}\\{\scriptsize owned generated resource}};
 
     \draw[arrow] (assessment) -- (reconciler);
     \draw[arrow] (reconciler) -- (engine);
     \draw[arrow] (engine) -- (model);
-    \draw[arrow] (engine) -- (checkerbox);
-    \draw[arrow] (checkerbox) -- (model);
-    \draw[arrow] (model) -- (planner);
-    \draw[arrow] (planner) -- (plan);
     \draw[arrow] (model) -- (status);
-    \draw[arrow] (status) -- (assessment);
-  \end{tikzpicture}
-  \caption{\tool{} artifact architecture. The reconciler reads assessment scope, dispatches deterministic checkers, materializes evidence-backed findings, and writes bounded assessment outputs.}
+    \draw[arrow] (engine.south) -- (checkerbox.north);
+    \draw[arrow] (checkerbox.north east) -- (model.south west);
+    \draw[arrow] (model.south) -- (planner.north);
+    \draw[arrow] (planner) -- (plan);
+  \end{tikzpicture}%
+  }
+  \caption{\tool{} artifact architecture. The reconciler reads an assessment resource, dispatches deterministic checkers, materializes evidence-backed findings in status, and generates a bounded, non-executing \crd{UpgradePlan}.}
   \label{fig:architecture}
 \end{figure*}
 
@@ -235,10 +253,10 @@ Admission and policy coverage is deliberately scoped. The evaluated benchmark co
     Readiness probes & \code{MISSING\_READINESS\_PROBE} & Container name and missing readiness probe & Implemented \\
     PDB & \code{PDB\_BLOCKING\_RISK} & Replica count, selector, \code{minAvailable}, \code{maxUnavailable} & Implemented \\
     Admission webhooks & \code{ADMISSION\_WEBHOOK\_RISK} & \code{failurePolicy=Fail}, missing webhook service, broad selector & Implemented \\
-    Policy risks & \code{POLICY\_RISK}; \code{POLICY\_ENGINE\_DETECTED} & Pod Security restricted labels, privileged containers, hostPath volumes, Kyverno/Gatekeeper CRDs & Partially implemented \\
+    Policy risks & \code{POLICY\_RISK};\newline \code{POLICY\_ENGINE\_DETECTED} & Pod Security restricted labels, privileged containers, hostPath volumes, Kyverno/Gatekeeper CRDs & Partially implemented \\
     Deprecated APIs & \code{DEPRECATED\_OR\_REMOVED\_API} & Static removed API table, target minor version, live object GVK & MVP table only \\
     Capacity & \code{CAPACITY\_DRAIN\_RISK} & Node allocatable CPU/memory, pod requests, one-node-loss headroom & Conservative heuristic \\
-    Observability & \code{OBSERVABILITY\_GAP}; \code{OBSERVABILITY\_CAPABILITY\_DETECTED} & Monitoring namespace and Prometheus CRD presence & Heuristic \\
+    Observability & \code{OBSERVABILITY\_GAP};\newline \code{OBSERVABILITY\_CAPABILITY\_DETECTED} & Monitoring namespace and Prometheus CRD presence & Heuristic \\
     RBAC gap helper & \code{RBAC\_ASSESSMENT\_GAP} & Forbidden list/get operations and API resource names & Implemented across checkers \\
     \bottomrule
   \end{tabular}
@@ -314,7 +332,7 @@ Features absent from this matrix, including broad field validation, full provide
     The bounded status design avoids the measured status-size failure. & AKS scale regression: 10/10 runs completed at 100, 1,000, 5,000, and 10,000 pairs after capping detailed status findings and plan actions at 200 entries. & Scale regression & Supports the bounded-write fix for synthetic large-result cases; detailed result pagination remains future work. \\
     The operator models RBAC gaps as findings. & Local checker test for forbidden API access. & Locally validated & Supported for covered RBAC-denial behavior. \\
     The operator performs bounded-write assessment. & Controller implementation and CRD/status write scope. & Implemented behavior & Supports bounded-write artifact description. \\
-    The generated plan is externally expert-rated. & No independent platform-engineer rating has been executed. & Not claimed & Requires a future human study before actionability claims. \\
+    The generated plan is externally human-rated. & No independent platform-engineer rating has been executed. & Not claimed & Outside the empirical scope of this paper; no subjective usefulness claim is made. \\
     \bottomrule
   \end{tabular}
 \end{table*}
@@ -327,7 +345,6 @@ The artifact scope is intentionally bounded:
   \item AKS validation records cluster metadata and provider webhooks, but not full node-pool upgrade simulation, Azure Policy behavior, or surge-upgrade execution;
   \item API-server request deltas are cluster-level counters that include harness polling and are not exact per-controller attribution;
   \item add-on support-matrix reasoning for cert-manager, ingress controllers, policy engines, storage drivers, and observability stacks is outside the core checker set;
-  \item external expert actionability review of \crd{UpgradePlan} is prepared as a protocol but is not claimed as executed;
   \item explanation-agent behavior is outside the evaluated artifact;
   \item automatic upgrade, drain, patch, or remediation execution is outside the design.
 \end{itemize}
@@ -377,7 +394,7 @@ This test suite supports claims about implemented behavior and deterministic tra
 This section reports the executed empirical evaluation. The conformance suite is intentionally controlled: it tests whether the current artifact detects labeled upgrade-readiness findings in reproducible Kind scenarios and whether safe fixtures remain silent. It does not estimate production-cluster prevalence.
 
 \subsubsection*{Evaluation Setup}
-The benchmark package is archived under \code{experiments/kind/r01-benchmark}. The final validated run is \code{results/20260617T091703Z}. It used Kind image \code{kindest/node:v1.24.15} to allow creation of Kubernetes APIs removed by later releases, target Kubernetes version \code{1.32}, Pluto \code{5.24.0}, and kubent \code{0.7.3}. \tool{} version \code{0.1.1} (commit \code{b11c531}) was used for both the Kind and AKS runs. The Kubernetes client was \code{v1.34.1} and the server was \code{v1.24.15}; this skew is recorded in the tool-version artifact and is acceptable for the benchmark because the run exercises server-side legacy API availability rather than client feature behavior.
+The benchmark package is archived under \code{article/evidence/experiments/kind/r01-benchmark}. The final validated run is \code{results/20260617T091703Z}. It used Kind image \code{kindest/node:v1.24.15} to allow creation of Kubernetes APIs removed by later releases, target Kubernetes version \code{1.32}, Pluto \code{5.24.0}, and kubent \code{0.7.3}. \tool{} version \code{0.1.1} (commit \code{b11c531}) was used for both the Kind and AKS runs. The Kubernetes client was \code{v1.34.1} and the server was \code{v1.24.15}; this skew is recorded in the tool-version artifact and is acceptable for the benchmark because the run exercises server-side legacy API availability rather than client feature behavior.
 
 The ground truth contains 31 expected findings: 4 deprecated-API findings, 3 workload-availability findings, 5 readiness-probe findings, 7 PDB findings, 4 admission-webhook findings, and 8 selected policy-risk findings. It also contains 5 negative controls: a safe three-replica deployment with readiness and PDB coverage, a scoped fail-open webhook with an existing service, a namespace with warn/audit Pod Security labels but no enforce label, a modern \code{autoscaling/v2} HPA, and a modern \code{policy/v1} PDB served by a legacy-capable API server. Raw outputs include the \crd{UpgradeAssessment}, generated \crd{UpgradePlan}, baseline reports, normalized findings, negative-control observations, metrics, controller logs, and tool-version records.
 
@@ -449,7 +466,7 @@ Table~\ref{tab:controlled-family} reports \tool{} metrics by risk family. The be
 \end{table}
 
 \subsubsection*{Adversarial Fixture Harness}
-The R10 package under \code{experiments/kind/r10-independent-labels} contains 20 adversarial or near-miss fixtures. Each expected label is grounded in a specific Kubernetes specification entry: deprecated-API findings cite the official removal guide~\cite{k8s-deprecation-guide}; PDB findings cite the disruption configuration specification~\cite{k8s-pdb}; admission-webhook findings cite the failure-policy documentation~\cite{k8s-webhooks}; policy findings cite the Pod Security Admission specification~\cite{k8s-psa}. Every label file carries a \texttt{derivation\_method: k8s-spec-analysis} field and a \texttt{k8s\_spec\_ref} URL that is independently verifiable. Labels were not derived by inspecting the checker source code.
+The R10 package under \code{article/evidence/experiments/kind/r10-independent-labels} contains 20 adversarial or near-miss fixtures. Each expected label is grounded in a specific Kubernetes specification entry: deprecated-API findings cite the official removal guide~\cite{kubernetesDeprecationGuide,kubernetesDeprecationPolicy}; PDB findings cite the disruption configuration specification~\cite{kubernetesDisruptions,kubernetesPdbTask}; admission-webhook findings cite the failure-policy documentation~\cite{kubernetesAdmissionWebhooks,kubernetesAdmissionWebhooksGoodPractices}; policy findings cite the Pod Security Admission specification~\cite{kubernetesPodSecurityAdmission,kubernetesPodSecurityStandards}. Every label file carries a \texttt{derivation\_method: k8s-spec-analysis} field and a \texttt{k8s\_spec\_ref} URL that is independently verifiable. Labels were not derived by inspecting the checker source code.
 
 The key evidence of oracle independence is the evaluation outcome itself: the checker achieves recall~0.8889 (\textbf{fn=4}), not 1.0. Had the oracle labels been constructed by observing the checker's output, the checker would achieve recall~1.0 by construction. The 4~false negatives are genuine specification-defined risks that the implementation does not detect, and are reported as concrete limitations: \code{networking.k8s.io/v1beta1} Ingress is absent from the deprecated-API table; empty webhook \code{caBundle} is not checked; the fake-client harness does not simulate a live RBAC-denied list call; and PVC storage-class risk is not modeled by the current capacity checker.
 
@@ -498,13 +515,13 @@ Table~\ref{tab:negative-controls} reports the negative-control observations. All
   \end{tabular}
 \end{table*}
 
-\subsection{RQ3 --- Actionability}\label{sec:rq3}
-Actionability is assessed through structural plan metrics computed from archived \crd{UpgradePlan} and \crd{UpgradeAssessment} JSON outputs rather than subjective ratings. In the controlled Kind run (\code{20260617T091703Z}), the generated plan contains 31 required actions; 31/31 actions reference a named Kubernetes resource and 31/31 actions carry evidence references. The corresponding assessment contains 31 findings; 31/31 findings include evidence records and 31/31 include a non-empty recommendation. In the single-node AKS run (\code{20260617T101556Z}), the generated plan contains 29 required actions; 29/29 actions reference a named resource and 29/29 actions carry evidence references. The AKS assessment contains 29 findings, including 21 scenario findings and 8 provider-managed webhook observations; 29/29 findings include evidence records and 29/29 include non-empty recommendations. In the multi-cluster AKS runs, \code{aks-medium} produced 27 required actions for 30 findings, and \code{aks-policy} produced 54 required actions for 58 findings; all actions reference a named resource and evidence reference, and all findings include evidence and a non-empty recommendation. These metrics are objective and reproducible from the archived JSON outputs; they do not capture whether a given engineer would choose to follow the recommended action.
+\subsection{RQ3 --- Structural Plan Completeness}\label{sec:rq3}
+Structural plan completeness is assessed through reproducible metrics computed from archived \crd{UpgradePlan} and \crd{UpgradeAssessment} JSON outputs. The evaluation does not claim that generated actions are sufficient for human operational decision-making; it measures whether plan artifacts contain the structural elements required for reviewable, evidence-linked, non-executing remediation. In the controlled Kind run (\code{20260617T091703Z}), the generated plan contains 31 required actions; 31/31 actions reference a named Kubernetes resource and 31/31 actions carry evidence references. The corresponding assessment contains 31 findings; 31/31 findings include evidence records and 31/31 include a non-empty recommendation. In the single-node AKS run (\code{20260617T101556Z}), the generated plan contains 29 required actions; 29/29 actions reference a named resource and 29/29 actions carry evidence references. The AKS assessment contains 29 findings, including 21 scenario findings and 8 provider-managed webhook observations; 29/29 findings include evidence records and 29/29 include non-empty recommendations. In the multi-cluster AKS runs, \code{aks-medium} produced 27 required actions for 30 findings, and \code{aks-policy} produced 54 required actions for 58 findings; all actions reference a named resource and evidence reference, and all findings include evidence and a non-empty recommendation. These metrics are objective and reproducible from the archived JSON outputs; they do not capture whether a given engineer would choose to follow the recommended action.
 
 \subsection{RQ4 --- Scalability}\label{sec:rq4}
 The R02 scale smoke study (Kind, synthetic Deployment/PDB pairs, 5 repetitions per size) provides preliminary timing data at 100, 500, and 1,000 assessed objects. Median/p95 assessment durations were 4.6\,s/7.1\,s at 100 objects, 1.6\,s/1.8\,s at 500 objects, and 5.1\,s/8.8\,s at 1,000 objects. The non-monotonic median (lower at 500 than at 100) is unexplained and coincides with controller log entries indicating optimistic-concurrency and storage errors; these data are reported as a first stress signal only.
 
-The new AKS scale regression under \code{experiments/scale} executed 10 runs at each of 100, 1,000, 5,000, and 10,000 synthetic Deployment/PDB pairs on \code{aks-medium} with AKS Cluster Autoscaler enabled (\code{min=3}, \code{max=8}). An earlier unbounded-status execution failed at 5,000 and 10,000 pairs with \code{Request entity too large: limit is 3145728}. The patched controller bounds detailed \crd{UpgradeAssessment.status.findings} and generated \crd{UpgradePlan} actions to 200 entries while preserving full aggregate counts in \code{status.summary}. With that bounded-write design, all 40 archived AKS scale assessments completed. At 5,000 pairs, the assessment reported \code{totalFindings=10000}; at 10,000 pairs, it reported \code{totalFindings=20000}. Both sizes set \code{AssessmentOutputTruncated=True}, making truncation explicit rather than silently dropping aggregate evidence.
+The new AKS scale regression under \code{article/evidence/experiments/scale} executed 10 runs at each of 100, 1,000, 5,000, and 10,000 synthetic Deployment/PDB pairs on \code{aks-medium} with AKS Cluster Autoscaler enabled (\code{min=3}, \code{max=8}). An earlier unbounded-status execution failed at 5,000 and 10,000 pairs with \code{Request entity too large: limit is 3145728}. The patched controller bounds detailed \crd{UpgradeAssessment.status.findings} and generated \crd{UpgradePlan} actions to 200 entries while preserving full aggregate counts in \code{status.summary}. With that bounded-write design, all 40 archived AKS scale assessments completed. At 5,000 pairs, the assessment reported \code{totalFindings=10000}; at 10,000 pairs, it reported \code{totalFindings=20000}. Both sizes set \code{AssessmentOutputTruncated=True}, making truncation explicit rather than silently dropping aggregate evidence.
 
 \begin{table}[t]
   \centering
@@ -527,9 +544,9 @@ The new AKS scale regression under \code{experiments/scale} executed 10 runs at 
 The AKS runs demonstrate that \tool{} operates on managed AKS control planes (Kubernetes \code{1.34.8}) without destructive privileges, within a bounded read-oriented RBAC scope, and without modifying the assessed workloads. The original single-node \code{Standard\_B2s} validation remains a scenario-labeled smoke test. The new \code{r03} and \code{r04} runs provisioned three-node clusters, installed ingress-nginx, cert-manager, kube-prometheus-stack, realistic PDB-protected workloads, an HPA, and a StatefulSet with PVCs; \code{r04} additionally used an Azure Policy-enabled AKS cluster.
 
 \subsubsection*{Managed AKS Validation}
-The managed validation package is archived under \code{experiments/aks/r02-managed-validation}. Run \code{20260617T101556Z} used AKS cluster \code{aks-kug-validation-we} in West Europe with Kubernetes \code{1.34.8}, one \code{Standard\_B2s} system node, Azure CNI overlay, workload identity enabled, and target version \code{1.35}. The scenario set excludes removed API fixtures because the AKS API server rejects removed API versions before an assessment can observe them. It instead exercises Kubernetes-modern workload availability, readiness, PDB, admission-webhook, and selected policy-risk patterns.
+The managed validation package is archived under \code{article/evidence/experiments/aks/r02-managed-validation}. Run \code{20260617T101556Z} used AKS cluster \code{aks-kug-validation-we} in West Europe with Kubernetes \code{1.34.8}, one \code{Standard\_B2s} system node, Azure CNI overlay, workload identity enabled, and target version \code{1.35}. The scenario set excludes removed API fixtures because the AKS API server rejects removed API versions before an assessment can observe them. It instead exercises Kubernetes-modern workload availability, readiness, PDB, admission-webhook, and selected policy-risk patterns.
 
-The AKS ground truth contains 21 expected scenario findings and 5 negative controls. \tool{} matched all 21 scenario labels with 0 false positives and 0 false negatives, and produced 0 observations on all 5 negative controls. In addition to scenario findings, \tool{} surfaced 8 AKS-managed admission-webhook observations from provider-managed webhook configurations. These observations are reported separately from scenario-label precision and recall because they are real provider-surface observations, not injected benchmark labels. The new multi-cluster package under \code{experiments/aks/r03-aks-medium} and \code{experiments/aks/r04-aks-policy} is not a labeled precision/recall benchmark; it is a managed add-on execution package. Its completed exports report 30 findings on \code{aks-medium} and 58 findings on \code{aks-policy}, with one generated \crd{UpgradePlan} per cluster.
+The AKS ground truth contains 21 expected scenario findings and 5 negative controls. \tool{} matched all 21 scenario labels with 0 false positives and 0 false negatives, and produced 0 observations on all 5 negative controls. In addition to scenario findings, \tool{} surfaced 8 AKS-managed admission-webhook observations from provider-managed webhook configurations. These observations are reported separately from scenario-label precision and recall because they are real provider-surface observations, not injected benchmark labels. The new multi-cluster package under \code{article/evidence/experiments/aks/r03-aks-medium} and \code{article/evidence/experiments/aks/r04-aks-policy} is not a labeled precision/recall benchmark; it is a managed add-on execution package. Its completed exports report 30 findings on \code{aks-medium} and 58 findings on \code{aks-policy}, with one generated \crd{UpgradePlan} per cluster.
 
 \begin{table}[t]
   \centering
@@ -584,34 +601,45 @@ The final Kind run produced 0 \tool{} false positives and 0 \tool{} false negati
 Errors are classified into six categories: scenario false positive, scenario false negative, negative-control observation, provider observation outside injected labels, measurement-attribution ambiguity, and artifact scalability failure. The final Kind run has none in the first three categories. The final AKS run has none in the first three categories, 8 provider observations, and one measurement-attribution caveat for the API-server request delta. R10 contributes four controlled false negatives. The pre-fix scale execution contributes one corrected artifact scalability defect; the post-fix 40-run AKS scale regression contributes no incomplete assessments. This taxonomy prevents provider-managed cluster surface from being misreported as benchmark false positives and separates detection misses from persistence-limit failures.
 
 \subsubsection*{Interpretation Limits}
-The controlled conformance evaluation is local, and the AKS validation remains a managed-cluster smoke test despite adding two three-node clusters and real add-ons. The R10 oracle labels are specification-grounded (each citing a Kubernetes documentation entry), but they remain team-authored and are not externally validated by platform engineers outside the research group. The scale regression is synthetic and uses repeated assessments over generated Deployment/PDB pairs, not production workload mixes. The evaluation still does not include production workloads, actual AKS surge upgrades, expert actionability ratings, or scoring calibration against outcomes. The result supports scenario-level detection consistency, negative-control precision for the included safe fixtures, scoped baseline comparison, managed-control-plane feasibility, add-on execution feasibility, and bounded-write behavior under one synthetic large-result workload. It does not support claims about production effectiveness, statistically robust accuracy across cluster populations, human-effort reduction, or calibrated risk prediction.
+The controlled conformance evaluation is local, and the AKS validation remains a managed-cluster smoke test despite adding two three-node clusters and real add-ons. The R10 oracle labels are specification-grounded (each citing a Kubernetes documentation entry), but they remain team-authored and are not externally validated by platform engineers outside the research group. The scale regression is synthetic and uses repeated assessments over generated Deployment/PDB pairs, not production workload mixes. The evaluation still does not include production workloads, actual AKS surge upgrades, human-perceived usefulness ratings, or scoring calibration against outcomes. The result supports scenario-level detection consistency, negative-control precision for the included safe fixtures, scoped baseline comparison, managed-control-plane feasibility, add-on execution feasibility, and bounded-write behavior under one synthetic large-result workload. It does not support claims about production effectiveness, statistically robust accuracy across cluster populations, human-effort reduction, or calibrated risk prediction.
 
 \section{Evaluation Artifact and Reproducibility}
 \label{sec:benchmark-artifact}
 This section describes the produced replication package for the controlled evaluation. The package separates scenarios, ground truth, tool execution, raw outputs, normalized findings, negative-control observations, and result tables.
 
+
+
 \begin{figure*}[t]
   \centering
+  \resizebox{0.96\textwidth}{!}{%
   \begin{tikzpicture}[
-    node distance=6mm and 7mm,
-    box/.style={draw, rounded corners=2pt, align=center, font=\footnotesize, minimum height=8mm, text width=2.75cm},
-    wide/.style={draw, rounded corners=2pt, align=center, font=\footnotesize, minimum height=8mm, text width=3.1cm},
+    font=\footnotesize,
+    node distance=7mm and 8mm,
+    box/.style={draw, rounded corners=2pt, align=center, minimum height=9mm, text width=2.95cm, fill=gray!5},
+    resultbox/.style={draw, rounded corners=2pt, align=center, minimum height=9mm, text width=3.05cm, fill=gray!10},
+    group/.style={draw, rounded corners=3pt, inner sep=6pt, dashed},
     arrow/.style={-{Latex[length=2mm]}, thick}
   ]
-    \node[wide] (datasets) {Scenario manifests\\{\scriptsize positive and negative fixtures}};
-    \node[wide, right=of datasets] (tools) {Tool runs\\{\scriptsize \tool{}, Pluto, kubent}};
-    \node[wide, right=of tools] (outputs) {Raw outputs\\{\scriptsize assessment, plan, logs, baseline reports}};
-    \node[wide, below=of outputs] (truth) {Ground truth\\{\scriptsize expected findings, negative controls}};
-    \node[wide, left=of truth] (metrics) {Metrics\\{\scriptsize precision, recall, F1, coverage}};
-    \node[wide, left=of metrics] (tables) {Result artifacts\\{\scriptsize tables, summaries, normalized JSON}};
+    \node[box] (fixtures) {Scenario fixtures\\{\scriptsize positives + negative controls}};
+    \node[box, right=of fixtures] (runs) {Tool execution\\{\scriptsize \tool{}, Pluto, kubent}};
+    \node[box, right=of runs] (raw) {Raw artifacts\\{\scriptsize assessments, plans, logs, reports}};
+    \node[box, right=of raw] (norm) {Normalization\\{\scriptsize comparable JSON records}};
 
-    \draw[arrow] (datasets) -- (tools);
-    \draw[arrow] (tools) -- (outputs);
-    \draw[arrow] (outputs) -- (truth);
-    \draw[arrow] (truth) -- (metrics);
+    \node[resultbox, below=12mm of norm] (oracle) {Oracle files\\{\scriptsize expected findings, safe fixtures}};
+    \node[resultbox, left=of oracle] (metrics) {Metrics\\{\scriptsize TP, FP, FN, precision, recall, F1}};
+    \node[resultbox, left=of metrics] (tables) {Paper artifacts\\{\scriptsize tables, summaries, replication metadata}};
+
+    \draw[arrow] (fixtures) -- (runs);
+    \draw[arrow] (runs) -- (raw);
+    \draw[arrow] (raw) -- (norm);
+    \draw[arrow] (norm) -- (oracle);
+    \draw[arrow] (oracle) -- (metrics);
     \draw[arrow] (metrics) -- (tables);
-  \end{tikzpicture}
-  \caption{Controlled evaluation pipeline. The produced package separates scenario inputs, tool execution, raw artifacts, ground truth, metrics, and final result tables.}
+
+    \node[group, fit=(oracle)(metrics)(tables), label={[font=\scriptsize]below:comparison and reporting artifacts; scenario-level evidence, not production calibration}] {};
+  \end{tikzpicture}%
+  }
+  \caption{Controlled evaluation pipeline. The replication package separates scenario fixtures, tool execution, raw outputs, normalized records, oracle labels, metrics, and paper tables; the resulting numbers are interpreted as scenario-level conformance evidence.}
   \label{fig:benchmark-pipeline}
 \end{figure*}
 
@@ -640,12 +668,12 @@ Table~\ref{tab:produced-artifacts} lists the files used to reproduce the reporte
 \end{table*}
 
 \subsection{Replication Command}
-The controlled benchmark is packaged under \code{experiments/kind/r01-benchmark}. The run can be reproduced from the repository root with:
+The controlled benchmark is packaged under \code{article/evidence/experiments/kind/r01-benchmark}. The run can be reproduced from the repository root with:
 
 {\scriptsize
 \begin{verbatim}
 PATH=/tmp/kug-r01-tools/bin:$PATH \
-python3 experiments/kind/r01-benchmark/\
+python3 article/evidence/experiments/kind/r01-benchmark/\
   run_kind_benchmark.py \
   --operator-repo ../kubeupgrade-guardian-operator \
   --restore-context aks-ihsen-mvp-we-admin
@@ -655,11 +683,11 @@ python3 experiments/kind/r01-benchmark/\
 The runner writes one timestamped directory under \code{results/}. In the validated run, it restored the kubeconfig context to \code{aks-ihsen-mvp-we-admin} and deleted the temporary Kind cluster after completion.
 
 \subsection{Managed AKS Validation Package}
-The managed-cluster validation package is stored separately under \code{experiments/aks/r02-managed-validation}. It contains AKS-compatible manifests, a ground-truth file with 21 expected non-API findings and 5 negative controls, the runner \code{run\_aks\_validation.py}, raw assessment and plan outputs, normalized scenario and provider findings, process samples, scoped object inventory, API-server metric snapshots, and result summaries. The validated run is \code{results/20260617T101556Z}. It can be reproduced against an existing AKS admin context with:
+The managed-cluster validation package is stored separately under \code{article/evidence/experiments/aks/r02-managed-validation}. It contains AKS-compatible manifests, a ground-truth file with 21 expected non-API findings and 5 negative controls, the runner \code{run\_aks\_validation.py}, raw assessment and plan outputs, normalized scenario and provider findings, process samples, scoped object inventory, API-server metric snapshots, and result summaries. The validated run is \code{results/20260617T101556Z}. It can be reproduced against an existing AKS admin context with:
 
 {\scriptsize
 \begin{verbatim}
-python3 experiments/aks/r02-managed-validation/\
+python3 article/evidence/experiments/aks/r02-managed-validation/\
   run_aks_validation.py \
   --context aks-kug-validation-we-admin \
   --resource-group rg-kug-aks-validation-we \
@@ -670,7 +698,7 @@ python3 experiments/aks/r02-managed-validation/\
 The runner deletes its scenario namespaces and webhooks after the run. The validated AKS cluster itself is intentionally not deleted by the runner so that cost and lifecycle control remain explicit.
 
 \subsection{Multi-Cluster AKS Execution Package}
-The multi-cluster AKS package is archived under \code{experiments/aks/r03-aks-medium}, \code{experiments/aks/r04-aks-policy}, and \code{experiments/aks/multi-cluster-summary.json}. Terraform provisioning is stored under \code{terraform/aks-evaluation}. The run created \code{aks-medium} and \code{aks-policy} in West Europe, each with three \code{Standard\_D2s\_v3} nodes and Kubernetes \code{1.34.8}; \code{aks-policy} enabled the Azure Policy add-on. The workload script installed ingress-nginx \code{4.10.0}, cert-manager \code{v1.14.5}, kube-prometheus-stack \code{58.5.0}, three PDB-protected Deployments, one HPA, and one StatefulSet with two PVC-backed replicas.
+The multi-cluster AKS package is archived under \code{article/evidence/experiments/aks/r03-aks-medium}, \code{article/evidence/experiments/aks/r04-aks-policy}, and \code{article/evidence/experiments/aks/multi-cluster-summary.json}. Terraform provisioning is stored under \code{article/evidence/terraform/aks-evaluation}. The run created \code{aks-medium} and \code{aks-policy} in West Europe, each with three \code{Standard\_D2s\_v3} nodes and Kubernetes \code{1.34.8}; \code{aks-policy} enabled the Azure Policy add-on. The workload script installed ingress-nginx \code{4.10.0}, cert-manager \code{v1.14.5}, kube-prometheus-stack \code{58.5.0}, three PDB-protected Deployments, one HPA, and one StatefulSet with two PVC-backed replicas.
 
 During this execution, the published in-cluster image produced findings and pod resource measurements but exposed a status-idempotency defect: plan/status requeues could leave an assessment in phase \code{Running} after findings had been computed. The defect was fixed in operator commit \code{4a2c14f} by making completed assessments idempotent for the current generation and retrying status updates on optimistic-concurrency conflicts. The stable \code{findings.json} and \code{upgradeplans.json} exports in \code{r03} and \code{r04} were produced by that patched controller against the live AKS clusters. The separately archived \code{in-cluster-run-metadata.json} and \code{in-cluster-controller-top.txt} files preserve the pod-based resource measurements from the in-cluster execution. This separation is intentional: it prevents the paper from reporting a \code{Completed} phase that was not present in the raw in-cluster assessment export while still preserving the measured pod RSS evidence.
 
@@ -706,7 +734,7 @@ Evidence changes the review conversation. A finding such as ``PDB may block disr
 The current artifact is useful as a repeatable pre-upgrade inspection framework, a structured way to expose evidence and assessment gaps, and a basis for comparing broader readiness risk categories against API-deprecation tools. The controlled conformance evaluation shows that the artifact can detect the labeled risks in the current scenario package. Its value is strongest when teams want a Kubernetes-native record of findings and proposed actions without granting the tool authority to mutate workloads.
 
 \subsection{Where the Current Artifact Is Weak}
-The deprecated-API checker uses a small static table. The observability checker is heuristic. The capacity checker is conservative and does not model all scheduler, autoscaler, topology, taint, priority, or managed-provider behaviors. Policy analysis covers selected indicators and is not a full admission dry run. Add-on and operator compatibility are not part of the measured benchmark. The score is intentionally simple. Until it is calibrated against real upgrade incidents---either through historical incident data or a structured expert study---it should be treated as a ranking aid, not as a risk predictor. Future work should compare score-derived decisions against post-upgrade incident records from real platform teams.
+The deprecated-API checker uses a small static table. The observability checker is heuristic. The capacity checker is conservative and does not model all scheduler, autoscaler, topology, taint, priority, or managed-provider behaviors. Policy analysis covers selected indicators and is not a full admission dry run. Add-on and operator compatibility are not part of the measured benchmark. The score is intentionally simple. Until it is calibrated against real upgrade incidents or a structured outcome corpus, it should be treated as a ranking aid, not as a risk predictor. Future work should compare score-derived decisions against post-upgrade incident records from real platform teams.
 
 \subsection{Checker Interactions and Plan Dependencies}
 The current planner treats findings as independently ordered actions, but upgrade readiness risks can compose. A low-replica workload with a strict PDB is more urgent than either finding alone because the same workload lacks redundancy and blocks voluntary disruption. A restricted namespace plus a workload-level security-context finding similarly indicates both policy context and concrete incompatibility. The current artifact preserves these links through shared resource references and evidence fields, but it does not yet compute a dependency graph among actions. In the evaluated plans, critical blockers appear before high-risk workload and admission actions; a future planner should explicitly group actions by affected workload, policy boundary, and disruption path.
@@ -717,10 +745,10 @@ The current planner treats findings as independently ordered actions, but upgrad
 \subsection{Scalability Limits}
 The single-node AKS validation measured 12 Deployments, 2 StatefulSets, 1 DaemonSet, 12 PDBs, 27 Pods, 1 HPA, and provider webhooks. The \~{}4~s assessment wait and \~{}47~MiB peak local RSS are useful smoke-test numbers, not asymptotic evidence. The multi-cluster AKS package adds two three-node clusters and real add-ons, but it is still a small sample. R02 adds a local repeated scale smoke study over synthetic Deployment/PDB pairs at 100, 500, and 1,000 assessed objects with five repetitions per size. Its p95 assessment durations were 7.128~s, 1.840~s, and 8.755~s respectively, and all 15 assessments completed. The AKS scale regression adds four larger points with 10 repetitions per size on an autoscaled AKS node pool; all 40 assessments completed after the controller bounded detailed status and plan output. The pre-fix failure remains important: it identified that storing all detailed findings inside one \crd{UpgradeAssessment} status does not scale. The patched design preserves aggregate counts and publishes a bounded detail sample, but full detailed evidence still needs pagination, externalized result storage, or child resources for production-scale clusters. The current checkers perform straightforward list/get operations and in-memory matching; PDB matching can grow with the number of PDB/workload selector comparisons in a namespace, and admission scanning is cluster-scoped. A stronger scalability study should vary realistic object mixes, report isolated controller memory and CPU, API-server request deltas, timeout behavior, and separate cache warm-up from assessment execution.
 
-\subsection{Documentation and Review Package}
-The repository now contains executable benchmark packages and generated summaries, but user-facing documentation still needs a stable installation path, sample \crd{UpgradeAssessment} scopes, RBAC profiles, expected output examples, and cleanup guidance. For human validation, the appropriate artifact is an expert review packet: a generated \crd{UpgradePlan}, source findings, evidence records, and a rubric for correctness, actionability, prioritization, evidence support, and remediation safety. This paper does not report completed external expert ratings; it prepares the structure required to collect them without overstating the current evidence.
+\subsection{Documentation and Replication Package}
+The repository now contains executable benchmark packages and generated summaries, but user-facing documentation still needs a stable installation path, sample \crd{UpgradeAssessment} scopes, RBAC profiles, expected output examples, and cleanup guidance. The replication package is the reviewable artifact for this paper: it contains scenario manifests, ground-truth files, normalized outputs, raw assessments, generated plans, and tool-version records. This keeps the empirical claim tied to executable evidence rather than subjective usefulness ratings.
 
-\subsection{Cautious Agent Integration}
+\subsection{Evidence-Bounded Assistance Layer}
 \kagent{} is not part of the evaluated artifact \cite{kagent}. The measured system is deterministic: checkers produce findings, the scorer produces a risk level, and the planner produces non-executing actions. Any agentic explanation layer would need to remain evidence-bounded and non-authoritative; it is not included in the benchmark results.
 
 \section{Threats to Validity}
@@ -730,7 +758,7 @@ The repository now contains executable benchmark packages and generated summarie
 
 \textbf{External validity.} The controlled conformance evaluation demonstrates behavior on labeled scenarios, not production generality. The AKS validation adds managed-control-plane evidence, including two three-node add-on clusters, but it remains provider-specific and small. Production clusters may include proprietary controllers, custom admission chains, Azure Policy assignments, private networking, multi-node surge behavior, and hidden operational constraints.
 
-\textbf{Conclusion validity.} The current local test suite supports implementation sanity, the Kind conformance run supports bounded scenario-level consistency, the R10 harness supports controlled error analysis, and the AKS runs support managed-cluster feasibility plus one bounded-write scale regression. The data does not support production effectiveness, human-effort reduction, expert-rated actionability, or calibrated risk-prediction claims.
+\textbf{Conclusion validity.} The current local test suite supports implementation sanity, the Kind conformance run supports bounded scenario-level consistency, the R10 harness supports controlled error analysis, and the AKS runs support managed-cluster feasibility plus one bounded-write scale regression. The data does not support production effectiveness, human-effort reduction, human-rated usefulness, or calibrated risk-prediction claims.
 
 \textbf{Measurement validity.} The AKS API-server request delta is a cluster-level metric over relevant resources during the assessment window. It includes harness polling and cannot be interpreted as exact per-controller request attribution without audit logs or instrumented clients. The AKS scale regression used a local controller process; pod-based RSS was unavailable for that run, and local \code{ps} samples can retain Go heap and informer-cache state across repetitions. They are reported separately from in-cluster pod measurements and should not be treated as isolated steady-state memory curves.
 
@@ -780,8 +808,8 @@ Kubernetes custom resources and the operator pattern define how domain-specific 
 \subsection{Policy-as-Code and Admission Control}
 Admission controllers, admission webhooks, ValidatingAdmissionPolicy, Pod Security Admission, and RBAC are central to upgrade readiness because recreated or migrated objects may be rejected even when their API versions still exist \cite{kubernetesAdmissionControllers,kubernetesAdmissionWebhooks,kubernetesValidatingAdmissionPolicy,kubernetesPodSecurityAdmission,kubernetesRbac,kubernetesRbacGoodPractices}. The Kubernetes admission-control threat model further emphasizes that admission components are security-sensitive operational dependencies \cite{kubernetesAdmissionThreatModel}. Policy-as-code systems such as OPA make policy enforcement programmable, and recent empirical work studies how policy-as-code is adopted in open-source projects \cite{opa,policyAsCodeAdoption2026}. \tool{} currently performs scoped policy and admission checks; it does not implement a full admission dry run or a complete policy-engine semantics model.
 
-\subsection{AIOps and LLM-Based Operations Assistance}
-AIOps and LLM assistance can help with explanation and synthesis, but may produce unsupported output and encourage overconfidence \cite{hou2024,perry2023}. \tool{} does not include an agentic or LLM layer; any such integration would need to remain evidence-bounded, non-authoritative, and separately evaluated.
+\subsection{Evidence-Bounded Operations Assistance}
+Operations-assistance systems can help with explanation and synthesis, but may produce unsupported recommendations and encourage overconfidence \cite{hou2024,perry2023,iacDriftAgents2025}. \tool{} does not include an agentic or LLM layer. The evaluated artifact is limited to deterministic checkers, evidence-backed findings, heuristic scoring, and non-executing plan generation.
 
 \section{Future Work}
 \label{sec:future-work}
@@ -789,7 +817,7 @@ AIOps and LLM assistance can help with explanation and synthesis, but may produc
 The current evaluation establishes implementation fidelity and scenario-level detection consistency. Several directions would strengthen the empirical claims.
 
 \paragraph{Independent ground truth.}
-The repository contains the R10 package \code{experiments/kind/r10-independent-labels}: 20 adversarial fixtures, specification-grounded oracle labels (each citing a Kubernetes documentation entry), a real-checker harness, and a comparison script. The executed R10 result is concrete error analysis: 32~TP, 0~FP, 4~FN, precision~1.0000, recall~0.8889. The oracle labels were derived from Kubernetes specification analysis rather than from inspecting checker source code; the fn=4 result confirms they were not reverse-engineered from the implementation. The evaluation remains team-authored; external validation by platform engineers who did not write the checkers would further strengthen the detection-coverage claim and is identified as future work.
+The repository contains the R10 package \code{article/evidence/experiments/kind/r10-independent-labels}: 20 adversarial fixtures, specification-grounded oracle labels (each citing a Kubernetes documentation entry), a real-checker harness, and a comparison script. The executed R10 result is concrete error analysis: 32~TP, 0~FP, 4~FN, precision~1.0000, recall~0.8889. The oracle labels were derived from Kubernetes specification analysis rather than from inspecting checker source code; the fn=4 result confirms they were not reverse-engineered from the implementation. The evaluation remains team-authored; external validation by platform engineers who did not write the checkers would further strengthen the detection-coverage claim and is identified as future work.
 
 \paragraph{Real-cluster and multi-cluster validation.}
 The new AKS \code{r03}/\code{r04} package moves beyond the earlier single-node smoke test by provisioning two three-node clusters and installing real add-ons. The next step is not merely provisioning, but breadth and independence: 3--5 clusters with different sizes, multiple Kubernetes target versions, node pools, private networking variants, Cluster Autoscaler behavior, node-image upgrades, and controlled surge-upgrade execution. For AKS specifically, managed-provider validation should include Azure Policy policy-assignment variants, workload identity edge cases, CSI driver behavior, and add-on upgrade interactions.
@@ -800,9 +828,6 @@ The R10 package includes ambiguous and near-miss cases: PDB selectors that match
 \paragraph{Scalable result storage.}
 The AKS scale regression shows that bounded status and plan output can avoid the Kubernetes request-size failure observed in the pre-fix 5,000/10,000-pair executions. A production-grade design should still store only bounded summaries and references in \crd{UpgradeAssessment} status, move complete detailed findings into paginated child resources or an external evidence store, and make generated plans robust to partial result pagination. Larger and more realistic workload mixes should be evaluated after that detail-storage redesign.
 
-\paragraph{Expert human evaluation.}
-Recruiting platform engineers to rate generated \crd{UpgradePlan} artifacts on correctness, actionability, prioritization quality, evidence usefulness, and remediation safety would provide the human-validation signal currently absent. A structured study with $n \geq 5$ raters and inter-rater agreement measurement is the minimum for a credible actionability claim.
-
 \paragraph{Score calibration.}
 The current severity weights are a deterministic sort key, not a calibrated risk predictor. Calibration against a corpus of real upgrade incidents---matching pre-upgrade assessment scores to post-upgrade outcomes---would allow the score to make evidence-based predictions rather than heuristic orderings.
 
@@ -810,7 +835,7 @@ The current severity weights are a deterministic sort key, not a calibrated risk
 The current replication package now includes static kube-score, kube-linter, and Polaris smoke runs on both the R01 scenario manifest and the R05 rendered Helm corpus. These runs demonstrate executable baseline feasibility and expose the kinds of workload-quality findings those tools produce, but they do not yet provide labeled TP/FP/FN comparison. A stronger comparison still requires independent labels over realistic workloads and additional baselines such as Popeye, Datree, Kyverno policy tests, Gatekeeper policy tests, and a manual SRE checklist.
 
 \section{Conclusion}
-This paper proposes an evidence-guided impact-analysis approach to Kubernetes upgrade readiness and instantiates it as \tool, a bounded-write Kubernetes-native operator. The approach differs from aggregating specialized CLI tools in three ways: (1) it produces a unified evidence trail linking each finding to its source resource and observable cluster fact; (2) it models assessment uncertainty explicitly through RBAC-gap findings rather than silently omitting inaccessible families; and (3) it materializes findings and remediation plans as persistent, inspectable Kubernetes resources rather than ephemeral command-line output. The current artifact includes deterministic checkers, structured evidence, scoring, decisions, and non-executing remediation actions. Local validation completed with \code{go test ./...} and 0 failures. The controlled Kind conformance run \code{20260617T091703Z} reported 31 true positives, 0 false positives, and 0 false negatives for \tool{} against the labeled scenario package, with 0 observations on 5 negative controls. Pluto and kubent matched all 4 deprecated-API findings in the API subset, while the 27 non-API readiness labels remained outside their scope. The R10 adversarial harness reported 32 true positives, 0 false positives, and 4 false negatives against specification-grounded team-authored control labels. The managed AKS validation run \code{20260617T101556Z} reported 21 true positives, 0 false positives, and 0 false negatives against Kubernetes-modern scenario labels, 0 observations on 5 negative controls, and 8 separately reported AKS-managed webhook observations. The new multi-cluster AKS execution package reported completed assessment exports with 30 findings on \code{aks-medium} and 58 findings on \code{aks-policy}, plus pod-based in-cluster resource measurements. The AKS scale regression completed 10/10 runs at each of 100, 1,000, 5,000, and 10,000 Deployment/PDB pairs after bounding detailed status findings and plan actions to 200 entries while preserving aggregate finding counts. Production effectiveness, full detailed-result pagination, and expert-rated actionability remain open validation questions documented in Section~\ref{sec:future-work}.
+This paper proposes an evidence-guided impact-analysis approach to Kubernetes upgrade readiness and instantiates it as \tool, a bounded-write Kubernetes-native operator. The approach differs from aggregating specialized CLI tools in three ways: (1) it produces a unified evidence trail linking each finding to its source resource and observable cluster fact; (2) it models assessment uncertainty explicitly through RBAC-gap findings rather than silently omitting inaccessible families; and (3) it materializes findings and remediation plans as persistent, inspectable Kubernetes resources rather than ephemeral command-line output. The current artifact includes deterministic checkers, structured evidence, scoring, decisions, and non-executing remediation actions. Local validation completed with \code{go test ./...} and 0 failures. The controlled Kind conformance run \code{20260617T091703Z} reported 31 true positives, 0 false positives, and 0 false negatives for \tool{} against the labeled scenario package, with 0 observations on 5 negative controls. Pluto and kubent matched all 4 deprecated-API findings in the API subset, while the 27 non-API readiness labels remained outside their scope. The R10 adversarial harness reported 32 true positives, 0 false positives, and 4 false negatives against specification-grounded team-authored control labels. The managed AKS validation run \code{20260617T101556Z} reported 21 true positives, 0 false positives, and 0 false negatives against Kubernetes-modern scenario labels, 0 observations on 5 negative controls, and 8 separately reported AKS-managed webhook observations. The new multi-cluster AKS execution package reported completed assessment exports with 30 findings on \code{aks-medium} and 58 findings on \code{aks-policy}, plus pod-based in-cluster resource measurements. The AKS scale regression completed 10/10 runs at each of 100, 1,000, 5,000, and 10,000 Deployment/PDB pairs after bounding detailed status findings and plan actions to 200 entries while preserving aggregate finding counts. Production effectiveness, full detailed-result pagination, and human-perceived usefulness remain outside the validated claims documented in Section~\ref{sec:future-work}.
 
 \begin{thebibliography}{99}
 \bibitem{lehman1980}
@@ -968,6 +993,43 @@ Z. Yang, H. Guan, V. Nicolet, B. Paulsen, J. Dodds, D. Kroening, and A. Chen, ``
 
 \bibitem{kagent}
 kagent-dev, ``kagent: Cloud native agentic AI,'' GitHub repository. [Online]. Available: \url{https://github.com/kagent-dev/kagent}
+
+
+\bibitem{kubernetesPdbTask}
+Kubernetes Documentation, ``Specifying a disruption budget for your application.'' [Online]. Available: \url{https://kubernetes.io/docs/tasks/run-application/configure-pdb/}
+
+\bibitem{kubernetesProbes}
+Kubernetes Documentation, ``Configure liveness, readiness and startup probes.'' [Online]. Available: \url{https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/}
+
+\bibitem{kubernetesPodLifecycle}
+Kubernetes Documentation, ``Pod lifecycle.'' [Online]. Available: \url{https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/}
+
+\bibitem{kubernetesPodSecurityStandards}
+Kubernetes Documentation, ``Pod Security Standards.'' [Online]. Available: \url{https://kubernetes.io/docs/concepts/security/pod-security-standards/}
+
+\bibitem{kubernetesAdmissionWebhooksGoodPractices}
+Kubernetes Documentation, ``Admission webhook good practices.'' [Online]. Available: \url{https://kubernetes.io/docs/concepts/cluster-administration/admission-webhooks-good-practices/}
+
+\bibitem{kubernetesSchedulingEviction}
+Kubernetes Documentation, ``Scheduling, preemption and eviction.'' [Online]. Available: \url{https://kubernetes.io/docs/concepts/scheduling-eviction/}
+
+\bibitem{kubernetesNodePressureEviction}
+Kubernetes Documentation, ``Node-pressure eviction.'' [Online]. Available: \url{https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/}
+
+\bibitem{kubernetesPersistentVolumes}
+Kubernetes Documentation, ``Persistent volumes.'' [Online]. Available: \url{https://kubernetes.io/docs/concepts/storage/persistent-volumes/}
+
+\bibitem{aksSupportPolicies}
+Microsoft Learn, ``Support policies for Azure Kubernetes Service (AKS).'' [Online]. Available: \url{https://learn.microsoft.com/en-us/azure/aks/support-policies}
+
+\bibitem{aksNodePools}
+Microsoft Learn, ``Create node pools for a cluster in Azure Kubernetes Service (AKS).'' [Online]. Available: \url{https://learn.microsoft.com/en-us/azure/aks/create-node-pools}
+
+\bibitem{gatekeeper}
+Open Policy Agent Gatekeeper, ``Gatekeeper documentation.'' [Online]. Available: \url{https://open-policy-agent.github.io/gatekeeper/website/}
+
+\bibitem{kyverno}
+Kyverno, ``Kyverno documentation.'' [Online]. Available: \url{https://kyverno.io/docs/}
 
 \bibitem{cncfOperatorWhitepaper}
 CNCF TAG App Delivery Operator Working Group, ``Operator white paper.'' [Online]. Available: \url{https://github.com/cncf/tag-app-delivery/blob/main/operator-wg/whitepaper/Operator-WhitePaper_v1-0.md}

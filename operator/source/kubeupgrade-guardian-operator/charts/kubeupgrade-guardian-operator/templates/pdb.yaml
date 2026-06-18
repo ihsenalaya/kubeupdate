@@ -1,0 +1,14 @@
+{{- if .Values.podDisruptionBudget.enabled }}
+{{- if lt (int .Values.replicaCount) 2 }}
+{{- fail "podDisruptionBudget.enabled requires replicaCount >= 2 so the operator cannot block node drains" }}
+{{- end }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "kubeupgrade-guardian-operator.fullname" . }}
+spec:
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "kubeupgrade-guardian-operator.selectorLabels" . | nindent 6 }}
+{{- end }}

@@ -1,0 +1,28 @@
+apiVersion: upgrade.guardian.io/v1alpha1
+kind: UpgradeAssessment
+metadata:
+  name: kind-assessment
+  namespace: kubeupgrade-guardian-system
+  labels:
+    app.kubernetes.io/managed-by: operator-report-export
+spec:
+  sourceVersion: "1.34"
+  targetVersion: "1.35"
+  profile: production
+  mode: ReadOnly
+  scope:
+    namespaces:
+      exclude:
+        - kube-system
+      include:
+        - kubeupgrade-guardian-system
+        - upgrade-lab
+  checks:
+    deprecatedApis: true
+    workloadAvailability: true
+    pdb: true
+    readinessProbes: true
+    admissionWebhooks: true
+    policyRisks: true
+    capacity: true
+    observability: true
