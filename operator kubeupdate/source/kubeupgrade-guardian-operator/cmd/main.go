@@ -25,11 +25,19 @@ import (
 	// to ensure that exec-entrypoint and run can make use of them.
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
+	admissionv1 "k8s.io/api/admissionregistration/v1"
+	appsv1 "k8s.io/api/apps/v1"
+	autoscalingv2 "k8s.io/api/autoscaling/v2"
+	batchv1 "k8s.io/api/batch/v1"
+	corev1 "k8s.io/api/core/v1"
+	discoveryv1 "k8s.io/api/discovery/v1"
+	policyv1 "k8s.io/api/policy/v1"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
@@ -51,6 +59,27 @@ func init() {
 	utilruntime.Must(apiextensionsv1.AddToScheme(scheme))
 	utilruntime.Must(upgradev1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
+}
+
+// assessedTypes lists every type collected by internal/snapshot. They are read
+// through the API reader, never through the cache.
+func assessedTypes() []client.Object {
+	return []client.Object{
+		&corev1.Namespace{},
+		&corev1.Node{},
+		&corev1.Pod{},
+		&corev1.Service{},
+		&appsv1.Deployment{},
+		&appsv1.StatefulSet{},
+		&appsv1.DaemonSet{},
+		&policyv1.PodDisruptionBudget{},
+		&discoveryv1.EndpointSlice{},
+		&autoscalingv2.HorizontalPodAutoscaler{},
+		&batchv1.CronJob{},
+		&admissionv1.ValidatingWebhookConfiguration{},
+		&admissionv1.MutatingWebhookConfiguration{},
+		&apiextensionsv1.CustomResourceDefinition{},
+	}
 }
 
 func main() {
@@ -98,6 +127,14 @@ func main() {
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme: scheme,
+		// The assessed cluster is read through the snapshot's direct API reader.
+		// Disabling the cache for every collected type guarantees no code path can
+		// accidentally start a cluster-wide informer and hold the cluster in RAM.
+		Client: client.Options{
+			Cache: &client.CacheOptions{
+				DisableFor: assessedTypes(),
+			},
+		},
 		Metrics: metricsserver.Options{
 			BindAddress:   metricsAddr,
 			SecureServing: secureMetrics,
@@ -126,6 +163,7 @@ func main() {
 
 	if err = (&controller.UpgradeAssessmentReconciler{
 		Client: mgr.GetClient(),
+		Reader: mgr.GetAPIReader(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "UpgradeAssessment")

@@ -17,18 +17,17 @@ limitations under the License.
 package checkers
 
 import (
-	"context"
 	"fmt"
+	"sort"
 	"strconv"
 
-	appsv1 "k8s.io/api/apps/v1"
 	policyv1 "k8s.io/api/policy/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	upgradev1alpha1 "github.com/ihsenalaya/kubeupgrade-guardian-operator/api/v1alpha1"
+	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/snapshot"
 )
 
 // PDB detects disruption budgets that can block voluntary disruption.
@@ -44,37 +43,19 @@ type workloadReplicaRef struct {
 	Replicas  int32
 }
 
-func (p PDB) Check(ctx context.Context, c client.Client, assessment *upgradev1alpha1.UpgradeAssessment) ([]upgradev1alpha1.Finding, error) {
-	nsList, err := namespaces(ctx, c, assessment)
-	if err != nil {
-		if isRBACDenied(err) {
-			return rbacGap(p.Name(), err), nil
-		}
-		return nil, err
+func (PDB) Check(snap *snapshot.ClusterSnapshot, _ *upgradev1alpha1.UpgradeAssessment) []upgradev1alpha1.Finding {
+	workloadsByNamespace := pdbWorkloads(snap)
+	pdbsByNamespace := make(map[string][]policyv1.PodDisruptionBudget, len(snap.PDBs))
+	for _, pdb := range snap.PDBs {
+		pdbsByNamespace[pdb.Namespace] = append(pdbsByNamespace[pdb.Namespace], pdb)
 	}
 
 	var findings []upgradev1alpha1.Finding
-	for _, ns := range nsList {
-		workloads, err := pdbWorkloads(ctx, c, ns)
-		if err != nil {
-			if isRBACDenied(err) {
-				findings = append(findings, rbacGap(p.Name()+"/workloads", err)...)
-				continue
-			}
-			return nil, err
-		}
-
-		var pdbs policyv1.PodDisruptionBudgetList
-		if err := c.List(ctx, &pdbs, client.InNamespace(ns)); err != nil {
-			if isRBACDenied(err) {
-				findings = append(findings, rbacGap(p.Name()+"/poddisruptionbudgets", err)...)
-				continue
-			}
-			return nil, err
-		}
+	for _, namespace := range snap.Namespaces {
+		workloads := workloadsByNamespace[namespace.Name]
 
 		matchedWorkloads := map[string]struct{}{}
-		for _, pdb := range pdbs.Items {
+		for _, pdb := range pdbsByNamespace[namespace.Name] {
 			pdbFindings, matched := evaluatePDB(pdb, workloads)
 			findings = append(findings, pdbFindings...)
 			for _, key := range matched {
@@ -93,49 +74,45 @@ func (p PDB) Check(ctx context.Context, c client.Client, assessment *upgradev1al
 		}
 	}
 
-	return findings, nil
+	return findings
 }
 
-func pdbWorkloads(ctx context.Context, c client.Client, namespace string) ([]workloadReplicaRef, error) {
-	var workloads []workloadReplicaRef
+// pdbWorkloads indexes the assessed workloads by namespace: a PodDisruptionBudget
+// only ever selects pods of its own namespace.
+func pdbWorkloads(snap *snapshot.ClusterSnapshot) map[string][]workloadReplicaRef {
+	byNamespace := map[string][]workloadReplicaRef{}
 
-	var deployments appsv1.DeploymentList
-	if err := c.List(ctx, &deployments, client.InNamespace(namespace)); err != nil {
-		return nil, err
-	}
-	for _, item := range deployments.Items {
-		replicas := int32(1)
-		if item.Spec.Replicas != nil {
-			replicas = *item.Spec.Replicas
-		}
-		workloads = append(workloads, workloadReplicaRef{
+	for _, item := range snap.Deployments {
+		byNamespace[item.Namespace] = append(byNamespace[item.Namespace], workloadReplicaRef{
 			Kind:      "Deployment",
 			Namespace: item.Namespace,
 			Name:      item.Name,
 			Labels:    item.Spec.Template.Labels,
-			Replicas:  replicas,
+			Replicas:  replicaCount(item.Spec.Replicas),
 		})
 	}
 
-	var statefulSets appsv1.StatefulSetList
-	if err := c.List(ctx, &statefulSets, client.InNamespace(namespace)); err != nil {
-		return nil, err
-	}
-	for _, item := range statefulSets.Items {
-		replicas := int32(1)
-		if item.Spec.Replicas != nil {
-			replicas = *item.Spec.Replicas
-		}
-		workloads = append(workloads, workloadReplicaRef{
+	for _, item := range snap.StatefulSets {
+		byNamespace[item.Namespace] = append(byNamespace[item.Namespace], workloadReplicaRef{
 			Kind:      "StatefulSet",
 			Namespace: item.Namespace,
 			Name:      item.Name,
 			Labels:    item.Spec.Template.Labels,
-			Replicas:  replicas,
+			Replicas:  replicaCount(item.Spec.Replicas),
 		})
 	}
 
-	return workloads, nil
+	for namespace := range byNamespace {
+		workloads := byNamespace[namespace]
+		sort.SliceStable(workloads, func(i, j int) bool {
+			if workloads[i].Kind != workloads[j].Kind {
+				return workloads[i].Kind < workloads[j].Kind
+			}
+			return workloads[i].Name < workloads[j].Name
+		})
+	}
+
+	return byNamespace
 }
 
 func evaluatePDB(pdb policyv1.PodDisruptionBudget, workloads []workloadReplicaRef) ([]upgradev1alpha1.Finding, []string) {
@@ -149,7 +126,7 @@ func evaluatePDB(pdb policyv1.PodDisruptionBudget, workloads []workloadReplicaRe
 	}
 
 	var findings []upgradev1alpha1.Finding
-	var matched []string
+	matched := make([]string, 0, len(workloads))
 	for _, workload := range workloads {
 		if !selector.Matches(labels.Set(workload.Labels)) {
 			continue

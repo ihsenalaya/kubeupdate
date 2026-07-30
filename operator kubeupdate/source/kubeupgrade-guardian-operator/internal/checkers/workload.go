@@ -17,15 +17,13 @@ limitations under the License.
 package checkers
 
 import (
-	"context"
 	"fmt"
 	"strconv"
 
-	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	upgradev1alpha1 "github.com/ihsenalaya/kubeupgrade-guardian-operator/api/v1alpha1"
+	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/snapshot"
 )
 
 // WorkloadAvailability detects workloads unlikely to remain available during an upgrade.
@@ -33,69 +31,32 @@ type WorkloadAvailability struct{}
 
 func (WorkloadAvailability) Name() string { return "workload-availability" }
 
-func (w WorkloadAvailability) Check(ctx context.Context, c client.Client, assessment *upgradev1alpha1.UpgradeAssessment) ([]upgradev1alpha1.Finding, error) {
-	nsList, err := namespaces(ctx, c, assessment)
-	if err != nil {
-		if isRBACDenied(err) {
-			return rbacGap(w.Name(), err), nil
-		}
-		return nil, err
-	}
-
+func (WorkloadAvailability) Check(snap *snapshot.ClusterSnapshot, _ *upgradev1alpha1.UpgradeAssessment) []upgradev1alpha1.Finding {
 	var findings []upgradev1alpha1.Finding
-	for _, ns := range nsList {
-		var deployments appsv1.DeploymentList
-		if err := c.List(ctx, &deployments, client.InNamespace(ns)); err != nil {
-			if isRBACDenied(err) {
-				findings = append(findings, rbacGap(w.Name()+"/deployments", err)...)
-				continue
-			}
-			return nil, err
-		}
-		for _, deployment := range deployments.Items {
-			replicas := int32(1)
-			if deployment.Spec.Replicas != nil {
-				replicas = *deployment.Spec.Replicas
-			}
-			if replicas < 2 {
-				findings = append(findings, replicaFinding("Deployment", deployment.Namespace, deployment.Name, replicas))
-			}
-		}
 
-		var statefulSets appsv1.StatefulSetList
-		if err := c.List(ctx, &statefulSets, client.InNamespace(ns)); err != nil {
-			if isRBACDenied(err) {
-				findings = append(findings, rbacGap(w.Name()+"/statefulsets", err)...)
-				continue
-			}
-			return nil, err
-		}
-		for _, statefulSet := range statefulSets.Items {
-			replicas := int32(1)
-			if statefulSet.Spec.Replicas != nil {
-				replicas = *statefulSet.Spec.Replicas
-			}
-			if replicas < 2 {
-				findings = append(findings, replicaFinding("StatefulSet", statefulSet.Namespace, statefulSet.Name, replicas))
-			}
-		}
-
-		var pods corev1.PodList
-		if err := c.List(ctx, &pods, client.InNamespace(ns)); err != nil {
-			if isRBACDenied(err) {
-				findings = append(findings, rbacGap(w.Name()+"/pods", err)...)
-				continue
-			}
-			return nil, err
-		}
-		for _, pod := range pods.Items {
-			if isStandalonePod(pod) {
-				findings = append(findings, standalonePodFinding(pod))
-			}
+	for _, deployment := range snap.Deployments {
+		if replicas := replicaCount(deployment.Spec.Replicas); replicas < 2 {
+			findings = append(findings, replicaFinding("Deployment", deployment.Namespace, deployment.Name, replicas))
 		}
 	}
 
-	return findings, nil
+	for _, statefulSet := range snap.StatefulSets {
+		if replicas := replicaCount(statefulSet.Spec.Replicas); replicas < 2 {
+			findings = append(findings, replicaFinding("StatefulSet", statefulSet.Namespace, statefulSet.Name, replicas))
+		}
+	}
+
+	scoped := namespaceSet(snap.Namespaces)
+	for _, pod := range snap.Pods {
+		if _, ok := scoped[pod.Namespace]; !ok {
+			continue
+		}
+		if isStandalonePod(pod) {
+			findings = append(findings, standalonePodFinding(pod))
+		}
+	}
+
+	return findings
 }
 
 func replicaFinding(kind, namespace, name string, replicas int32) upgradev1alpha1.Finding {

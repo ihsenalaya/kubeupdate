@@ -2,8 +2,6 @@ package checkers
 
 import (
 	"testing"
-
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
 func TestUsesDeprecatedSourceRequiresLastAppliedDeprecatedAPIVersion(t *testing.T) {
@@ -38,13 +36,13 @@ func TestUsesDeprecatedSourceRequiresLastAppliedDeprecatedAPIVersion(t *testing.
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			item := unstructured.Unstructured{}
+			var annotations map[string]string
 			if tt.annotation != "" {
-				item.SetAnnotations(map[string]string{
+				annotations = map[string]string{
 					"kubectl.kubernetes.io/last-applied-configuration": tt.annotation,
-				})
+				}
 			}
-			if got := usesDeprecatedSource(item, api); got != tt.want {
+			if got := usesDeprecatedSource(annotations, api); got != tt.want {
 				t.Fatalf("usesDeprecatedSource() = %v, want %v", got, tt.want)
 			}
 		})

@@ -17,14 +17,12 @@ limitations under the License.
 package checkers
 
 import (
-	"context"
 	"fmt"
 
-	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	upgradev1alpha1 "github.com/ihsenalaya/kubeupgrade-guardian-operator/api/v1alpha1"
+	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/snapshot"
 )
 
 // ReadinessProbe detects containers that do not expose readiness information.
@@ -32,59 +30,24 @@ type ReadinessProbe struct{}
 
 func (ReadinessProbe) Name() string { return "readiness-probes" }
 
-func (r ReadinessProbe) Check(ctx context.Context, c client.Client, assessment *upgradev1alpha1.UpgradeAssessment) ([]upgradev1alpha1.Finding, error) {
-	nsList, err := namespaces(ctx, c, assessment)
-	if err != nil {
-		if isRBACDenied(err) {
-			return rbacGap(r.Name(), err), nil
-		}
-		return nil, err
-	}
-
+func (ReadinessProbe) Check(snap *snapshot.ClusterSnapshot, _ *upgradev1alpha1.UpgradeAssessment) []upgradev1alpha1.Finding {
 	var findings []upgradev1alpha1.Finding
-	for _, ns := range nsList {
-		var deployments appsv1.DeploymentList
-		if err := c.List(ctx, &deployments, client.InNamespace(ns)); err != nil {
-			if isRBACDenied(err) {
-				findings = append(findings, rbacGap(r.Name()+"/deployments", err)...)
-				continue
-			}
-			return nil, err
-		}
-		for _, item := range deployments.Items {
-			findings = append(findings, missingReadinessFindings("Deployment", item.Namespace, item.Name, item.Spec.Template.Spec.Containers)...)
-		}
 
-		var statefulSets appsv1.StatefulSetList
-		if err := c.List(ctx, &statefulSets, client.InNamespace(ns)); err != nil {
-			if isRBACDenied(err) {
-				findings = append(findings, rbacGap(r.Name()+"/statefulsets", err)...)
-				continue
-			}
-			return nil, err
-		}
-		for _, item := range statefulSets.Items {
-			findings = append(findings, missingReadinessFindings("StatefulSet", item.Namespace, item.Name, item.Spec.Template.Spec.Containers)...)
-		}
-
-		var daemonSets appsv1.DaemonSetList
-		if err := c.List(ctx, &daemonSets, client.InNamespace(ns)); err != nil {
-			if isRBACDenied(err) {
-				findings = append(findings, rbacGap(r.Name()+"/daemonsets", err)...)
-				continue
-			}
-			return nil, err
-		}
-		for _, item := range daemonSets.Items {
-			findings = append(findings, missingReadinessFindings("DaemonSet", item.Namespace, item.Name, item.Spec.Template.Spec.Containers)...)
-		}
+	for _, item := range snap.Deployments {
+		findings = append(findings, missingReadinessFindings("Deployment", item.Namespace, item.Name, item.Spec.Template.Spec.Containers)...)
+	}
+	for _, item := range snap.StatefulSets {
+		findings = append(findings, missingReadinessFindings("StatefulSet", item.Namespace, item.Name, item.Spec.Template.Spec.Containers)...)
+	}
+	for _, item := range snap.DaemonSets {
+		findings = append(findings, missingReadinessFindings("DaemonSet", item.Namespace, item.Name, item.Spec.Template.Spec.Containers)...)
 	}
 
-	return findings, nil
+	return findings
 }
 
 func missingReadinessFindings(kind, namespace, name string, containers []corev1.Container) []upgradev1alpha1.Finding {
-	var findings []upgradev1alpha1.Finding
+	findings := make([]upgradev1alpha1.Finding, 0, len(containers))
 	for _, container := range containers {
 		if container.ReadinessProbe != nil {
 			continue

@@ -17,15 +17,13 @@ limitations under the License.
 package checkers
 
 import (
-	"context"
 	"fmt"
+	"sort"
 
-	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
-	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	upgradev1alpha1 "github.com/ihsenalaya/kubeupgrade-guardian-operator/api/v1alpha1"
+	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/snapshot"
 )
 
 // PolicyRisk detects obvious conflicts with admission policy engines and Pod Security Admission.
@@ -33,103 +31,62 @@ type PolicyRisk struct{}
 
 func (PolicyRisk) Name() string { return "policy-risks" }
 
-func (p PolicyRisk) Check(ctx context.Context, c client.Client, assessment *upgradev1alpha1.UpgradeAssessment) ([]upgradev1alpha1.Finding, error) {
-	nsList, err := namespaces(ctx, c, assessment)
-	if err != nil {
-		if isRBACDenied(err) {
-			return rbacGap(p.Name(), err), nil
-		}
-		return nil, err
-	}
-
-	restricted := map[string]corev1.Namespace{}
-	for _, ns := range nsList {
-		var namespace corev1.Namespace
-		if err := c.Get(ctx, client.ObjectKey{Name: ns}, &namespace); err != nil {
-			if isRBACDenied(err) {
-				return rbacGap(p.Name()+"/namespaces", err), nil
-			}
-			return nil, err
-		}
+func (p PolicyRisk) Check(snap *snapshot.ClusterSnapshot, _ *upgradev1alpha1.UpgradeAssessment) []upgradev1alpha1.Finding {
+	var restricted []corev1.Namespace
+	for _, namespace := range snap.Namespaces {
 		if namespace.Labels["pod-security.kubernetes.io/enforce"] == "restricted" {
-			restricted[ns] = namespace
+			restricted = append(restricted, namespace)
 		}
 	}
 
-	var findings []upgradev1alpha1.Finding
+	findings := make([]upgradev1alpha1.Finding, 0, len(restricted))
 	for _, namespace := range restricted {
 		findings = append(findings, restrictedNamespaceFinding(namespace))
-		findings = append(findings, p.incompatibleWorkloadFindings(ctx, c, namespace.Name)...)
+		findings = append(findings, incompatibleWorkloadFindings(snap, namespace.Name)...)
 	}
 
-	engineFindings, err := p.policyEngineFindings(ctx, c)
-	if err != nil {
-		if isRBACDenied(err) {
-			findings = append(findings, rbacGap(p.Name()+"/policy-engines", err)...)
-			return findings, nil
-		}
-		return nil, err
-	}
-	findings = append(findings, engineFindings...)
-
-	return findings, nil
+	return append(findings, policyEngineFindings(snap)...)
 }
 
-func (p PolicyRisk) incompatibleWorkloadFindings(ctx context.Context, c client.Client, namespace string) []upgradev1alpha1.Finding {
+func incompatibleWorkloadFindings(snap *snapshot.ClusterSnapshot, namespace string) []upgradev1alpha1.Finding {
 	var findings []upgradev1alpha1.Finding
 
-	var deployments appsv1.DeploymentList
-	if err := c.List(ctx, &deployments, client.InNamespace(namespace)); err != nil {
-		if isRBACDenied(err) {
-			return rbacGap(p.Name()+"/deployments", err)
+	for _, item := range snap.Deployments {
+		if item.Namespace == namespace {
+			findings = append(findings, podSpecPolicyFindings("Deployment", item.Namespace, item.Name, item.Spec.Template.Spec)...)
 		}
-		return []upgradev1alpha1.Finding{checkerErrorFinding(p.Name(), err)}
 	}
-	for _, item := range deployments.Items {
-		findings = append(findings, podSpecPolicyFindings("Deployment", item.Namespace, item.Name, item.Spec.Template.Spec)...)
-	}
-
-	var statefulSets appsv1.StatefulSetList
-	if err := c.List(ctx, &statefulSets, client.InNamespace(namespace)); err != nil {
-		if isRBACDenied(err) {
-			return rbacGap(p.Name()+"/statefulsets", err)
+	for _, item := range snap.StatefulSets {
+		if item.Namespace == namespace {
+			findings = append(findings, podSpecPolicyFindings("StatefulSet", item.Namespace, item.Name, item.Spec.Template.Spec)...)
 		}
-		return []upgradev1alpha1.Finding{checkerErrorFinding(p.Name(), err)}
 	}
-	for _, item := range statefulSets.Items {
-		findings = append(findings, podSpecPolicyFindings("StatefulSet", item.Namespace, item.Name, item.Spec.Template.Spec)...)
-	}
-
-	var daemonSets appsv1.DaemonSetList
-	if err := c.List(ctx, &daemonSets, client.InNamespace(namespace)); err != nil {
-		if isRBACDenied(err) {
-			return rbacGap(p.Name()+"/daemonsets", err)
+	for _, item := range snap.DaemonSets {
+		if item.Namespace == namespace {
+			findings = append(findings, podSpecPolicyFindings("DaemonSet", item.Namespace, item.Name, item.Spec.Template.Spec)...)
 		}
-		return []upgradev1alpha1.Finding{checkerErrorFinding(p.Name(), err)}
-	}
-	for _, item := range daemonSets.Items {
-		findings = append(findings, podSpecPolicyFindings("DaemonSet", item.Namespace, item.Name, item.Spec.Template.Spec)...)
 	}
 
 	return findings
 }
 
-func (PolicyRisk) policyEngineFindings(ctx context.Context, c client.Client) ([]upgradev1alpha1.Finding, error) {
-	var crds apiextensionsv1.CustomResourceDefinitionList
-	if err := c.List(ctx, &crds); err != nil {
-		return nil, err
+func policyEngineFindings(snap *snapshot.ClusterSnapshot) []upgradev1alpha1.Finding {
+	names := make([]string, 0, len(snap.CRDNames))
+	for name := range snap.CRDNames {
+		names = append(names, name)
 	}
+	sort.Strings(names)
 
 	var findings []upgradev1alpha1.Finding
-	for _, crd := range crds.Items {
-		switch crd.Name {
+	for _, name := range names {
+		switch name {
 		case "clusterpolicies.kyverno.io", "policies.kyverno.io":
-			findings = append(findings, policyEngineDetectedFinding("Kyverno", crd.Name))
+			findings = append(findings, policyEngineDetectedFinding("Kyverno", name))
 		case "constrainttemplates.templates.gatekeeper.sh", "constraints.gatekeeper.sh":
-			findings = append(findings, policyEngineDetectedFinding("Gatekeeper", crd.Name))
+			findings = append(findings, policyEngineDetectedFinding("Gatekeeper", name))
 		}
 	}
-	return findings, nil
+	return findings
 }
 
 func restrictedNamespaceFinding(namespace corev1.Namespace) upgradev1alpha1.Finding {
@@ -213,16 +170,5 @@ func policyEngineDetectedFinding(engine, crdName string) upgradev1alpha1.Finding
 			},
 		}},
 		Recommendation: "Review policy reports and admission behavior before upgrade.",
-	}
-}
-
-func checkerErrorFinding(checker string, err error) upgradev1alpha1.Finding {
-	return upgradev1alpha1.Finding{
-		ID:             findingID(upgradev1alpha1.FindingTypeRBACAssessmentGap, checker, "error"),
-		Type:           upgradev1alpha1.FindingTypeRBACAssessmentGap,
-		Severity:       upgradev1alpha1.RiskLevelHigh,
-		Category:       "Assessment",
-		Message:        err.Error(),
-		Recommendation: "Fix the read error and rerun the assessment.",
 	}
 }

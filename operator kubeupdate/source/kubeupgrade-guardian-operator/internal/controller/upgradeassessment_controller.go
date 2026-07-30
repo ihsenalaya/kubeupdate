@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"sort"
+	"sync"
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
@@ -39,6 +40,7 @@ import (
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/planner"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/reporting"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/scoring"
+	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/snapshot"
 )
 
 const (
@@ -49,6 +51,10 @@ const (
 // UpgradeAssessmentReconciler reconciles a UpgradeAssessment object
 type UpgradeAssessmentReconciler struct {
 	client.Client
+	// Reader reads the assessed cluster state. It is wired to the manager's API
+	// reader so snapshot collection bypasses the cache and starts no informer.
+	// When nil, the reconciler falls back to Client.
+	Reader   client.Reader
 	Scheme   *runtime.Scheme
 	Checkers []checkers.Checker
 }
@@ -64,6 +70,7 @@ type UpgradeAssessmentReconciler struct {
 //+kubebuilder:rbac:groups=policy,resources=poddisruptionbudgets,verbs=get;list;watch
 //+kubebuilder:rbac:groups=admissionregistration.k8s.io,resources=validatingwebhookconfigurations;mutatingwebhookconfigurations,verbs=get;list;watch
 //+kubebuilder:rbac:groups=apiextensions.k8s.io,resources=customresourcedefinitions,verbs=get;list;watch
+//+kubebuilder:rbac:groups=discovery.k8s.io,resources=endpointslices,verbs=get;list;watch
 //+kubebuilder:rbac:groups=autoscaling,resources=horizontalpodautoscalers,verbs=get;list;watch
 //+kubebuilder:rbac:groups=batch,resources=cronjobs,verbs=get;list;watch
 
@@ -84,7 +91,7 @@ func (r *UpgradeAssessmentReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		return ctrl.Result{}, err
 	}
 
-	rawFindings, err := r.runCheckers(ctx, &assessment)
+	snap, err := snapshot.Collect(ctx, r.reader(), assessment.Spec.Scope)
 	if err != nil {
 		logger.Error(err, "assessment failed")
 		if statusErr := r.markFailed(ctx, &assessment, err); statusErr != nil {
@@ -92,6 +99,8 @@ func (r *UpgradeAssessmentReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		}
 		return ctrl.Result{}, err
 	}
+
+	rawFindings := r.runCheckers(snap, &assessment)
 
 	sort.SliceStable(rawFindings, func(i, j int) bool {
 		return rawFindings[i].ID < rawFindings[j].ID
@@ -132,21 +141,45 @@ func (r *UpgradeAssessmentReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r *UpgradeAssessmentReconciler) runCheckers(ctx context.Context, assessment *upgradev1alpha1.UpgradeAssessment) ([]upgradev1alpha1.Finding, error) {
+// reader returns the direct cluster reader, falling back to the cached client so
+// that tests can drive the reconciler with a single fake client.
+func (r *UpgradeAssessmentReconciler) reader() client.Reader {
+	if r.Reader != nil {
+		return r.Reader
+	}
+	return r.Client
+}
+
+// runCheckers evaluates every enabled checker against the same snapshot. Checkers
+// are pure functions with no shared state, so they run concurrently; the caller
+// re-sorts the merged result by ID to keep publication deterministic.
+func (r *UpgradeAssessmentReconciler) runCheckers(snap *snapshot.ClusterSnapshot, assessment *upgradev1alpha1.UpgradeAssessment) []upgradev1alpha1.Finding {
 	selected := r.Checkers
 	if len(selected) == 0 {
 		selected = checkers.Default(assessment)
 	}
 
-	var findings []upgradev1alpha1.Finding
+	var (
+		wg       sync.WaitGroup
+		mu       sync.Mutex
+		findings []upgradev1alpha1.Finding
+	)
 	for _, checker := range selected {
-		checkerFindings, err := checker.Check(ctx, r.Client, assessment)
-		if err != nil {
-			return nil, err
-		}
-		findings = append(findings, checkerFindings...)
+		checker := checker
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			checkerFindings := checker.Check(snap, assessment)
+			mu.Lock()
+			defer mu.Unlock()
+			findings = append(findings, checkerFindings...)
+		}()
 	}
-	return findings, nil
+	wg.Wait()
+
+	// Collection gaps are reported once for the whole assessment rather than once
+	// per checker that would have consumed the denied resource type.
+	return append(findings, snap.Gaps...)
 }
 
 func (r *UpgradeAssessmentReconciler) markRunning(ctx context.Context, assessment *upgradev1alpha1.UpgradeAssessment) error {

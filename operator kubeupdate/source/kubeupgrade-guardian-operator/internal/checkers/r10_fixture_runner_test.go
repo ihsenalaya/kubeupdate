@@ -24,6 +24,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 
 	upgradev1alpha1 "github.com/ihsenalaya/kubeupgrade-guardian-operator/api/v1alpha1"
+	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/snapshot"
 )
 
 func TestR10FixtureRunner(t *testing.T) {
@@ -60,13 +61,14 @@ func TestR10FixtureRunner(t *testing.T) {
 		},
 	}
 
-	var findings []upgradev1alpha1.Finding
+	snap, err := snapshot.Collect(context.Background(), kubeClient, assessment.Spec.Scope)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	findings := append([]upgradev1alpha1.Finding{}, snap.Gaps...)
 	for _, checker := range Default(assessment) {
-		checkerFindings, err := checker.Check(context.Background(), kubeClient, assessment)
-		if err != nil {
-			t.Fatalf("%s: %v", checker.Name(), err)
-		}
-		findings = append(findings, checkerFindings...)
+		findings = append(findings, checker.Check(snap, assessment)...)
 	}
 
 	sort.Slice(findings, func(i, j int) bool {

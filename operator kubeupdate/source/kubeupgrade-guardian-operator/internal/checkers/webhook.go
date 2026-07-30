@@ -17,16 +17,13 @@ limitations under the License.
 package checkers
 
 import (
-	"context"
 	"fmt"
 
 	admissionv1 "k8s.io/api/admissionregistration/v1"
-	corev1 "k8s.io/api/core/v1"
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	upgradev1alpha1 "github.com/ihsenalaya/kubeupgrade-guardian-operator/api/v1alpha1"
+	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/snapshot"
 )
 
 // AdmissionWebhook detects upgrade risks introduced by admission webhooks.
@@ -34,40 +31,36 @@ type AdmissionWebhook struct{}
 
 func (AdmissionWebhook) Name() string { return "admission-webhooks" }
 
-func (a AdmissionWebhook) Check(ctx context.Context, c client.Client, _ *upgradev1alpha1.UpgradeAssessment) ([]upgradev1alpha1.Finding, error) {
+func (AdmissionWebhook) Check(snap *snapshot.ClusterSnapshot, _ *upgradev1alpha1.UpgradeAssessment) []upgradev1alpha1.Finding {
+	services := serviceSet(snap)
+
 	var findings []upgradev1alpha1.Finding
-
-	var validating admissionv1.ValidatingWebhookConfigurationList
-	if err := c.List(ctx, &validating); err != nil {
-		if isRBACDenied(err) {
-			return rbacGap(a.Name()+"/validating", err), nil
-		}
-		return nil, err
-	}
-	for _, item := range validating.Items {
+	for _, item := range snap.ValidatingWebhooks {
 		for _, webhook := range item.Webhooks {
-			findings = append(findings, evaluateWebhook(ctx, c, "ValidatingWebhookConfiguration", item.Name, webhook.Name, webhook.FailurePolicy, webhook.ClientConfig.Service, isBroadNamespaceSelector(webhook.NamespaceSelector))...)
+			findings = append(findings, evaluateWebhook(services, "ValidatingWebhookConfiguration", item.Name, webhook.Name, webhook.FailurePolicy, webhook.ClientConfig.Service, isBroadNamespaceSelector(webhook.NamespaceSelector))...)
 		}
 	}
-
-	var mutating admissionv1.MutatingWebhookConfigurationList
-	if err := c.List(ctx, &mutating); err != nil {
-		if isRBACDenied(err) {
-			findings = append(findings, rbacGap(a.Name()+"/mutating", err)...)
-			return findings, nil
-		}
-		return nil, err
-	}
-	for _, item := range mutating.Items {
+	for _, item := range snap.MutatingWebhooks {
 		for _, webhook := range item.Webhooks {
-			findings = append(findings, evaluateWebhook(ctx, c, "MutatingWebhookConfiguration", item.Name, webhook.Name, webhook.FailurePolicy, webhook.ClientConfig.Service, isBroadNamespaceSelector(webhook.NamespaceSelector))...)
+			findings = append(findings, evaluateWebhook(services, "MutatingWebhookConfiguration", item.Name, webhook.Name, webhook.FailurePolicy, webhook.ClientConfig.Service, isBroadNamespaceSelector(webhook.NamespaceSelector))...)
 		}
 	}
 
-	return findings, nil
+	return findings
 }
 
-func evaluateWebhook(ctx context.Context, c client.Client, kind, configName, webhookName string, failurePolicy *admissionv1.FailurePolicyType, service *admissionv1.ServiceReference, broadScope bool) []upgradev1alpha1.Finding {
+// serviceSet indexes webhook backends by namespace/name. Webhook services are
+// looked up cluster-wide: a webhook backend commonly lives outside the assessed
+// namespaces, and treating it as absent would be a false Critical.
+func serviceSet(snap *snapshot.ClusterSnapshot) map[string]struct{} {
+	services := make(map[string]struct{}, len(snap.Services))
+	for _, service := range snap.Services {
+		services[service.Namespace+"/"+service.Name] = struct{}{}
+	}
+	return services
+}
+
+func evaluateWebhook(services map[string]struct{}, kind, configName, webhookName string, failurePolicy *admissionv1.FailurePolicyType, service *admissionv1.ServiceReference, broadScope bool) []upgradev1alpha1.Finding {
 	var findings []upgradev1alpha1.Finding
 
 	if failurePolicy != nil && *failurePolicy == admissionv1.Fail {
@@ -75,12 +68,8 @@ func evaluateWebhook(ctx context.Context, c client.Client, kind, configName, web
 	}
 
 	if service != nil {
-		var svc corev1.Service
-		err := c.Get(ctx, client.ObjectKey{Namespace: service.Namespace, Name: service.Name}, &svc)
-		if apierrors.IsNotFound(err) {
+		if _, ok := services[service.Namespace+"/"+service.Name]; !ok {
 			findings = append(findings, webhookFinding(kind, configName, webhookName, upgradev1alpha1.RiskLevelCritical, "referenced service is absent", "Restore the webhook Service or remove the webhook configuration before upgrade."))
-		} else if isRBACDenied(err) {
-			findings = append(findings, rbacGap("admission-webhooks/service", err)...)
 		}
 	}
 

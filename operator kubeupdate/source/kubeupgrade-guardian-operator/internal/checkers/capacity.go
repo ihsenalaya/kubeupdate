@@ -17,15 +17,14 @@ limitations under the License.
 package checkers
 
 import (
-	"context"
 	"fmt"
 	"strconv"
 
 	corev1 "k8s.io/api/core/v1"
 	resourceapi "k8s.io/apimachinery/pkg/api/resource"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	upgradev1alpha1 "github.com/ihsenalaya/kubeupgrade-guardian-operator/api/v1alpha1"
+	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/snapshot"
 )
 
 // Capacity performs a conservative one-node-loss capacity estimate.
@@ -33,25 +32,11 @@ type Capacity struct{}
 
 func (Capacity) Name() string { return "capacity" }
 
-func (cap Capacity) Check(ctx context.Context, c client.Client, _ *upgradev1alpha1.UpgradeAssessment) ([]upgradev1alpha1.Finding, error) {
-	var nodes corev1.NodeList
-	if err := c.List(ctx, &nodes); err != nil {
-		if isRBACDenied(err) {
-			return rbacGap(cap.Name()+"/nodes", err), nil
-		}
-		return nil, err
-	}
-
-	var pods corev1.PodList
-	if err := c.List(ctx, &pods); err != nil {
-		if isRBACDenied(err) {
-			return rbacGap(cap.Name()+"/pods", err), nil
-		}
-		return nil, err
-	}
-
+// Check reads the cluster-wide node and pod inventory: rescheduling headroom after
+// a drain is a cluster property and must not be narrowed by the assessment scope.
+func (Capacity) Check(snap *snapshot.ClusterSnapshot, _ *upgradev1alpha1.UpgradeAssessment) []upgradev1alpha1.Finding {
 	totalCPU, totalMemory, largestCPU, largestMemory := int64(0), int64(0), int64(0), int64(0)
-	for _, node := range nodes.Items {
+	for _, node := range snap.Nodes {
 		if node.Spec.Unschedulable {
 			continue
 		}
@@ -67,7 +52,7 @@ func (cap Capacity) Check(ctx context.Context, c client.Client, _ *upgradev1alph
 		}
 	}
 
-	requestedCPU, requestedMemory := podRequests(pods.Items)
+	requestedCPU, requestedMemory := podRequests(snap.Pods)
 	remainingCPU := totalCPU - largestCPU
 	remainingMemory := totalMemory - largestMemory
 
@@ -78,7 +63,7 @@ func (cap Capacity) Check(ctx context.Context, c client.Client, _ *upgradev1alph
 		findings = append(findings, capacityFinding(upgradev1alpha1.RiskLevelMedium, totalCPU, totalMemory, requestedCPU, requestedMemory, remainingCPU, remainingMemory))
 	}
 
-	return findings, nil
+	return findings
 }
 
 func podRequests(pods []corev1.Pod) (int64, int64) {

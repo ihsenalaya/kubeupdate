@@ -17,14 +17,10 @@ limitations under the License.
 package checkers
 
 import (
-	"context"
 	"strings"
 
-	corev1 "k8s.io/api/core/v1"
-	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-
 	upgradev1alpha1 "github.com/ihsenalaya/kubeupgrade-guardian-operator/api/v1alpha1"
+	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/snapshot"
 )
 
 // Observability detects whether monitoring signals needed for upgrade validation are present.
@@ -32,19 +28,13 @@ type Observability struct{}
 
 func (Observability) Name() string { return "observability" }
 
-func (o Observability) Check(ctx context.Context, c client.Client, _ *upgradev1alpha1.UpgradeAssessment) ([]upgradev1alpha1.Finding, error) {
+// Check reasons about the whole cluster: monitoring is a platform capability, so
+// it reads the unscoped namespace list rather than the assessed namespaces.
+func (Observability) Check(snap *snapshot.ClusterSnapshot, _ *upgradev1alpha1.UpgradeAssessment) []upgradev1alpha1.Finding {
 	var findings []upgradev1alpha1.Finding
 
-	var namespaces corev1.NamespaceList
-	if err := c.List(ctx, &namespaces); err != nil {
-		if isRBACDenied(err) {
-			return rbacGap(o.Name()+"/namespaces", err), nil
-		}
-		return nil, err
-	}
-
 	hasObservabilityNamespace := false
-	for _, ns := range namespaces.Items {
+	for _, ns := range snap.AllNamespaces {
 		switch ns.Name {
 		case "monitoring", "prometheus", "observability":
 			hasObservabilityNamespace = true
@@ -54,30 +44,16 @@ func (o Observability) Check(ctx context.Context, c client.Client, _ *upgradev1a
 		findings = append(findings, observabilityGapFinding("namespace", "No monitoring, prometheus, or observability namespace found.", upgradev1alpha1.RiskLevelMedium))
 	}
 
-	var crds apiextensionsv1.CustomResourceDefinitionList
-	if err := c.List(ctx, &crds); err != nil {
-		if isRBACDenied(err) {
-			findings = append(findings, rbacGap(o.Name()+"/crds", err)...)
-			return findings, nil
-		}
-		return nil, err
-	}
-
-	crdNames := map[string]struct{}{}
-	for _, crd := range crds.Items {
-		crdNames[crd.Name] = struct{}{}
-	}
-
 	for _, name := range []string{"servicemonitors.monitoring.coreos.com", "podmonitors.monitoring.coreos.com", "prometheuses.monitoring.coreos.com"} {
-		if _, ok := crdNames[name]; ok {
+		if _, ok := snap.CRDNames[name]; ok {
 			findings = append(findings, observabilityCapabilityFinding(name))
 		}
 	}
-	if _, ok := crdNames["prometheuses.monitoring.coreos.com"]; !ok {
+	if _, ok := snap.CRDNames["prometheuses.monitoring.coreos.com"]; !ok {
 		findings = append(findings, observabilityGapFinding("prometheus-crd", "Prometheus CRD not detected; upgrade observability validation may be incomplete.", upgradev1alpha1.RiskLevelLow))
 	}
 
-	return findings, nil
+	return findings
 }
 
 func observabilityGapFinding(id, message string, severity upgradev1alpha1.RiskLevel) upgradev1alpha1.Finding {

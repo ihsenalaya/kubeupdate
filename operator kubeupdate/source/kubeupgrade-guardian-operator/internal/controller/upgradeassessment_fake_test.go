@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"testing"
 
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -31,21 +32,33 @@ import (
 
 	upgradev1alpha1 "github.com/ihsenalaya/kubeupgrade-guardian-operator/api/v1alpha1"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/checkers"
+	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/snapshot"
 )
 
 type staticChecker struct {
 	findings []upgradev1alpha1.Finding
 }
 
+// testScheme registers everything the snapshot collector lists, so a reconcile
+// driven by a fake client exercises the same collection path as production.
+func testScheme(t *testing.T) *runtime.Scheme {
+	t.Helper()
+	scheme := runtime.NewScheme()
+	for _, add := range []func(*runtime.Scheme) error{
+		clientgoscheme.AddToScheme,
+		apiextensionsv1.AddToScheme,
+		upgradev1alpha1.AddToScheme,
+	} {
+		if err := add(scheme); err != nil {
+			t.Fatal(err)
+		}
+	}
+	return scheme
+}
+
 func TestReconcileBoundsPublishedFindingsAndPlanActions(t *testing.T) {
 	ctx := context.Background()
-	scheme := runtime.NewScheme()
-	if err := clientgoscheme.AddToScheme(scheme); err != nil {
-		t.Fatal(err)
-	}
-	if err := upgradev1alpha1.AddToScheme(scheme); err != nil {
-		t.Fatal(err)
-	}
+	scheme := testScheme(t)
 
 	assessment := &upgradev1alpha1.UpgradeAssessment{
 		ObjectMeta: metav1.ObjectMeta{Name: "large-assessment", Namespace: "default", Generation: 1},
@@ -114,19 +127,13 @@ func TestReconcileBoundsPublishedFindingsAndPlanActions(t *testing.T) {
 
 func (s staticChecker) Name() string { return "static" }
 
-func (s staticChecker) Check(context.Context, client.Client, *upgradev1alpha1.UpgradeAssessment) ([]upgradev1alpha1.Finding, error) {
-	return s.findings, nil
+func (s staticChecker) Check(*snapshot.ClusterSnapshot, *upgradev1alpha1.UpgradeAssessment) []upgradev1alpha1.Finding {
+	return s.findings
 }
 
 func TestReconcileCreatesIdempotentUpgradePlan(t *testing.T) {
 	ctx := context.Background()
-	scheme := runtime.NewScheme()
-	if err := clientgoscheme.AddToScheme(scheme); err != nil {
-		t.Fatal(err)
-	}
-	if err := upgradev1alpha1.AddToScheme(scheme); err != nil {
-		t.Fatal(err)
-	}
+	scheme := testScheme(t)
 
 	assessment := &upgradev1alpha1.UpgradeAssessment{
 		ObjectMeta: metav1.ObjectMeta{Name: "prod-upgrade-assessment", Namespace: "default", Generation: 1},
