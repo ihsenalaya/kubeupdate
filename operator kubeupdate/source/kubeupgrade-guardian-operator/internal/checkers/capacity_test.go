@@ -37,8 +37,9 @@ func TestCapacityExcludesPodsThatNeverReschedule(t *testing.T) {
 
 func TestCapacityCountsDemandOfReschedulablePodsOnly(t *testing.T) {
 	controller := true
+	// Asymmetric nodes: losing the largest leaves 2000m of CPU headroom.
 	snap := &snapshot.ClusterSnapshot{
-		Nodes: []corev1.Node{node("node-a", "2000m", "4Gi"), node("node-b", "2000m", "4Gi")},
+		Nodes: []corev1.Node{node("node-a", "2000m", "4Gi"), node("node-b", "3000m", "6Gi")},
 		Pods: []corev1.Pod{
 			podWithRequests("payment-api", "1700m", "1Gi", nil),
 			podWithRequests("daemon", "1000m", "1Gi", func(pod *corev1.Pod) {

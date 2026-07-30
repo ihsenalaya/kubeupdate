@@ -17,6 +17,7 @@ limitations under the License.
 package checkers
 
 import (
+	"fmt"
 	"strings"
 
 	corev1 "k8s.io/api/core/v1"
@@ -63,6 +64,29 @@ func Default(assessment *upgradev1alpha1.UpgradeAssessment) []Checker {
 	add(checks.Observability, Observability{})
 
 	return selected
+}
+
+// AssessmentErrorFinding reports that a checker did not complete. It keeps the
+// assessment auditable: the caller publishes the findings it does have and this
+// finding says which check is missing and why.
+func AssessmentErrorFinding(checker string, err error) upgradev1alpha1.Finding {
+	id := findingID(upgradev1alpha1.FindingTypeAssessmentError, checker)
+	return upgradev1alpha1.Finding{
+		ID:       id,
+		Type:     upgradev1alpha1.FindingTypeAssessmentError,
+		Severity: upgradev1alpha1.RiskLevelHigh,
+		Category: "Assessment",
+		Message:  fmt.Sprintf("Checker %s did not complete: %v", checker, err),
+		Evidence: []upgradev1alpha1.Evidence{{
+			ID:          evidenceID(upgradev1alpha1.FindingTypeAssessmentError, checker),
+			Description: "A checker failed while evaluating the cluster snapshot.",
+			Observed: map[string]string{
+				"checker": checker,
+				"error":   err.Error(),
+			},
+		}},
+		Recommendation: "Report this failure: the corresponding risk category was not assessed, so the result is incomplete.",
+	}
 }
 
 // namespaceSet indexes the in-scope namespaces so checkers can narrow the

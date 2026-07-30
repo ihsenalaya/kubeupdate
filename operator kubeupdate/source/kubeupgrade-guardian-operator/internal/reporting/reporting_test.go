@@ -127,10 +127,10 @@ func TestPlanMarkdownExecutiveDecisionShowsBlockerCounts(t *testing.T) {
 			},
 			BlockingFindings: []upgradev1alpha1.ClassifiedFindingRef{
 				{Category: "AdmissionWebhook", Severity: upgradev1alpha1.RiskLevelHigh, Message: "failurePolicy=Fail.",
-					Resource: upgradev1alpha1.ResourceRef{Kind: "MutatingWebhookConfiguration", Name: "cert-manager-webhook"},
+					Resource:       upgradev1alpha1.ResourceRef{Kind: "MutatingWebhookConfiguration", Name: "cert-manager-webhook"},
 					Classification: upgradev1alpha1.FindingClassification{Status: upgradev1alpha1.FindingClassificationBlocking}},
 				{Category: "AdmissionWebhook", Severity: upgradev1alpha1.RiskLevelHigh, Message: "failurePolicy=Fail.",
-					Resource: upgradev1alpha1.ResourceRef{Kind: "MutatingWebhookConfiguration", Name: "istio-sidecar-injector"},
+					Resource:       upgradev1alpha1.ResourceRef{Kind: "MutatingWebhookConfiguration", Name: "istio-sidecar-injector"},
 					Classification: upgradev1alpha1.FindingClassification{Status: upgradev1alpha1.FindingClassificationBlocking}},
 				{Category: "Capacity", Severity: upgradev1alpha1.RiskLevelHigh, Message: "Cluster may not have enough capacity.",
 					Classification: upgradev1alpha1.FindingClassification{Status: upgradev1alpha1.FindingClassificationBlocking}},
@@ -155,13 +155,13 @@ func TestPlanMarkdownTopBlockersGroupsWebhooksByComponent(t *testing.T) {
 			RiskLevel: upgradev1alpha1.RiskLevelHigh,
 			BlockingFindings: []upgradev1alpha1.ClassifiedFindingRef{
 				{Category: "AdmissionWebhook", Message: "failurePolicy=Fail.",
-					Resource: upgradev1alpha1.ResourceRef{Kind: "MutatingWebhookConfiguration", Name: "cert-manager-webhook"},
+					Resource:       upgradev1alpha1.ResourceRef{Kind: "MutatingWebhookConfiguration", Name: "cert-manager-webhook"},
 					Classification: upgradev1alpha1.FindingClassification{Status: upgradev1alpha1.FindingClassificationBlocking}},
 				{Category: "AdmissionWebhook", Message: "namespaceSelector is absent.",
-					Resource: upgradev1alpha1.ResourceRef{Kind: "ValidatingWebhookConfiguration", Name: "cert-manager-webhook"},
+					Resource:       upgradev1alpha1.ResourceRef{Kind: "ValidatingWebhookConfiguration", Name: "cert-manager-webhook"},
 					Classification: upgradev1alpha1.FindingClassification{Status: upgradev1alpha1.FindingClassificationBlocking}},
 				{Category: "AdmissionWebhook", Message: "failurePolicy=Fail.",
-					Resource: upgradev1alpha1.ResourceRef{Kind: "MutatingWebhookConfiguration", Name: "kyverno-policy-mutating-webhook-cfg"},
+					Resource:       upgradev1alpha1.ResourceRef{Kind: "MutatingWebhookConfiguration", Name: "kyverno-policy-mutating-webhook-cfg"},
 					Classification: upgradev1alpha1.FindingClassification{Status: upgradev1alpha1.FindingClassificationBlocking}},
 			},
 		},
@@ -184,8 +184,8 @@ func TestPlanMarkdownRemediationPriorities(t *testing.T) {
 	plan := &upgradev1alpha1.UpgradePlan{
 		ObjectMeta: metav1.ObjectMeta{Name: "plan", Namespace: "platform"},
 		Spec: upgradev1alpha1.UpgradePlanSpec{
-			Decision:  upgradev1alpha1.DecisionProceedWithCaution,
-			RiskLevel: upgradev1alpha1.RiskLevelCritical,
+			Decision:              upgradev1alpha1.DecisionProceedWithCaution,
+			RiskLevel:             upgradev1alpha1.RiskLevelCritical,
 			ClassificationSummary: upgradev1alpha1.ClassificationSummary{Blocking: 3},
 			BlockingFindings: []upgradev1alpha1.ClassifiedFindingRef{
 				{Category: "Capacity", Severity: upgradev1alpha1.RiskLevelHigh,
@@ -228,12 +228,12 @@ func TestPlanMarkdownGoNoGoGatesFailOnBlockers(t *testing.T) {
 	plan := &upgradev1alpha1.UpgradePlan{
 		ObjectMeta: metav1.ObjectMeta{Name: "plan", Namespace: "platform"},
 		Spec: upgradev1alpha1.UpgradePlanSpec{
-			Decision:  upgradev1alpha1.DecisionProceedWithCaution,
-			RiskLevel: upgradev1alpha1.RiskLevelCritical,
+			Decision:              upgradev1alpha1.DecisionProceedWithCaution,
+			RiskLevel:             upgradev1alpha1.RiskLevelCritical,
 			ClassificationSummary: upgradev1alpha1.ClassificationSummary{Blocking: 2},
 			BlockingFindings: []upgradev1alpha1.ClassifiedFindingRef{
 				{Category: "AdmissionWebhook", Message: "webhook has risk: failurePolicy=Fail.",
-					Resource: upgradev1alpha1.ResourceRef{Kind: "MutatingWebhookConfiguration", Name: "cert-manager-webhook"},
+					Resource:       upgradev1alpha1.ResourceRef{Kind: "MutatingWebhookConfiguration", Name: "cert-manager-webhook"},
 					Classification: upgradev1alpha1.FindingClassification{Status: upgradev1alpha1.FindingClassificationBlocking}},
 				{Category: "Capacity", Message: "Cluster may not have enough capacity.",
 					Recommendation: "Add capacity. Estimated remaining capacity after one-node loss: 1900m CPU.",
@@ -273,12 +273,12 @@ func TestPlanMarkdownChronologyIncludesConditions(t *testing.T) {
 	plan := &upgradev1alpha1.UpgradePlan{
 		ObjectMeta: metav1.ObjectMeta{Name: "plan", Namespace: "platform"},
 		Spec: upgradev1alpha1.UpgradePlanSpec{
-			Decision:  upgradev1alpha1.DecisionProceedWithCaution,
-			RiskLevel: upgradev1alpha1.RiskLevelCritical,
+			Decision:              upgradev1alpha1.DecisionProceedWithCaution,
+			RiskLevel:             upgradev1alpha1.RiskLevelCritical,
 			ClassificationSummary: upgradev1alpha1.ClassificationSummary{Blocking: 1},
 			BlockingFindings: []upgradev1alpha1.ClassifiedFindingRef{
 				{Category: "AdmissionWebhook", Message: "webhook has risk: failurePolicy=Fail.",
-					Resource: upgradev1alpha1.ResourceRef{Kind: "MutatingWebhookConfiguration", Name: "cert-manager-webhook"},
+					Resource:       upgradev1alpha1.ResourceRef{Kind: "MutatingWebhookConfiguration", Name: "cert-manager-webhook"},
 					Classification: upgradev1alpha1.FindingClassification{Status: upgradev1alpha1.FindingClassificationBlocking}},
 			},
 			UpgradePath: []upgradev1alpha1.UpgradePathStep{{
@@ -425,8 +425,8 @@ func TestFindingPriority(t *testing.T) {
 
 func TestWebhookComponentFromName(t *testing.T) {
 	cases := []struct {
-		name      string
-		want      string
+		name string
+		want string
 	}{
 		{"cert-manager-webhook", "cert-manager"},
 		{"istio-sidecar-injector", "istio"},

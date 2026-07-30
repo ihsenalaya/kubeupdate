@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 
@@ -28,6 +29,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/tools/record"
 	"k8s.io/client-go/util/retry"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -38,6 +40,7 @@ import (
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/checkers"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/classifier"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/export"
+	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/metrics"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/planner"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/reporting"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/scoring"
@@ -47,6 +50,10 @@ import (
 const (
 	maxPublishedFindings = 200
 	maxPlanActions       = 200
+
+	// minRefreshInterval keeps a mistyped spec.refreshInterval from turning the
+	// operator into a cluster-wide polling loop.
+	minRefreshInterval = time.Minute
 )
 
 // UpgradeAssessmentReconciler reconciles a UpgradeAssessment object
@@ -57,7 +64,30 @@ type UpgradeAssessmentReconciler struct {
 	// When nil, the reconciler falls back to Client.
 	Reader   client.Reader
 	Scheme   *runtime.Scheme
+	Recorder record.EventRecorder
 	Checkers []checkers.Checker
+}
+
+// assessmentResult is everything one audit produced, computed once and reused by
+// the plan, the artifact, the status and the metrics.
+type assessmentResult struct {
+	TakenAt   metav1.Time
+	Findings  []upgradev1alpha1.Finding
+	Published []upgradev1alpha1.Finding
+	PlanInput []upgradev1alpha1.Finding
+
+	Summary               upgradev1alpha1.FindingSummary
+	RawSummary            upgradev1alpha1.FindingSummary
+	ClassificationSummary upgradev1alpha1.ClassificationSummary
+
+	Score     int
+	RiskLevel upgradev1alpha1.RiskLevel
+	Decision  upgradev1alpha1.Decision
+
+	// Degraded is true when part of the cluster could not be read or a checker
+	// failed, so the findings below are partial.
+	Degraded       bool
+	DegradedReason string
 }
 
 //+kubebuilder:rbac:groups=upgrade.guardian.io,resources=upgradeassessments,verbs=get;list;watch;create;update;patch;delete
@@ -67,6 +97,7 @@ type UpgradeAssessmentReconciler struct {
 //+kubebuilder:rbac:groups=upgrade.guardian.io,resources=upgradeplans/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups="",resources=configmaps,verbs=get;list;watch;create;update;patch
 //+kubebuilder:rbac:groups="",resources=namespaces;nodes;pods;services,verbs=get;list;watch
+//+kubebuilder:rbac:groups="",resources=events,verbs=create;patch
 //+kubebuilder:rbac:groups=apps,resources=deployments;statefulsets;daemonsets,verbs=get;list;watch
 //+kubebuilder:rbac:groups=policy,resources=poddisruptionbudgets,verbs=get;list;watch
 //+kubebuilder:rbac:groups=admissionregistration.k8s.io,resources=validatingwebhookconfigurations;mutatingwebhookconfigurations,verbs=get;list;watch
@@ -82,10 +113,16 @@ func (r *UpgradeAssessmentReconciler) Reconcile(ctx context.Context, req ctrl.Re
 
 	var assessment upgradev1alpha1.UpgradeAssessment
 	if err := r.Get(ctx, req.NamespacedName, &assessment); err != nil {
-		return ctrl.Result{}, client.IgnoreNotFound(err)
+		if apierrors.IsNotFound(err) {
+			// The object is gone; its series would otherwise stay exported forever.
+			metrics.ForgetAssessment(req.Namespace, req.Name)
+			return ctrl.Result{}, nil
+		}
+		return ctrl.Result{}, err
 	}
-	if completedForCurrentGeneration(&assessment) {
-		return ctrl.Result{}, nil
+
+	if due, requeueAfter := assessmentDue(&assessment, time.Now()); !due {
+		return ctrl.Result{RequeueAfter: requeueAfter}, nil
 	}
 
 	if err := r.markRunning(ctx, &assessment); err != nil {
@@ -95,52 +132,142 @@ func (r *UpgradeAssessmentReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	snap, err := snapshot.Collect(ctx, r.reader(), assessment.Spec.Scope)
 	if err != nil {
 		logger.Error(err, "assessment failed")
+		r.event(&assessment, corev1.EventTypeWarning, "AssessmentFailed", fmt.Sprintf("Cluster snapshot failed: %v", err))
 		if statusErr := r.markFailed(ctx, &assessment, err); statusErr != nil {
 			return ctrl.Result{}, statusErr
 		}
 		return ctrl.Result{}, err
 	}
 
-	rawFindings := r.runCheckers(snap, &assessment)
+	result := r.assess(snap, &assessment)
 
+	planName := assessment.Name + "-plan"
+	artifactName := reporting.ArtifactName(&assessment)
+	planSpec := planner.BuildSpec(&assessment, result.Decision, result.RiskLevel, result.Score, result.Summary, result.RawSummary, result.ClassificationSummary, result.PlanInput)
+	if err := r.upsertPlan(ctx, &assessment, planName, planSpec); err != nil {
+		r.event(&assessment, corev1.EventTypeWarning, "AssessmentFailed", fmt.Sprintf("UpgradePlan could not be written: %v", err))
+		if statusErr := r.markFailed(ctx, &assessment, err); statusErr != nil {
+			return ctrl.Result{}, statusErr
+		}
+		return ctrl.Result{}, err
+	}
+
+	if err := r.upsertArtifact(ctx, &assessment, planName, artifactName, result, planSpec); err != nil {
+		r.event(&assessment, corev1.EventTypeWarning, "AssessmentFailed", fmt.Sprintf("Assessment artifact could not be written: %v", err))
+		if statusErr := r.markFailed(ctx, &assessment, err); statusErr != nil {
+			return ctrl.Result{}, statusErr
+		}
+		return ctrl.Result{}, err
+	}
+
+	if err := r.markCompleted(ctx, &assessment, planName, artifactName, result); err != nil {
+		return ctrl.Result{}, err
+	}
+
+	metrics.RecordAssessment(assessment.Namespace, assessment.Name, result.Score, result.Decision, result.RiskLevel, result.Summary)
+	r.event(&assessment, corev1.EventTypeNormal, "AssessmentCompleted",
+		fmt.Sprintf("Assessment completed: decision %s, score %d, risk %s.", result.Decision, result.Score, result.RiskLevel))
+	if result.Degraded {
+		r.event(&assessment, corev1.EventTypeWarning, "AssessmentDegraded", result.DegradedReason)
+	}
+
+	return ctrl.Result{RequeueAfter: refreshInterval(&assessment)}, nil
+}
+
+// SetupWithManager sets up the controller with the Manager.
+func (r *UpgradeAssessmentReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	if r.Recorder == nil {
+		r.Recorder = mgr.GetEventRecorderFor("upgradeassessment-controller")
+	}
+	return ctrl.NewControllerManagedBy(mgr).
+		For(&upgradev1alpha1.UpgradeAssessment{}).
+		Owns(&upgradev1alpha1.UpgradePlan{}).
+		Complete(r)
+}
+
+// assess runs the checkers and derives everything the rest of the reconcile needs,
+// so the classified findings are sorted and bounded exactly once.
+func (r *UpgradeAssessmentReconciler) assess(snap *snapshot.ClusterSnapshot, assessment *upgradev1alpha1.UpgradeAssessment) assessmentResult {
+	rawFindings, failedCheckers := r.runCheckers(snap, assessment)
 	sort.SliceStable(rawFindings, func(i, j int) bool {
 		return rawFindings[i].ID < rawFindings[j].ID
 	})
 
 	classified := classifier.Classify(rawFindings, assessment.Spec, time.Now())
-	effectiveFindings := classified.BlockingFindings()
-	score, summary := scoring.Score(effectiveFindings)
+	blocking := classified.BlockingFindings()
+	score, summary := scoring.Score(blocking)
 	_, rawSummary := scoring.Score(classified.Findings)
-	riskLevel := scoring.RiskLevel(score)
-	decision := scoring.Decision(score, summary, effectiveFindings)
 
-	takenAt := metav1.NewTime(snap.TakenAt)
-	planName := assessment.Name + "-plan"
-	artifactName := reporting.ArtifactName(&assessment)
-	planSpec := planner.BuildSpec(&assessment, decision, riskLevel, score, summary, rawSummary, classified.Summary, boundedFindings(classified.Findings, maxPlanActions))
-	if err := r.upsertPlan(ctx, &assessment, planName, planSpec); err != nil {
-		if statusErr := r.markFailed(ctx, &assessment, err); statusErr != nil {
-			return ctrl.Result{}, statusErr
-		}
-		return ctrl.Result{}, err
+	result := assessmentResult{
+		TakenAt:               metav1.NewTime(snap.TakenAt),
+		Findings:              classified.Findings,
+		Published:             boundedFindings(classified.Findings, maxPublishedFindings),
+		PlanInput:             boundedFindings(classified.Findings, maxPlanActions),
+		Summary:               summary,
+		RawSummary:            rawSummary,
+		ClassificationSummary: classified.Summary,
+		Score:                 score,
+		RiskLevel:             scoring.RiskLevel(score),
+		Decision:              scoring.Decision(score, summary, blocking),
 	}
 
-	if err := r.upsertArtifact(ctx, &assessment, planName, artifactName, takenAt, riskLevel, score, summary, rawSummary, classified.Summary, classified.Findings, planSpec); err != nil {
-		if statusErr := r.markFailed(ctx, &assessment, err); statusErr != nil {
-			return ctrl.Result{}, statusErr
-		}
-		return ctrl.Result{}, err
+	switch {
+	case len(failedCheckers) > 0 && len(snap.Gaps) > 0:
+		result.Degraded = true
+		result.DegradedReason = fmt.Sprintf("%d checker(s) failed and %d resource type(s) could not be read; the published findings are partial.",
+			len(failedCheckers), len(snap.Gaps))
+	case len(failedCheckers) > 0:
+		result.Degraded = true
+		result.DegradedReason = fmt.Sprintf("Checker(s) %s failed; the published findings are partial.", strings.Join(failedCheckers, ", "))
+	case len(snap.Gaps) > 0:
+		result.Degraded = true
+		result.DegradedReason = fmt.Sprintf("%d resource type(s) could not be read; the published findings are partial.", len(snap.Gaps))
 	}
 
-	return ctrl.Result{}, r.markCompleted(ctx, &assessment, planName, artifactName, takenAt, riskLevel, score, summary, rawSummary, classified.Summary, classified.Findings)
+	return result
 }
 
-// SetupWithManager sets up the controller with the Manager.
-func (r *UpgradeAssessmentReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&upgradev1alpha1.UpgradeAssessment{}).
-		Owns(&upgradev1alpha1.UpgradePlan{}).
-		Complete(r)
+// assessmentDue answers whether the current status already covers this generation,
+// this re-run token and this refresh interval. When it does not have to run again
+// yet, the returned delay is when the next refresh falls due.
+func assessmentDue(assessment *upgradev1alpha1.UpgradeAssessment, now time.Time) (bool, time.Duration) {
+	if !completedForCurrentGeneration(assessment) {
+		return true, 0
+	}
+	if assessment.Annotations[upgradev1alpha1.RerunAnnotation] != assessment.Status.LastRerunToken {
+		return true, 0
+	}
+
+	interval := refreshInterval(assessment)
+	if interval == 0 {
+		return false, 0
+	}
+	if assessment.Status.LastAssessedTime == nil {
+		return true, 0
+	}
+	if remaining := assessment.Status.LastAssessedTime.Add(interval).Sub(now); remaining > 0 {
+		return false, remaining
+	}
+	return true, 0
+}
+
+// refreshInterval returns the effective re-run period, 0 when the assessment runs
+// on demand only.
+func refreshInterval(assessment *upgradev1alpha1.UpgradeAssessment) time.Duration {
+	if assessment.Spec.RefreshInterval == nil || assessment.Spec.RefreshInterval.Duration <= 0 {
+		return 0
+	}
+	if assessment.Spec.RefreshInterval.Duration < minRefreshInterval {
+		return minRefreshInterval
+	}
+	return assessment.Spec.RefreshInterval.Duration
+}
+
+func (r *UpgradeAssessmentReconciler) event(assessment *upgradev1alpha1.UpgradeAssessment, eventType, reason, message string) {
+	if r.Recorder == nil {
+		return
+	}
+	r.Recorder.Event(assessment, eventType, reason, message)
 }
 
 // reader returns the direct cluster reader, falling back to the cached client so
@@ -154,8 +281,9 @@ func (r *UpgradeAssessmentReconciler) reader() client.Reader {
 
 // runCheckers evaluates every enabled checker against the same snapshot. Checkers
 // are pure functions with no shared state, so they run concurrently; the caller
-// re-sorts the merged result by ID to keep publication deterministic.
-func (r *UpgradeAssessmentReconciler) runCheckers(snap *snapshot.ClusterSnapshot, assessment *upgradev1alpha1.UpgradeAssessment) []upgradev1alpha1.Finding {
+// re-sorts the merged result by ID to keep publication deterministic. It returns
+// the names of the checkers that did not complete.
+func (r *UpgradeAssessmentReconciler) runCheckers(snap *snapshot.ClusterSnapshot, assessment *upgradev1alpha1.UpgradeAssessment) ([]upgradev1alpha1.Finding, []string) {
 	selected := r.Checkers
 	if len(selected) == 0 {
 		selected = checkers.Default(assessment)
@@ -165,23 +293,46 @@ func (r *UpgradeAssessmentReconciler) runCheckers(snap *snapshot.ClusterSnapshot
 		wg       sync.WaitGroup
 		mu       sync.Mutex
 		findings []upgradev1alpha1.Finding
+		failed   []string
 	)
 	for _, checker := range selected {
 		checker := checker
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			checkerFindings := checker.Check(snap, assessment)
+			checkerFindings, ok := runChecker(checker, snap, assessment)
 			mu.Lock()
 			defer mu.Unlock()
 			findings = append(findings, checkerFindings...)
+			if !ok {
+				failed = append(failed, checker.Name())
+			}
 		}()
 	}
 	wg.Wait()
+	sort.Strings(failed)
 
 	// Collection gaps are reported once for the whole assessment rather than once
 	// per checker that would have consumed the denied resource type.
-	return append(findings, snap.Gaps...)
+	return append(findings, snap.Gaps...), failed
+}
+
+// runChecker isolates one checker: a panic becomes an ASSESSMENT_ERROR finding
+// instead of taking the whole audit down, so the operator still publishes the
+// risks it did manage to observe.
+func runChecker(checker checkers.Checker, snap *snapshot.ClusterSnapshot, assessment *upgradev1alpha1.UpgradeAssessment) (findings []upgradev1alpha1.Finding, ok bool) {
+	start := time.Now()
+	defer func() {
+		metrics.ObserveChecker(checker.Name(), time.Since(start))
+		if recovered := recover(); recovered != nil {
+			findings = []upgradev1alpha1.Finding{
+				checkers.AssessmentErrorFinding(checker.Name(), fmt.Errorf("checker panicked: %v", recovered)),
+			}
+			ok = false
+		}
+	}()
+
+	return checker.Check(snap, assessment), true
 }
 
 func (r *UpgradeAssessmentReconciler) markRunning(ctx context.Context, assessment *upgradev1alpha1.UpgradeAssessment) error {
@@ -190,7 +341,9 @@ func (r *UpgradeAssessmentReconciler) markRunning(ctx context.Context, assessmen
 		if err := r.Get(ctx, client.ObjectKeyFromObject(assessment), latest); err != nil {
 			return err
 		}
-		if completedForCurrentGeneration(latest) {
+		if alreadyRunning(latest) {
+			// Nothing to say: skipping the write avoids a status update - and the
+			// reconcile it triggers - on every re-run.
 			return nil
 		}
 		latest.Status.Phase = upgradev1alpha1.AssessmentPhaseRunning
@@ -228,33 +381,14 @@ func (r *UpgradeAssessmentReconciler) markCompleted(
 	assessment *upgradev1alpha1.UpgradeAssessment,
 	planName string,
 	artifactName string,
-	takenAt metav1.Time,
-	riskLevel upgradev1alpha1.RiskLevel,
-	score int,
-	summary upgradev1alpha1.FindingSummary,
-	rawSummary upgradev1alpha1.FindingSummary,
-	classificationSummary upgradev1alpha1.ClassificationSummary,
-	findings []upgradev1alpha1.Finding,
+	result assessmentResult,
 ) error {
 	return retry.RetryOnConflict(retry.DefaultRetry, func() error {
 		latest := &upgradev1alpha1.UpgradeAssessment{}
 		if err := r.Get(ctx, client.ObjectKeyFromObject(assessment), latest); err != nil {
 			return err
 		}
-		latest.Status.Phase = upgradev1alpha1.AssessmentPhaseCompleted
-		latest.Status.RiskLevel = riskLevel
-		latest.Status.Score = score
-		latest.Status.Summary = summary
-		latest.Status.RawSummary = rawSummary
-		latest.Status.ClassificationSummary = classificationSummary
-		latest.Status.Findings = boundedFindings(findings, maxPublishedFindings)
-		latest.Status.LastAssessedTime = takenAt.DeepCopy()
-		latest.Status.GeneratedPlanRef = &upgradev1alpha1.PlanReference{Name: planName}
-		latest.Status.ArtifactRef = &upgradev1alpha1.ArtifactReference{
-			Kind:      "ConfigMap",
-			Name:      artifactName,
-			Namespace: latest.Namespace,
-		}
+		applyResultToStatus(latest, planName, artifactName, result)
 		setCondition(latest, metav1.Condition{
 			Type:               upgradev1alpha1.ConditionAssessmentCompleted,
 			Status:             metav1.ConditionTrue,
@@ -269,9 +403,31 @@ func (r *UpgradeAssessmentReconciler) markCompleted(
 			Message:            "Assessment is not running.",
 			ObservedGeneration: latest.Generation,
 		})
-		setTruncationCondition(latest, findings)
+		setDegradedCondition(latest, result)
+		setTruncationCondition(latest, result.Findings)
 		return r.Status().Update(ctx, latest)
 	})
+}
+
+// applyResultToStatus writes one audit onto a status. It is shared by the status
+// update and by the assessment rendered into the artifact, so the published
+// ConfigMap can never disagree with the object it describes.
+func applyResultToStatus(assessment *upgradev1alpha1.UpgradeAssessment, planName, artifactName string, result assessmentResult) {
+	assessment.Status.Phase = upgradev1alpha1.AssessmentPhaseCompleted
+	assessment.Status.RiskLevel = result.RiskLevel
+	assessment.Status.Score = result.Score
+	assessment.Status.Summary = result.Summary
+	assessment.Status.RawSummary = result.RawSummary
+	assessment.Status.ClassificationSummary = result.ClassificationSummary
+	assessment.Status.Findings = result.Published
+	assessment.Status.LastAssessedTime = result.TakenAt.DeepCopy()
+	assessment.Status.LastRerunToken = assessment.Annotations[upgradev1alpha1.RerunAnnotation]
+	assessment.Status.GeneratedPlanRef = &upgradev1alpha1.PlanReference{Name: planName}
+	assessment.Status.ArtifactRef = &upgradev1alpha1.ArtifactReference{
+		Kind:      "ConfigMap",
+		Name:      artifactName,
+		Namespace: assessment.Namespace,
+	}
 }
 
 func (r *UpgradeAssessmentReconciler) upsertArtifact(
@@ -279,30 +435,11 @@ func (r *UpgradeAssessmentReconciler) upsertArtifact(
 	assessment *upgradev1alpha1.UpgradeAssessment,
 	planName string,
 	artifactName string,
-	takenAt metav1.Time,
-	riskLevel upgradev1alpha1.RiskLevel,
-	score int,
-	summary upgradev1alpha1.FindingSummary,
-	rawSummary upgradev1alpha1.FindingSummary,
-	classificationSummary upgradev1alpha1.ClassificationSummary,
-	findings []upgradev1alpha1.Finding,
+	result assessmentResult,
 	planSpec upgradev1alpha1.UpgradePlanSpec,
 ) error {
 	renderedAssessment := assessment.DeepCopy()
-	renderedAssessment.Status.Phase = upgradev1alpha1.AssessmentPhaseCompleted
-	renderedAssessment.Status.RiskLevel = riskLevel
-	renderedAssessment.Status.Score = score
-	renderedAssessment.Status.Summary = summary
-	renderedAssessment.Status.RawSummary = rawSummary
-	renderedAssessment.Status.ClassificationSummary = classificationSummary
-	renderedAssessment.Status.Findings = boundedFindings(findings, maxPublishedFindings)
-	renderedAssessment.Status.LastAssessedTime = takenAt.DeepCopy()
-	renderedAssessment.Status.GeneratedPlanRef = &upgradev1alpha1.PlanReference{Name: planName}
-	renderedAssessment.Status.ArtifactRef = &upgradev1alpha1.ArtifactReference{
-		Kind:      "ConfigMap",
-		Name:      artifactName,
-		Namespace: assessment.Namespace,
-	}
+	applyResultToStatus(renderedAssessment, planName, artifactName, result)
 
 	renderedPlan := &upgradev1alpha1.UpgradePlan{}
 	renderedPlan.Namespace = assessment.Namespace
@@ -376,6 +513,29 @@ func (r *UpgradeAssessmentReconciler) upsertPlan(ctx context.Context, assessment
 
 func setCondition(assessment *upgradev1alpha1.UpgradeAssessment, condition metav1.Condition) {
 	meta.SetStatusCondition(&assessment.Status.Conditions, condition)
+}
+
+// setDegradedCondition records whether the published findings are complete. The
+// phase stays Completed either way: partial results are worth more than no result.
+func setDegradedCondition(assessment *upgradev1alpha1.UpgradeAssessment, result assessmentResult) {
+	if !result.Degraded {
+		setCondition(assessment, metav1.Condition{
+			Type:               upgradev1alpha1.ConditionAssessmentDegraded,
+			Status:             metav1.ConditionFalse,
+			Reason:             "Complete",
+			Message:            "Every checker completed against a fully readable cluster.",
+			ObservedGeneration: assessment.Generation,
+		})
+		return
+	}
+
+	setCondition(assessment, metav1.Condition{
+		Type:               upgradev1alpha1.ConditionAssessmentDegraded,
+		Status:             metav1.ConditionTrue,
+		Reason:             "PartialResults",
+		Message:            result.DegradedReason,
+		ObservedGeneration: assessment.Generation,
+	})
 }
 
 func setTruncationCondition(assessment *upgradev1alpha1.UpgradeAssessment, findings []upgradev1alpha1.Finding) {
@@ -454,6 +614,16 @@ func completedForCurrentGeneration(assessment *upgradev1alpha1.UpgradeAssessment
 		return false
 	}
 	condition := meta.FindStatusCondition(assessment.Status.Conditions, upgradev1alpha1.ConditionAssessmentCompleted)
+	return condition != nil &&
+		condition.Status == metav1.ConditionTrue &&
+		condition.ObservedGeneration == assessment.Generation
+}
+
+func alreadyRunning(assessment *upgradev1alpha1.UpgradeAssessment) bool {
+	if assessment.Status.Phase != upgradev1alpha1.AssessmentPhaseRunning {
+		return false
+	}
+	condition := meta.FindStatusCondition(assessment.Status.Conditions, upgradev1alpha1.ConditionAssessmentRunning)
 	return condition != nil &&
 		condition.Status == metav1.ConditionTrue &&
 		condition.ObservedGeneration == assessment.Generation

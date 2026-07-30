@@ -125,6 +125,14 @@ spec:
                 - staging
                 - production
                 type: string
+              refreshInterval:
+                description: |-
+                  RefreshInterval re-runs the assessment on a schedule once it has completed,
+                  so a long-lived UpgradeAssessment keeps tracking cluster drift instead of
+                  freezing on the state observed at creation time. Intervals shorter than one
+                  minute are raised to one minute. When omitted, the assessment runs once per
+                  spec change or explicit re-run.
+                type: string
               scope:
                 description: AssessmentScope defines the cluster slice to assess.
                 properties:
@@ -360,6 +368,11 @@ spec:
                   LastAssessedTime is when the cluster snapshot backing this status was taken.
                   It is the observation time exposed as takenAt in the JSON artifact.
                 format: date-time
+                type: string
+              lastRerunToken:
+                description: |-
+                  LastRerunToken is the value of the re-run annotation the controller has
+                  already acted on. A different value in the annotation triggers a new audit.
                 type: string
               phase:
                 description: AssessmentPhase describes the observed lifecycle of an

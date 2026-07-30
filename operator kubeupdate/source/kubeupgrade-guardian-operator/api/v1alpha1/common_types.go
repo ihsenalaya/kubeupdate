@@ -94,7 +94,12 @@ const (
 	FindingTypeObservabilityGap        = "OBSERVABILITY_GAP"
 	FindingTypePolicyEngineDetected    = "POLICY_ENGINE_DETECTED"
 	FindingTypeObservabilityCapability = "OBSERVABILITY_CAPABILITY_DETECTED"
+	FindingTypeAssessmentError         = "ASSESSMENT_ERROR"
 )
+
+// RerunAnnotation triggers a new audit when its value changes. Any value works;
+// a timestamp or a build id is the usual choice.
+const RerunAnnotation = "upgrade.guardian.io/rerun"
 
 // ResourceRef identifies a Kubernetes resource used as finding evidence.
 type ResourceRef struct {
@@ -209,6 +214,10 @@ const (
 	ConditionAssessmentRunning   = "AssessmentRunning"
 	ConditionAssessmentCompleted = "AssessmentCompleted"
 	ConditionAssessmentFailed    = "AssessmentFailed"
+	// ConditionAssessmentDegraded is true when the assessment completed but part
+	// of the cluster could not be read or a checker failed, so the published
+	// findings are partial.
+	ConditionAssessmentDegraded = "AssessmentDegraded"
 )
 
 // Now returns a metav1.Time. Keeping this tiny helper in the API package avoids

@@ -72,6 +72,13 @@ type UpgradeAssessmentSpec struct {
 	// +kubebuilder:default=production
 	Profile AssessmentProfile `json:"profile,omitempty"`
 
+	// RefreshInterval re-runs the assessment on a schedule once it has completed,
+	// so a long-lived UpgradeAssessment keeps tracking cluster drift instead of
+	// freezing on the state observed at creation time. Intervals shorter than one
+	// minute are raised to one minute. When omitted, the assessment runs once per
+	// spec change or explicit re-run.
+	RefreshInterval *metav1.Duration `json:"refreshInterval,omitempty"`
+
 	Scope         AssessmentScope  `json:"scope,omitempty"`
 	Checks        AssessmentChecks `json:"checks,omitempty"`
 	AcceptedRisks []AcceptedRisk   `json:"acceptedRisks,omitempty"`
@@ -92,6 +99,10 @@ type UpgradeAssessmentStatus struct {
 	// LastAssessedTime is when the cluster snapshot backing this status was taken.
 	// It is the observation time exposed as takenAt in the JSON artifact.
 	LastAssessedTime *metav1.Time `json:"lastAssessedTime,omitempty"`
+
+	// LastRerunToken is the value of the re-run annotation the controller has
+	// already acted on. A different value in the annotation triggers a new audit.
+	LastRerunToken string `json:"lastRerunToken,omitempty"`
 
 	// +patchMergeKey=type
 	// +patchStrategy=merge
