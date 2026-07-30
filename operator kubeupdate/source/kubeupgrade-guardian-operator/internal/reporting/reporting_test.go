@@ -387,9 +387,8 @@ func TestComputeDecisionLabel(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			_, got := computeDecisionLabel(tc.plan)
-			if got != tc.wantLabel {
-				t.Errorf("computeDecisionLabel() = %q, want %q", got, tc.wantLabel)
+			if got := decisionLabel(tc.plan); got != tc.wantLabel {
+				t.Errorf("decisionLabel() = %q, want %q", got, tc.wantLabel)
 			}
 		})
 	}

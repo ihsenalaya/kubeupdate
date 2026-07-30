@@ -47,7 +47,7 @@ func (r Result) BlockingFindings() []upgradev1alpha1.Finding {
 
 // FindingsByStatus returns classified findings matching a status.
 func (r Result) FindingsByStatus(status upgradev1alpha1.FindingClassificationStatus) []upgradev1alpha1.Finding {
-	var out []upgradev1alpha1.Finding
+	out := make([]upgradev1alpha1.Finding, 0, len(r.Findings))
 	for _, finding := range r.Findings {
 		if finding.Classification == nil || finding.Classification.Status != status {
 			continue

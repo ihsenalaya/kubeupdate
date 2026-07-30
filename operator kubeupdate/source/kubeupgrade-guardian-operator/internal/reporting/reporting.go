@@ -29,6 +29,19 @@ const (
 	PlanMarkdownKey       = "plan.md"
 )
 
+// Finding categories the plan renders with dedicated wording.
+const (
+	categoryCapacity         = "Capacity"
+	categoryAdmissionWebhook = "AdmissionWebhook"
+	categoryPolicyRisk       = "PolicyRisk"
+)
+
+// labelBlocked is the readiness label of a plan that must not be executed.
+const labelBlocked = "NOT READY — BLOCKED"
+
+// clusterScope names a finding that is about the cluster rather than one object.
+const clusterScope = "cluster"
+
 // ArtifactName returns the ConfigMap name used for human-readable output.
 func ArtifactName(assessment *upgradev1alpha1.UpgradeAssessment) string {
 	return assessment.Name + "-artifact"
@@ -119,8 +132,7 @@ func writePlanHeader(b *strings.Builder, plan *upgradev1alpha1.UpgradePlan) {
 func writePlanExecutiveDecision(b *strings.Builder, plan *upgradev1alpha1.UpgradePlan) {
 	writeHeading(b, 2, "Executive Decision")
 
-	_, label := computeDecisionLabel(plan)
-	b.WriteString(fmt.Sprintf("**Upgrade readiness: %s**\n\n", label))
+	b.WriteString(fmt.Sprintf("**Upgrade readiness: %s**\n\n", decisionLabel(plan)))
 
 	if plan.Spec.ClassificationSummary.Blocking > 0 {
 		b.WriteString(fmt.Sprintf(
@@ -141,27 +153,27 @@ func writePlanExecutiveDecision(b *strings.Builder, plan *upgradev1alpha1.Upgrad
 	}
 }
 
-// computeDecisionLabel derives the human-facing decision from spec data.
+// decisionLabel derives the human-facing readiness label from spec data.
 // A plan with blocking findings and Critical risk is BLOCKED regardless of the stored Decision value,
 // since the controller may have emitted ProceedWithCaution before classification was complete.
-func computeDecisionLabel(plan *upgradev1alpha1.UpgradePlan) (decision, label string) {
+func decisionLabel(plan *upgradev1alpha1.UpgradePlan) string {
 	if plan.Spec.ClassificationSummary.Blocking > 0 && plan.Spec.RiskLevel == upgradev1alpha1.RiskLevelCritical {
-		return "BLOCKED", "NOT READY — BLOCKED"
+		return labelBlocked
 	}
 	for _, f := range plan.Spec.BlockingFindings {
-		if f.Category == "Capacity" {
-			return "BLOCKED", "NOT READY — BLOCKED"
+		if f.Category == categoryCapacity {
+			return labelBlocked
 		}
 	}
 	switch plan.Spec.Decision {
 	case upgradev1alpha1.DecisionDoNotUpgrade:
-		return "BLOCKED", "NOT READY — BLOCKED"
+		return labelBlocked
 	case upgradev1alpha1.DecisionProceedWithCaution:
-		return "PROCEED WITH CAUTION", "PROCEED WITH CAUTION — review findings before upgrade"
+		return "PROCEED WITH CAUTION — review findings before upgrade"
 	case upgradev1alpha1.DecisionProceed:
-		return "READY", "READY — no blocking findings"
+		return "READY — no blocking findings"
 	default:
-		return string(plan.Spec.Decision), string(plan.Spec.Decision)
+		return string(plan.Spec.Decision)
 	}
 }
 
@@ -176,7 +188,7 @@ func writePlanTopBlockers(b *strings.Builder, plan *upgradev1alpha1.UpgradePlan)
 		return
 	}
 
-	priorityOrder := []string{"Capacity", "AdmissionWebhook", "WorkloadAvailability", "PolicyRisk", "ReadinessProbes"}
+	priorityOrder := []string{categoryCapacity, categoryAdmissionWebhook, "WorkloadAvailability", categoryPolicyRisk, "ReadinessProbes"}
 	rendered := map[string]bool{}
 
 	for _, cat := range priorityOrder {
@@ -200,7 +212,7 @@ func writeBlockerCategorySection(b *strings.Builder, category string, findings [
 	writeHeading(b, 3, fmt.Sprintf("%s (%d finding%s)", category, len(findings), plural(len(findings))))
 
 	switch category {
-	case "AdmissionWebhook":
+	case categoryAdmissionWebhook:
 		b.WriteString("**Impact:** Webhooks with `failurePolicy: Fail` block all API admission if the webhook pod is unavailable during node drain, potentially stalling the upgrade mid-flight.\n\n")
 		components := uniqueWebhookComponents(findings)
 		if len(components) > 0 {
@@ -241,7 +253,7 @@ func writeBlockerCategorySection(b *strings.Builder, category string, findings [
 		}
 		b.WriteString("**Required action:** Add readinessProbe to affected containers, or document upstream chart constraints as accepted risk.\n\n")
 
-	case "Capacity":
+	case categoryCapacity:
 		b.WriteString("**Impact:** Insufficient CPU headroom means workloads may fail to reschedule after a node is drained during upgrade.\n\n")
 		for _, f := range findings {
 			b.WriteString(fmt.Sprintf("- %s\n", f.Message))
@@ -249,7 +261,7 @@ func writeBlockerCategorySection(b *strings.Builder, category string, findings [
 		b.WriteString("\n")
 		b.WriteString("**Required action:** Add node capacity or reduce pod resource requests before upgrade.\n\n")
 
-	case "PolicyRisk":
+	case categoryPolicyRisk:
 		b.WriteString("**Impact:** Workloads violating namespace Pod Security policies may fail admission after the upgrade activates stricter enforcement.\n\n")
 		for _, f := range findings {
 			if f.Resource.Name != "" {
@@ -304,7 +316,7 @@ func writeRemediationGroup(b *strings.Builder, findings []upgradev1alpha1.Classi
 		catFindings := byCategory[cat]
 		b.WriteString(fmt.Sprintf("**%s (%d finding%s)**\n\n", cat, len(catFindings), plural(len(catFindings))))
 
-		if cat == "AdmissionWebhook" {
+		if cat == categoryAdmissionWebhook {
 			compCounts := map[string]int{}
 			compRec := map[string]string{}
 			for _, f := range catFindings {
@@ -321,7 +333,7 @@ func writeRemediationGroup(b *strings.Builder, findings []upgradev1alpha1.Classi
 		} else {
 			for _, f := range catFindings {
 				res := resourceValueName(f.Resource)
-				if res == "cluster" {
+				if res == clusterScope {
 					b.WriteString(fmt.Sprintf("- %s\n", f.Recommendation))
 				} else {
 					b.WriteString(fmt.Sprintf("- %s: %s\n", res, f.Recommendation))
@@ -340,7 +352,7 @@ func writePlanGoNoGoGates(b *strings.Builder, plan *upgradev1alpha1.UpgradePlan)
 	p0Count := countPriorityFindings(plan.Spec.BlockingFindings, "P0")
 	p1Count := countPriorityFindings(plan.Spec.BlockingFindings, "P1")
 	webhookFailCount := countWebhookFailFindings(plan.Spec.BlockingFindings)
-	capacityCount := countCategoryFindings(plan.Spec.BlockingFindings, "Capacity")
+	capacityCount := countCategoryFindings(plan.Spec.BlockingFindings, categoryCapacity)
 	availCount := countCategoryFindings(plan.Spec.BlockingFindings, "WorkloadAvailability")
 
 	// Gate 1
@@ -412,8 +424,8 @@ func writePlanChronology(b *strings.Builder, plan *upgradev1alpha1.UpgradePlan) 
 		return
 	}
 
-	hasWebhookBlockers := countCategoryFindings(plan.Spec.BlockingFindings, "AdmissionWebhook") > 0
-	hasCapacityBlockers := countCategoryFindings(plan.Spec.BlockingFindings, "Capacity") > 0
+	hasWebhookBlockers := countCategoryFindings(plan.Spec.BlockingFindings, categoryAdmissionWebhook) > 0
+	hasCapacityBlockers := countCategoryFindings(plan.Spec.BlockingFindings, categoryCapacity) > 0
 	hasAvailBlockers := countCategoryFindings(plan.Spec.BlockingFindings, "WorkloadAvailability") > 0
 
 	for _, step := range plan.Spec.UpgradePath {
@@ -615,7 +627,7 @@ func namespacedName(namespace, name string) string {
 
 func resourceName(ref *upgradev1alpha1.ResourceRef) string {
 	if ref == nil {
-		return "cluster"
+		return clusterScope
 	}
 	return resourceValueName(*ref)
 }
@@ -623,7 +635,7 @@ func resourceName(ref *upgradev1alpha1.ResourceRef) string {
 func resourceValueName(ref upgradev1alpha1.ResourceRef) string {
 	name := ref.Name
 	if name == "" {
-		name = "cluster"
+		name = clusterScope
 	}
 	if ref.Namespace != "" {
 		name = ref.Namespace + "/" + name
@@ -735,7 +747,7 @@ func countCategoryFindings(findings []upgradev1alpha1.ClassifiedFindingRef, cate
 func countWebhookFailFindings(findings []upgradev1alpha1.ClassifiedFindingRef) int {
 	n := 0
 	for _, f := range findings {
-		if f.Category == "AdmissionWebhook" && strings.Contains(f.Message, "failurePolicy=Fail") {
+		if f.Category == categoryAdmissionWebhook && strings.Contains(f.Message, "failurePolicy=Fail") {
 			n++
 		}
 	}
@@ -758,16 +770,16 @@ func countPriorityFindings(findings []upgradev1alpha1.ClassifiedFindingRef, prio
 // P2: health visibility or documentation gap.
 func findingPriority(f upgradev1alpha1.ClassifiedFindingRef) string {
 	switch f.Category {
-	case "Capacity":
+	case categoryCapacity:
 		return "P0"
-	case "AdmissionWebhook":
+	case categoryAdmissionWebhook:
 		if strings.Contains(f.Message, "failurePolicy=Fail") {
 			return "P0"
 		}
 		return "P1"
 	case "WorkloadAvailability":
 		return "P1"
-	case "PolicyRisk":
+	case categoryPolicyRisk:
 		if f.Severity == upgradev1alpha1.RiskLevelHigh {
 			return "P1"
 		}
@@ -833,7 +845,7 @@ func workloadsByNamespace(findings []upgradev1alpha1.ClassifiedFindingRef) map[s
 	byNS := make(map[string][]string)
 	seen := map[string]bool{}
 	for _, f := range findings {
-		ns := valueOr(f.Resource.Namespace, "cluster")
+		ns := valueOr(f.Resource.Namespace, clusterScope)
 		key := ns + "/" + f.Resource.Name
 		if !seen[key] {
 			seen[key] = true
@@ -870,7 +882,7 @@ func extractRiskLabel(message string) string {
 func extractCapacityHeadroom(findings []upgradev1alpha1.ClassifiedFindingRef) string {
 	const marker = "Estimated remaining capacity after one-node loss: "
 	for _, f := range findings {
-		if f.Category != "Capacity" {
+		if f.Category != categoryCapacity {
 			continue
 		}
 		if idx := strings.Index(f.Recommendation, marker); idx >= 0 {

@@ -4,17 +4,25 @@
 
 KubeUpgrade Guardian Operator analyzes Kubernetes upgrade readiness in read-only mode. It never upgrades a cluster, drains nodes, patches workloads, or performs destructive actions. It watches `UpgradeAssessment` resources, runs observable checks against the cluster, writes findings to assessment status, and creates an idempotent `UpgradePlan` with prioritized recommendations.
 
-The first implementation covers:
+The checks cover:
 
 - workload availability risks;
 - missing readiness probes;
 - PodDisruptionBudget blockers;
-- admission webhook risks;
-- Pod Security Admission and policy engine signals;
-- removed/deprecated API usage from a static MVP table;
+- admission webhook risks: failure policy graded by drain blast radius, absent or
+  unready backends, webhook timeouts;
+- Pod Security Admission (restricted profile, effective pod + container security
+  context) and policy engine signals;
+- objects still written through a removed API version, from an embedded removal
+  table;
 - conservative one-node-loss capacity headroom;
 - observability gaps and monitoring CRD detection;
 - RBAC gaps when a check cannot verify required data.
+
+The cluster is read exactly once per assessment, through `internal/snapshot`: one
+paginated List per resource type against the API server, no informer, no cache.
+Every checker is a pure function over that snapshot, so all findings of one
+assessment describe the same cluster state.
 
 ## Getting Started
 
@@ -37,11 +45,102 @@ Apply an `UpgradeAssessment`:
 
 ```sh
 kubectl apply -f config/samples/upgrade_v1alpha1_upgradeassessment.yaml
-kubectl get upgradeassessment prod-upgrade-assessment -o yaml
-kubectl get upgradeplan prod-upgrade-assessment-plan -o yaml
+kubectl get upgradeassessment
+kubectl get upgradeplan
+```
+
+Both resources print their outcome directly:
+
+```
+NAME                      TARGET   PHASE       RISK       SCORE   AGE
+prod-upgrade-assessment   1.32     Completed   Critical   74      3m
+
+NAME                           DECISION       RISK       SCORE   AGE
+prod-upgrade-assessment-plan   DoNotUpgrade   Critical   74      3m
 ```
 
 The generated `UpgradePlan` contains recommendations only. Every recommendation stays non-executing and should be reviewed by an operator before any real cluster upgrade work.
+
+### Assessment spec
+
+| Field | Meaning |
+| --- | --- |
+| `sourceVersion` | Current minor version, e.g. `1.31`. Defaults to `current` in the report. |
+| `targetVersion` | Minor version being assessed, e.g. `1.32`. Required. |
+| `mode` | `ReadOnly`, the only supported mode. |
+| `profile` | `lab`, `staging` or `production`. Tunes which severities block. |
+| `refreshInterval` | Optional. Re-runs the audit on that period once completed, so the assessment tracks cluster drift. Values under `1m` are raised to `1m`. Omit it to assess on demand only. |
+| `scope.namespaces.include` / `.exclude` | Namespaces the workload checks look at. Cluster-level checks (capacity, webhooks, observability) always reason about the whole cluster. |
+| `checks.*` | Enable individual checkers. When none is set, all of them run. |
+| `acceptedRisks` | Documented exceptions, matched by finding id, type or resource. |
+
+### Assessment status
+
+| Field | Meaning |
+| --- | --- |
+| `phase` | `Pending`, `Running`, `Completed` or `Failed`. |
+| `riskLevel`, `score` | Aggregate risk of the blocking findings. |
+| `summary`, `rawSummary`, `classificationSummary` | Counts of effective, raw and classified findings. |
+| `findings` | Published findings, bounded to keep the object under the API server size limit. |
+| `generatedPlanRef`, `artifactRef` | The generated `UpgradePlan` and artifact ConfigMap. |
+| `lastAssessedTime` | When the cluster snapshot behind this status was taken. |
+| `lastRerunToken` | The re-run annotation value already acted on. |
+
+Conditions: `AssessmentRunning`, `AssessmentCompleted`, `AssessmentFailed`,
+`AssessmentDegraded` (the audit completed but a checker failed or a resource type
+could not be read, so the findings are partial) and `AssessmentOutputTruncated`.
+
+### Re-running an assessment
+
+An assessment runs once per spec change. To force a fresh audit without touching
+the spec, change the value of the re-run annotation:
+
+```sh
+kubectl annotate upgradeassessment prod-upgrade-assessment \
+  upgrade.guardian.io/rerun="$(date +%s)" --overwrite
+```
+
+The controller records the value it acted on in `status.lastRerunToken`, so the
+same token never triggers two audits.
+
+### Artifacts
+
+Each assessment publishes a ConfigMap named `<assessment>-artifact` with three keys:
+
+| Key | Content |
+| --- | --- |
+| `assessment.md` | Human-readable assessment summary. |
+| `plan.md` | Operator-grade upgrade plan: decision, blockers, remediation, go/no-go gates, chronology. |
+| `assessment.json` | Machine-readable export for CI and dashboards. |
+
+`assessment.json` carries `"exportVersion": "v1"`, the snapshot time as `takenAt`,
+the assessment and plan references, source/target versions and profile, the
+decision, risk level and score, the three summaries, the published findings with
+their full classification and evidence, and the plan's `requiredActions`,
+`upgradePath` and `recommendedOrder`. It is bounded exactly like the Markdown
+artifacts so the ConfigMap stays under the 1 MiB object limit.
+
+```sh
+kubectl get configmap prod-upgrade-assessment-artifact \
+  -o jsonpath='{.data.assessment\.json}' | jq '.decision, .score'
+```
+
+### Metrics
+
+The manager exposes these on its existing `/metrics` endpoint:
+
+| Metric | Type | Labels |
+| --- | --- | --- |
+| `guardian_assessment_score` | gauge | `namespace`, `name` |
+| `guardian_assessment_findings` | gauge | `namespace`, `name`, `severity` |
+| `guardian_checker_duration_seconds` | histogram | `checker` |
+| `guardian_assessment_info` | gauge (always 1) | `namespace`, `name`, `decision`, `risk_level` |
+
+Series are removed when the assessment is deleted.
+
+The controller also emits Kubernetes events on the assessment: `Normal
+AssessmentCompleted` with the decision and score, `Warning AssessmentDegraded`
+and `Warning AssessmentFailed`.
 
 ### Testing
 
@@ -133,7 +232,14 @@ kubectl apply -f https://raw.githubusercontent.com/<org>/kubeupgrade-guardian-op
 ```
 
 ## Contributing
-Keep changes assessment-only. New checkers must return observable evidence, treat RBAC denial as `RBAC_ASSESSMENT_GAP`, and add focused tests for findings and plan output.
+Keep changes assessment-only. A new checker reads the cluster through
+`internal/snapshot` and never through a Kubernetes client - a test enforces this
+by parsing the package imports. If a checker needs a resource type the snapshot
+does not collect yet, add it to `snapshot.Collect` (one paginated List, RBAC
+refusal recorded as a gap) and to the RBAC markers plus the Helm chart role.
+Findings must carry observable evidence, RBAC denial stays
+`RBAC_ASSESSMENT_GAP` rather than an error, and each new finding needs focused
+tests on the finding and on the plan output.
 
 **NOTE:** Run `make help` for more information on all potential `make` targets
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -131,7 +132,7 @@ func loadFixtureObjects(scheme *runtime.Scheme, fixtureDir string) ([]client.Obj
 				if errors.Is(err, io.EOF) {
 					break
 				}
-				file.Close()
+				_ = file.Close()
 				return nil, err
 			}
 			if len(raw) == 0 {
@@ -139,7 +140,7 @@ func loadFixtureObjects(scheme *runtime.Scheme, fixtureDir string) ([]client.Obj
 			}
 			object, err := fixtureObject(scheme, raw)
 			if err != nil {
-				file.Close()
+				_ = file.Close()
 				return nil, err
 			}
 			objects = append(objects, object)
@@ -223,7 +224,7 @@ func syntheticNodes() []client.Object {
 	var nodes []client.Object
 	for i := 1; i <= 3; i++ {
 		nodes = append(nodes, &corev1.Node{
-			ObjectMeta: metav1.ObjectMeta{Name: "r10-node-" + string(rune('0'+i))},
+			ObjectMeta: metav1.ObjectMeta{Name: fmt.Sprintf("r10-node-%d", i)},
 			Status: corev1.NodeStatus{
 				Allocatable: corev1.ResourceList{
 					corev1.ResourceCPU:    apiresource.MustParse("2"),
@@ -264,7 +265,7 @@ func syntheticPod(kind, namespace, ownerName string, labels map[string]string, s
 	controller := true
 	return &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      ownerName + "-synthetic-" + string(rune('0'+index)),
+			Name:      fmt.Sprintf("%s-synthetic-%d", ownerName, index),
 			Namespace: namespace,
 			Labels:    labels,
 			OwnerReferences: []metav1.OwnerReference{{
@@ -284,7 +285,7 @@ func syntheticPod(kind, namespace, ownerName string, labels map[string]string, s
 func findingSortKey(finding upgradev1alpha1.Finding) string {
 	resource := finding.Resource
 	if resource == nil {
-		return finding.Category + "/" + string(finding.Type) + "/" + finding.Message
+		return finding.Category + "/" + finding.Type + "/" + finding.Message
 	}
-	return finding.Category + "/" + string(finding.Type) + "/" + resource.Kind + "/" + resource.Namespace + "/" + resource.Name + "/" + finding.Message
+	return finding.Category + "/" + finding.Type + "/" + resource.Kind + "/" + resource.Namespace + "/" + resource.Name + "/" + finding.Message
 }
