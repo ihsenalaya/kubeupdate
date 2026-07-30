@@ -54,6 +54,10 @@ type UpgradePlanStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:printcolumn:name="Decision",type=string,JSONPath=`.spec.decision`
+//+kubebuilder:printcolumn:name="Risk",type=string,JSONPath=`.spec.riskLevel`
+//+kubebuilder:printcolumn:name="Score",type=integer,JSONPath=`.spec.score`
+//+kubebuilder:printcolumn:name="Age",type=date,JSONPath=`.metadata.creationTimestamp`
 
 // UpgradePlan is the Schema for the upgradeplans API
 type UpgradePlan struct {

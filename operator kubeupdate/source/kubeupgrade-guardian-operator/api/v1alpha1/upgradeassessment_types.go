@@ -89,6 +89,10 @@ type UpgradeAssessmentStatus struct {
 	GeneratedPlanRef      *PlanReference        `json:"generatedPlanRef,omitempty"`
 	ArtifactRef           *ArtifactReference    `json:"artifactRef,omitempty"`
 
+	// LastAssessedTime is when the cluster snapshot backing this status was taken.
+	// It is the observation time exposed as takenAt in the JSON artifact.
+	LastAssessedTime *metav1.Time `json:"lastAssessedTime,omitempty"`
+
 	// +patchMergeKey=type
 	// +patchStrategy=merge
 	// +listType=map
@@ -98,6 +102,11 @@ type UpgradeAssessmentStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:printcolumn:name="Target",type=string,JSONPath=`.spec.targetVersion`
+//+kubebuilder:printcolumn:name="Phase",type=string,JSONPath=`.status.phase`
+//+kubebuilder:printcolumn:name="Risk",type=string,JSONPath=`.status.riskLevel`
+//+kubebuilder:printcolumn:name="Score",type=integer,JSONPath=`.status.score`
+//+kubebuilder:printcolumn:name="Age",type=date,JSONPath=`.metadata.creationTimestamp`
 
 // UpgradeAssessment is the Schema for the upgradeassessments API
 type UpgradeAssessment struct {

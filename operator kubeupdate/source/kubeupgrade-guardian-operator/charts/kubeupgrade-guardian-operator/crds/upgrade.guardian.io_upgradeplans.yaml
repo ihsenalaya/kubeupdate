@@ -14,7 +14,20 @@ spec:
     singular: upgradeplan
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.decision
+      name: Decision
+      type: string
+    - jsonPath: .spec.riskLevel
+      name: Risk
+      type: string
+    - jsonPath: .spec.score
+      name: Score
+      type: integer
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: UpgradePlan is the Schema for the upgradeplans API

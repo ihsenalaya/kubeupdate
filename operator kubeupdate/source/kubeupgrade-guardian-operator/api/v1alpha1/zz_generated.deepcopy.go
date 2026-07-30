@@ -413,6 +413,10 @@ func (in *UpgradeAssessmentStatus) DeepCopyInto(out *UpgradeAssessmentStatus) {
 		*out = new(ArtifactReference)
 		**out = **in
 	}
+	if in.LastAssessedTime != nil {
+		in, out := &in.LastAssessedTime, &out.LastAssessedTime
+		*out = (*in).DeepCopy()
+	}
 	if in.Conditions != nil {
 		in, out := &in.Conditions, &out.Conditions
 		*out = make([]v1.Condition, len(*in))

@@ -37,6 +37,7 @@ import (
 	upgradev1alpha1 "github.com/ihsenalaya/kubeupgrade-guardian-operator/api/v1alpha1"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/checkers"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/classifier"
+	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/export"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/planner"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/reporting"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/scoring"
@@ -113,6 +114,7 @@ func (r *UpgradeAssessmentReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	riskLevel := scoring.RiskLevel(score)
 	decision := scoring.Decision(score, summary, effectiveFindings)
 
+	takenAt := metav1.NewTime(snap.TakenAt)
 	planName := assessment.Name + "-plan"
 	artifactName := reporting.ArtifactName(&assessment)
 	planSpec := planner.BuildSpec(&assessment, decision, riskLevel, score, summary, rawSummary, classified.Summary, boundedFindings(classified.Findings, maxPlanActions))
@@ -123,14 +125,14 @@ func (r *UpgradeAssessmentReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		return ctrl.Result{}, err
 	}
 
-	if err := r.upsertArtifact(ctx, &assessment, planName, artifactName, riskLevel, score, summary, rawSummary, classified.Summary, classified.Findings, planSpec); err != nil {
+	if err := r.upsertArtifact(ctx, &assessment, planName, artifactName, takenAt, riskLevel, score, summary, rawSummary, classified.Summary, classified.Findings, planSpec); err != nil {
 		if statusErr := r.markFailed(ctx, &assessment, err); statusErr != nil {
 			return ctrl.Result{}, statusErr
 		}
 		return ctrl.Result{}, err
 	}
 
-	return ctrl.Result{}, r.markCompleted(ctx, &assessment, planName, artifactName, riskLevel, score, summary, rawSummary, classified.Summary, classified.Findings)
+	return ctrl.Result{}, r.markCompleted(ctx, &assessment, planName, artifactName, takenAt, riskLevel, score, summary, rawSummary, classified.Summary, classified.Findings)
 }
 
 // SetupWithManager sets up the controller with the Manager.
@@ -226,6 +228,7 @@ func (r *UpgradeAssessmentReconciler) markCompleted(
 	assessment *upgradev1alpha1.UpgradeAssessment,
 	planName string,
 	artifactName string,
+	takenAt metav1.Time,
 	riskLevel upgradev1alpha1.RiskLevel,
 	score int,
 	summary upgradev1alpha1.FindingSummary,
@@ -245,6 +248,7 @@ func (r *UpgradeAssessmentReconciler) markCompleted(
 		latest.Status.RawSummary = rawSummary
 		latest.Status.ClassificationSummary = classificationSummary
 		latest.Status.Findings = boundedFindings(findings, maxPublishedFindings)
+		latest.Status.LastAssessedTime = takenAt.DeepCopy()
 		latest.Status.GeneratedPlanRef = &upgradev1alpha1.PlanReference{Name: planName}
 		latest.Status.ArtifactRef = &upgradev1alpha1.ArtifactReference{
 			Kind:      "ConfigMap",
@@ -275,6 +279,7 @@ func (r *UpgradeAssessmentReconciler) upsertArtifact(
 	assessment *upgradev1alpha1.UpgradeAssessment,
 	planName string,
 	artifactName string,
+	takenAt metav1.Time,
 	riskLevel upgradev1alpha1.RiskLevel,
 	score int,
 	summary upgradev1alpha1.FindingSummary,
@@ -291,6 +296,7 @@ func (r *UpgradeAssessmentReconciler) upsertArtifact(
 	renderedAssessment.Status.RawSummary = rawSummary
 	renderedAssessment.Status.ClassificationSummary = classificationSummary
 	renderedAssessment.Status.Findings = boundedFindings(findings, maxPublishedFindings)
+	renderedAssessment.Status.LastAssessedTime = takenAt.DeepCopy()
 	renderedAssessment.Status.GeneratedPlanRef = &upgradev1alpha1.PlanReference{Name: planName}
 	renderedAssessment.Status.ArtifactRef = &upgradev1alpha1.ArtifactReference{
 		Kind:      "ConfigMap",
@@ -317,10 +323,16 @@ func (r *UpgradeAssessmentReconciler) upsertArtifact(
 		configMap.Labels["app.kubernetes.io/name"] = "kubeupgrade-guardian-operator"
 		configMap.Labels["app.kubernetes.io/component"] = "assessment-artifact"
 		configMap.Labels["upgrade.guardian.io/assessment"] = assessment.Name
-		configMap.Data = map[string]string{
-			reporting.AssessmentMarkdownKey: reporting.AssessmentMarkdown(renderedAssessment),
-			reporting.PlanMarkdownKey:       reporting.PlanMarkdown(renderedPlan),
+
+		data := make(map[string]string, len(export.Default()))
+		for _, renderer := range export.Default() {
+			rendered, renderErr := renderer.Render(renderedAssessment, renderedPlan)
+			if renderErr != nil {
+				return renderErr
+			}
+			data[renderer.Key()] = string(rendered)
 		}
+		configMap.Data = data
 		return nil
 	})
 	return err

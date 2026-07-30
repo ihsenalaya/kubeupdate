@@ -18,9 +18,12 @@ package controller
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"sort"
 	"testing"
 
+	corev1 "k8s.io/api/core/v1"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -32,6 +35,8 @@ import (
 
 	upgradev1alpha1 "github.com/ihsenalaya/kubeupgrade-guardian-operator/api/v1alpha1"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/checkers"
+	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/export"
+	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/reporting"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/snapshot"
 )
 
@@ -197,4 +202,38 @@ func TestReconcileCreatesIdempotentUpgradePlan(t *testing.T) {
 	if updated.Status.GeneratedPlanRef == nil || updated.Status.GeneratedPlanRef.Name != "prod-upgrade-assessment-plan" {
 		t.Fatalf("expected generated plan ref, got %#v", updated.Status.GeneratedPlanRef)
 	}
+	if updated.Status.LastAssessedTime == nil {
+		t.Fatal("expected the snapshot time to be published as lastAssessedTime")
+	}
+
+	artifact := &corev1.ConfigMap{}
+	artifactKey := client.ObjectKey{Namespace: "default", Name: "prod-upgrade-assessment-artifact"}
+	if err := k8sClient.Get(ctx, artifactKey, artifact); err != nil {
+		t.Fatal(err)
+	}
+	for _, key := range []string{reporting.AssessmentMarkdownKey, reporting.PlanMarkdownKey, export.JSONKey} {
+		if artifact.Data[key] == "" {
+			t.Fatalf("expected artifact key %q in the ConfigMap, got keys %v", key, artifactKeys(artifact))
+		}
+	}
+
+	var document map[string]any
+	if err := json.Unmarshal([]byte(artifact.Data[export.JSONKey]), &document); err != nil {
+		t.Fatalf("assessment.json is not valid JSON: %v", err)
+	}
+	if document["exportVersion"] != export.JSONVersion {
+		t.Fatalf("expected exportVersion %q, got %v", export.JSONVersion, document["exportVersion"])
+	}
+	if document["takenAt"] == nil {
+		t.Fatalf("expected takenAt in the export, got %v", document)
+	}
+}
+
+func artifactKeys(artifact *corev1.ConfigMap) []string {
+	keys := make([]string, 0, len(artifact.Data))
+	for key := range artifact.Data {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	return keys
 }
