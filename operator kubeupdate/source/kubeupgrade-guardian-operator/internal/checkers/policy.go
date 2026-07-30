@@ -108,6 +108,11 @@ func restrictedNamespaceFinding(namespace corev1.Namespace) upgradev1alpha1.Find
 	}
 }
 
+// podSpecPolicyFindings evaluates the restricted Pod Security profile against the
+// *effective* security context of each container. Pod Security Admission resolves
+// pod-level settings first and lets the container override them, so judging a
+// container in isolation - as this checker used to - flagged every workload that
+// correctly sets runAsNonRoot once, at pod level.
 func podSpecPolicyFindings(kind, namespace, name string, spec corev1.PodSpec) []upgradev1alpha1.Finding {
 	var findings []upgradev1alpha1.Finding
 	for _, volume := range spec.Volumes {
@@ -115,22 +120,97 @@ func podSpecPolicyFindings(kind, namespace, name string, spec corev1.PodSpec) []
 			findings = append(findings, policyFinding(kind, namespace, name, "hostPath volume", volume.Name))
 		}
 	}
+
 	for _, container := range spec.Containers {
-		if container.SecurityContext == nil {
+		effective := effectiveSecurityContext(spec.SecurityContext, container.SecurityContext)
+		if !effective.Defined {
 			findings = append(findings, policyFinding(kind, namespace, name, "missing securityContext", container.Name))
 			continue
 		}
-		if container.SecurityContext.Privileged != nil && *container.SecurityContext.Privileged {
-			findings = append(findings, policyFinding(kind, namespace, name, "privileged=true", container.Name))
-		}
-		if container.SecurityContext.RunAsNonRoot == nil {
-			findings = append(findings, policyFinding(kind, namespace, name, "runAsNonRoot absent", container.Name))
-		}
-		if container.SecurityContext.AllowPrivilegeEscalation != nil && *container.SecurityContext.AllowPrivilegeEscalation {
-			findings = append(findings, policyFinding(kind, namespace, name, "allowPrivilegeEscalation=true", container.Name))
+		for _, reason := range effective.restrictedViolations() {
+			findings = append(findings, policyFinding(kind, namespace, name, reason, container.Name))
 		}
 	}
+
 	return findings
+}
+
+// effectiveContext is a container's security context after the Pod Security
+// Admission merge of pod-level and container-level settings.
+type effectiveContext struct {
+	// Defined reports whether any security context was declared at all.
+	Defined                  bool
+	Privileged               bool
+	AllowPrivilegeEscalation *bool
+	RunAsNonRoot             *bool
+	SeccompProfile           *corev1.SeccompProfile
+	DropsAllCapabilities     bool
+}
+
+func effectiveSecurityContext(pod *corev1.PodSecurityContext, container *corev1.SecurityContext) effectiveContext {
+	effective := effectiveContext{Defined: pod != nil || container != nil}
+
+	if pod != nil {
+		effective.RunAsNonRoot = pod.RunAsNonRoot
+		effective.SeccompProfile = pod.SeccompProfile
+	}
+	if container == nil {
+		return effective
+	}
+
+	if container.RunAsNonRoot != nil {
+		effective.RunAsNonRoot = container.RunAsNonRoot
+	}
+	if container.SeccompProfile != nil {
+		effective.SeccompProfile = container.SeccompProfile
+	}
+	// privileged, allowPrivilegeEscalation and capabilities exist only at
+	// container level; there is nothing to inherit.
+	effective.Privileged = container.Privileged != nil && *container.Privileged
+	effective.AllowPrivilegeEscalation = container.AllowPrivilegeEscalation
+	if container.Capabilities != nil {
+		for _, dropped := range container.Capabilities.Drop {
+			if dropped == "ALL" {
+				effective.DropsAllCapabilities = true
+				break
+			}
+		}
+	}
+
+	return effective
+}
+
+func (e effectiveContext) restrictedViolations() []string {
+	reasons := make([]string, 0, 5)
+
+	if e.Privileged {
+		reasons = append(reasons, "privileged=true")
+	}
+	if e.AllowPrivilegeEscalation != nil && *e.AllowPrivilegeEscalation {
+		reasons = append(reasons, "allowPrivilegeEscalation=true")
+	}
+	switch {
+	case e.RunAsNonRoot == nil:
+		reasons = append(reasons, "runAsNonRoot absent")
+	case !*e.RunAsNonRoot:
+		reasons = append(reasons, "runAsNonRoot=false")
+	}
+	if !hasRestrictedSeccompProfile(e.SeccompProfile) {
+		reasons = append(reasons, "seccompProfile is not RuntimeDefault or Localhost")
+	}
+	if !e.DropsAllCapabilities {
+		reasons = append(reasons, "capabilities.drop does not contain ALL")
+	}
+
+	return reasons
+}
+
+func hasRestrictedSeccompProfile(profile *corev1.SeccompProfile) bool {
+	if profile == nil {
+		return false
+	}
+	return profile.Type == corev1.SeccompProfileTypeRuntimeDefault ||
+		profile.Type == corev1.SeccompProfileTypeLocalhost
 }
 
 func policyFinding(kind, namespace, name, reason, subject string) upgradev1alpha1.Finding {

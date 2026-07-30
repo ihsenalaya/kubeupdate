@@ -154,6 +154,7 @@ func loadFixtureObjects(scheme *runtime.Scheme, fixtureDir string) ([]client.Obj
 func fixtureObject(scheme *runtime.Scheme, raw map[string]any) (client.Object, error) {
 	obj := &unstructured.Unstructured{Object: raw}
 	addLastAppliedAnnotation(obj)
+	migrateToServedVersion(obj)
 
 	gvk := obj.GroupVersionKind()
 	typed, err := scheme.New(gvk)
@@ -195,6 +196,27 @@ func addLastAppliedAnnotation(obj *unstructured.Unstructured) {
 	}
 	annotations["kubectl.kubernetes.io/last-applied-configuration"] = string(header)
 	obj.SetAnnotations(annotations)
+}
+
+// servedReplacements maps a removed API version to the version a real cluster
+// still serves the object under.
+var servedReplacements = map[schema.GroupVersionKind]string{
+	{Group: "policy", Version: "v1beta1", Kind: "PodDisruptionBudget"}:          "policy/v1",
+	{Group: "batch", Version: "v1beta1", Kind: "CronJob"}:                       "batch/v1",
+	{Group: "autoscaling", Version: "v2beta2", Kind: "HorizontalPodAutoscaler"}: "autoscaling/v2",
+}
+
+// migrateToServedVersion reproduces what an upgraded cluster does to a legacy
+// fixture: the object is served under the current version while its last-applied
+// configuration still names the removed one. Without this the fixture would sit
+// in the fake client under a version nothing lists, and the deprecated-API
+// checker would never see it.
+func migrateToServedVersion(obj *unstructured.Unstructured) {
+	served, ok := servedReplacements[obj.GroupVersionKind()]
+	if !ok {
+		return
+	}
+	obj.SetAPIVersion(served)
 }
 
 func syntheticNodes() []client.Object {

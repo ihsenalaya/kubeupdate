@@ -45,6 +45,25 @@ import (
 // listPageSize bounds the memory held while paging through a resource type.
 const listPageSize = 500
 
+// Resource names used in gap findings. Checkers use them to tell "the cluster has
+// none of these" apart from "we were not allowed to look".
+const (
+	ResourceNamespaces         = "namespaces"
+	ResourceDeployments        = "deployments"
+	ResourceStatefulSets       = "statefulsets"
+	ResourceDaemonSets         = "daemonsets"
+	ResourcePDBs               = "poddisruptionbudgets"
+	ResourceHPAs               = "horizontalpodautoscalers"
+	ResourceCronJobs           = "cronjobs"
+	ResourcePods               = "pods"
+	ResourceNodes              = "nodes"
+	ResourceServices           = "services"
+	ResourceEndpointSlices     = "endpointslices"
+	ResourceValidatingWebhooks = "validatingwebhookconfigurations"
+	ResourceMutatingWebhooks   = "mutatingwebhookconfigurations"
+	ResourceCRDs               = "customresourcedefinitions"
+)
+
 // ClusterSnapshot is the read-only view of the cluster an assessment runs against.
 //
 // Namespaced workload inventories (Deployments, StatefulSets, DaemonSets, PDBs,
@@ -90,7 +109,7 @@ func Collect(ctx context.Context, reader client.Reader, scope upgradev1alpha1.As
 		CRDNames: map[string]struct{}{},
 	}
 
-	allNamespaces, err := collect(ctx, reader, snap, "namespaces",
+	allNamespaces, err := collect(ctx, reader, snap, ResourceNamespaces,
 		func() *corev1.NamespaceList { return &corev1.NamespaceList{} },
 		func(list *corev1.NamespaceList) []corev1.Namespace { return list.Items })
 	if err != nil {
@@ -100,7 +119,7 @@ func Collect(ctx context.Context, reader client.Reader, scope upgradev1alpha1.As
 	snap.Namespaces = scopedNamespaces(allNamespaces, scope)
 	scoped := namespaceSet(snap.Namespaces)
 
-	deployments, err := collect(ctx, reader, snap, "deployments",
+	deployments, err := collect(ctx, reader, snap, ResourceDeployments,
 		func() *appsv1.DeploymentList { return &appsv1.DeploymentList{} },
 		func(list *appsv1.DeploymentList) []appsv1.Deployment { return list.Items })
 	if err != nil {
@@ -108,7 +127,7 @@ func Collect(ctx context.Context, reader client.Reader, scope upgradev1alpha1.As
 	}
 	snap.Deployments = filterByNamespace(deployments, scoped, func(item appsv1.Deployment) string { return item.Namespace })
 
-	statefulSets, err := collect(ctx, reader, snap, "statefulsets",
+	statefulSets, err := collect(ctx, reader, snap, ResourceStatefulSets,
 		func() *appsv1.StatefulSetList { return &appsv1.StatefulSetList{} },
 		func(list *appsv1.StatefulSetList) []appsv1.StatefulSet { return list.Items })
 	if err != nil {
@@ -116,7 +135,7 @@ func Collect(ctx context.Context, reader client.Reader, scope upgradev1alpha1.As
 	}
 	snap.StatefulSets = filterByNamespace(statefulSets, scoped, func(item appsv1.StatefulSet) string { return item.Namespace })
 
-	daemonSets, err := collect(ctx, reader, snap, "daemonsets",
+	daemonSets, err := collect(ctx, reader, snap, ResourceDaemonSets,
 		func() *appsv1.DaemonSetList { return &appsv1.DaemonSetList{} },
 		func(list *appsv1.DaemonSetList) []appsv1.DaemonSet { return list.Items })
 	if err != nil {
@@ -124,7 +143,7 @@ func Collect(ctx context.Context, reader client.Reader, scope upgradev1alpha1.As
 	}
 	snap.DaemonSets = filterByNamespace(daemonSets, scoped, func(item appsv1.DaemonSet) string { return item.Namespace })
 
-	pdbs, err := collect(ctx, reader, snap, "poddisruptionbudgets",
+	pdbs, err := collect(ctx, reader, snap, ResourcePDBs,
 		func() *policyv1.PodDisruptionBudgetList { return &policyv1.PodDisruptionBudgetList{} },
 		func(list *policyv1.PodDisruptionBudgetList) []policyv1.PodDisruptionBudget { return list.Items })
 	if err != nil {
@@ -132,7 +151,7 @@ func Collect(ctx context.Context, reader client.Reader, scope upgradev1alpha1.As
 	}
 	snap.PDBs = filterByNamespace(pdbs, scoped, func(item policyv1.PodDisruptionBudget) string { return item.Namespace })
 
-	hpas, err := collect(ctx, reader, snap, "horizontalpodautoscalers",
+	hpas, err := collect(ctx, reader, snap, ResourceHPAs,
 		func() *autoscalingv2.HorizontalPodAutoscalerList { return &autoscalingv2.HorizontalPodAutoscalerList{} },
 		func(list *autoscalingv2.HorizontalPodAutoscalerList) []autoscalingv2.HorizontalPodAutoscaler {
 			return list.Items
@@ -142,7 +161,7 @@ func Collect(ctx context.Context, reader client.Reader, scope upgradev1alpha1.As
 	}
 	snap.HPAs = filterByNamespace(hpas, scoped, func(item autoscalingv2.HorizontalPodAutoscaler) string { return item.Namespace })
 
-	cronJobs, err := collect(ctx, reader, snap, "cronjobs",
+	cronJobs, err := collect(ctx, reader, snap, ResourceCronJobs,
 		func() *batchv1.CronJobList { return &batchv1.CronJobList{} },
 		func(list *batchv1.CronJobList) []batchv1.CronJob { return list.Items })
 	if err != nil {
@@ -150,31 +169,31 @@ func Collect(ctx context.Context, reader client.Reader, scope upgradev1alpha1.As
 	}
 	snap.CronJobs = filterByNamespace(cronJobs, scoped, func(item batchv1.CronJob) string { return item.Namespace })
 
-	if snap.Pods, err = collect(ctx, reader, snap, "pods",
+	if snap.Pods, err = collect(ctx, reader, snap, ResourcePods,
 		func() *corev1.PodList { return &corev1.PodList{} },
 		func(list *corev1.PodList) []corev1.Pod { return list.Items }); err != nil {
 		return nil, err
 	}
 
-	if snap.Nodes, err = collect(ctx, reader, snap, "nodes",
+	if snap.Nodes, err = collect(ctx, reader, snap, ResourceNodes,
 		func() *corev1.NodeList { return &corev1.NodeList{} },
 		func(list *corev1.NodeList) []corev1.Node { return list.Items }); err != nil {
 		return nil, err
 	}
 
-	if snap.Services, err = collect(ctx, reader, snap, "services",
+	if snap.Services, err = collect(ctx, reader, snap, ResourceServices,
 		func() *corev1.ServiceList { return &corev1.ServiceList{} },
 		func(list *corev1.ServiceList) []corev1.Service { return list.Items }); err != nil {
 		return nil, err
 	}
 
-	if snap.EndpointSlices, err = collect(ctx, reader, snap, "endpointslices",
+	if snap.EndpointSlices, err = collect(ctx, reader, snap, ResourceEndpointSlices,
 		func() *discoveryv1.EndpointSliceList { return &discoveryv1.EndpointSliceList{} },
 		func(list *discoveryv1.EndpointSliceList) []discoveryv1.EndpointSlice { return list.Items }); err != nil {
 		return nil, err
 	}
 
-	if snap.ValidatingWebhooks, err = collect(ctx, reader, snap, "validatingwebhookconfigurations",
+	if snap.ValidatingWebhooks, err = collect(ctx, reader, snap, ResourceValidatingWebhooks,
 		func() *admissionv1.ValidatingWebhookConfigurationList {
 			return &admissionv1.ValidatingWebhookConfigurationList{}
 		},
@@ -184,7 +203,7 @@ func Collect(ctx context.Context, reader client.Reader, scope upgradev1alpha1.As
 		return nil, err
 	}
 
-	if snap.MutatingWebhooks, err = collect(ctx, reader, snap, "mutatingwebhookconfigurations",
+	if snap.MutatingWebhooks, err = collect(ctx, reader, snap, ResourceMutatingWebhooks,
 		func() *admissionv1.MutatingWebhookConfigurationList {
 			return &admissionv1.MutatingWebhookConfigurationList{}
 		},
@@ -194,7 +213,7 @@ func Collect(ctx context.Context, reader client.Reader, scope upgradev1alpha1.As
 		return nil, err
 	}
 
-	crds, err := collect(ctx, reader, snap, "customresourcedefinitions",
+	crds, err := collect(ctx, reader, snap, ResourceCRDs,
 		func() *apiextensionsv1.CustomResourceDefinitionList {
 			return &apiextensionsv1.CustomResourceDefinitionList{}
 		},
@@ -210,6 +229,20 @@ func Collect(ctx context.Context, reader client.Reader, scope upgradev1alpha1.As
 
 	sort.SliceStable(snap.Gaps, func(i, j int) bool { return snap.Gaps[i].ID < snap.Gaps[j].ID })
 	return snap, nil
+}
+
+// Denied reports whether collecting a resource type was refused by RBAC. Checks
+// that read an absence as a problem must not fire when the absence only means the
+// operator was not allowed to look.
+func (s *ClusterSnapshot) Denied(resource string) bool {
+	for _, gap := range s.Gaps {
+		for _, evidence := range gap.Evidence {
+			if evidence.Observed["resource"] == resource {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // collect pages through one resource type. A forbidden response is downgraded to

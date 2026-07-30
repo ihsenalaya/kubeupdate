@@ -1,0 +1,46 @@
+# Kubernetes API versions removed by a given minor release.
+#
+# The checker never lists these versions: a cluster that already dropped them
+# cannot serve them. It reads the objects served under their current version and
+# looks for a removed version in managedFields and in the last-applied
+# configuration, which is where a stale manifest or a stale controller shows up.
+#
+# removedInMinor is the 1.x minor release that stopped serving the version.
+# Entries whose kind is not part of the cluster snapshot are simply never matched.
+removedApis:
+  - apiVersion: policy/v1beta1
+    kind: PodDisruptionBudget
+    removedInMinor: 25
+  - apiVersion: policy/v1beta1
+    kind: PodSecurityPolicy
+    removedInMinor: 25
+  - apiVersion: batch/v1beta1
+    kind: CronJob
+    removedInMinor: 25
+  - apiVersion: autoscaling/v2beta1
+    kind: HorizontalPodAutoscaler
+    removedInMinor: 25
+  - apiVersion: autoscaling/v2beta2
+    kind: HorizontalPodAutoscaler
+    removedInMinor: 26
+  - apiVersion: flowcontrol.apiserver.k8s.io/v1beta1
+    kind: FlowSchema
+    removedInMinor: 26
+  - apiVersion: flowcontrol.apiserver.k8s.io/v1beta1
+    kind: PriorityLevelConfiguration
+    removedInMinor: 26
+  - apiVersion: storage.k8s.io/v1beta1
+    kind: CSIStorageCapacity
+    removedInMinor: 27
+  - apiVersion: flowcontrol.apiserver.k8s.io/v1beta2
+    kind: FlowSchema
+    removedInMinor: 29
+  - apiVersion: flowcontrol.apiserver.k8s.io/v1beta2
+    kind: PriorityLevelConfiguration
+    removedInMinor: 29
+  - apiVersion: flowcontrol.apiserver.k8s.io/v1beta3
+    kind: FlowSchema
+    removedInMinor: 32
+  - apiVersion: flowcontrol.apiserver.k8s.io/v1beta3
+    kind: PriorityLevelConfiguration
+    removedInMinor: 32

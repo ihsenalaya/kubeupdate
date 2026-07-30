@@ -17,38 +17,67 @@ limitations under the License.
 package checkers
 
 import (
+	"bytes"
+	_ "embed"
 	"encoding/json"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	utilyaml "k8s.io/apimachinery/pkg/util/yaml"
 
 	upgradev1alpha1 "github.com/ihsenalaya/kubeupgrade-guardian-operator/api/v1alpha1"
 	"github.com/ihsenalaya/kubeupgrade-guardian-operator/internal/snapshot"
 )
 
-// DeprecatedAPI uses a static MVP table of APIs removed by target Kubernetes versions.
+const lastAppliedAnnotation = "kubectl.kubernetes.io/last-applied-configuration"
+
+// DeprecatedAPI reports objects still written through an API version a target
+// Kubernetes release no longer serves.
 type DeprecatedAPI struct{}
 
 func (DeprecatedAPI) Name() string { return "deprecated-apis" }
 
 type removedAPI struct {
-	APIVersion string
-	Kind       string
-	RemovedIn  int
+	APIVersion     string `json:"apiVersion"`
+	Kind           string `json:"kind"`
+	RemovedInMinor int    `json:"removedInMinor"`
 }
 
-var removedAPIs = []removedAPI{
-	{APIVersion: "policy/v1beta1", Kind: "PodDisruptionBudget", RemovedIn: 25},
-	{APIVersion: "policy/v1beta1", Kind: "PodSecurityPolicy", RemovedIn: 25},
-	{APIVersion: "autoscaling/v2beta2", Kind: "HorizontalPodAutoscaler", RemovedIn: 26},
-	{APIVersion: "batch/v1beta1", Kind: "CronJob", RemovedIn: 25},
+type removedAPITable struct {
+	RemovedAPIs []removedAPI `json:"removedApis"`
+}
+
+//go:embed data/removed_apis.yaml
+var removedAPIsYAML []byte
+
+// removedAPIs is the removal table, indexed by kind for lookup.
+var removedAPIs = mustLoadRemovedAPIs(removedAPIsYAML)
+
+func mustLoadRemovedAPIs(raw []byte) map[string][]removedAPI {
+	var table removedAPITable
+	if err := utilyaml.NewYAMLOrJSONDecoder(bytes.NewReader(raw), 4096).Decode(&table); err != nil {
+		panic(fmt.Sprintf("checkers: cannot parse the embedded removed API table: %v", err))
+	}
+
+	byKind := map[string][]removedAPI{}
+	for _, api := range table.RemovedAPIs {
+		byKind[api.Kind] = append(byKind[api.Kind], api)
+	}
+	for kind := range byKind {
+		entries := byKind[kind]
+		sort.SliceStable(entries, func(i, j int) bool { return entries[i].APIVersion < entries[j].APIVersion })
+	}
+	return byKind
 }
 
 // Check inspects the objects served under their current API version. A removed
-// API version is never listable on a cluster that already dropped it, so the
-// signal has to come from the objects that survived the migration.
+// version is not listable on a cluster that already dropped it, so listing those
+// versions directly - as this checker used to - always came back empty and
+// reported false confidence. The trace of a stale writer survives in
+// metadata.managedFields and in the last-applied configuration instead.
 func (DeprecatedAPI) Check(snap *snapshot.ClusterSnapshot, assessment *upgradev1alpha1.UpgradeAssessment) []upgradev1alpha1.Finding {
 	target := targetMinor(assessment.Spec.TargetVersion)
 
@@ -67,35 +96,77 @@ func (DeprecatedAPI) Check(snap *snapshot.ClusterSnapshot, assessment *upgradev1
 }
 
 func deprecatedSourceFindings(meta metav1.ObjectMeta, kind string, targetMinor int) []upgradev1alpha1.Finding {
-	findings := make([]upgradev1alpha1.Finding, 0, len(removedAPIs))
-	for _, api := range removedAPIs {
-		if api.Kind != kind || !usesDeprecatedSource(meta.Annotations, api) {
+	candidates := removedAPIs[kind]
+	if len(candidates) == 0 {
+		return nil
+	}
+
+	findings := make([]upgradev1alpha1.Finding, 0, len(candidates))
+	for _, api := range candidates {
+		writers := removedAPIWriters(meta, api)
+		if len(writers) == 0 {
 			continue
 		}
+
 		severity := upgradev1alpha1.RiskLevelHigh
-		if targetMinor >= api.RemovedIn {
+		if api.RemovedInMinor <= targetMinor {
 			severity = upgradev1alpha1.RiskLevelCritical
 		}
+
 		findings = append(findings, upgradev1alpha1.Finding{
-			ID:       findingID(upgradev1alpha1.FindingTypeDeprecatedOrRemovedAPI, meta.Namespace, api.Kind, meta.Name),
+			ID:       findingID(upgradev1alpha1.FindingTypeDeprecatedOrRemovedAPI, meta.Namespace, api.Kind, meta.Name, api.APIVersion),
 			Type:     upgradev1alpha1.FindingTypeDeprecatedOrRemovedAPI,
 			Severity: severity,
 			Category: "DeprecatedAPI",
 			Resource: resource(api.APIVersion, api.Kind, meta.Namespace, meta.Name),
-			Message:  fmt.Sprintf("%s %s/%s uses %s removed in Kubernetes 1.%d.", api.Kind, meta.Namespace, meta.Name, api.APIVersion, api.RemovedIn),
+			Message:  fmt.Sprintf("%s %s/%s is still written through %s, removed in Kubernetes 1.%d.", api.Kind, meta.Namespace, meta.Name, api.APIVersion, api.RemovedInMinor),
 			Evidence: []upgradev1alpha1.Evidence{{
-				ID:          evidenceID(upgradev1alpha1.FindingTypeDeprecatedOrRemovedAPI, meta.Namespace, api.Kind, meta.Name),
-				Description: "Deprecated or removed API version observed in last-applied configuration.",
+				ID:          evidenceID(upgradev1alpha1.FindingTypeDeprecatedOrRemovedAPI, meta.Namespace, api.Kind, meta.Name, api.APIVersion),
+				Description: "Removed API version observed in managedFields or in the last-applied configuration.",
 				Observed: map[string]string{
-					"apiVersion": api.APIVersion,
-					"kind":       api.Kind,
-					"removedIn":  "1." + strconv.Itoa(api.RemovedIn),
+					"apiVersion":    api.APIVersion,
+					"kind":          api.Kind,
+					"removedIn":     "1." + strconv.Itoa(api.RemovedInMinor),
+					"fieldManagers": strings.Join(writers, ","),
 				},
 			}},
-			Recommendation: "Migrate this resource to a served API version before upgrading.",
+			Recommendation: "Update the manifests and controllers writing this object to a served API version before upgrading.",
 		})
 	}
 	return findings
+}
+
+// removedAPIWriters returns the field managers still writing through the removed
+// version, plus "kubectl-last-applied" when the stored manifest uses it. An empty
+// result means nothing observable points at the removed version.
+func removedAPIWriters(meta metav1.ObjectMeta, api removedAPI) []string {
+	var writers []string
+	seen := map[string]struct{}{}
+	add := func(manager string) {
+		if _, ok := seen[manager]; ok {
+			return
+		}
+		seen[manager] = struct{}{}
+		writers = append(writers, manager)
+	}
+
+	for _, entry := range meta.ManagedFields {
+		if entry.APIVersion != api.APIVersion {
+			continue
+		}
+		manager := entry.Manager
+		if manager == "" {
+			manager = "unknown"
+		}
+		add(manager)
+	}
+
+	if usesDeprecatedSource(meta.Annotations, api) {
+		add("kubectl-last-applied")
+	}
+
+	sort.Strings(writers)
+	return writers
 }
 
 type appliedObjectHeader struct {
@@ -107,7 +178,7 @@ func usesDeprecatedSource(annotations map[string]string, api removedAPI) bool {
 	if len(annotations) == 0 {
 		return false
 	}
-	value := strings.TrimSpace(annotations["kubectl.kubernetes.io/last-applied-configuration"])
+	value := strings.TrimSpace(annotations[lastAppliedAnnotation])
 	if value == "" {
 		return false
 	}

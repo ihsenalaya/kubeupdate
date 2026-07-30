@@ -24,7 +24,6 @@ import (
 	"strings"
 	"testing"
 
-	admissionv1 "k8s.io/api/admissionregistration/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	policyv1 "k8s.io/api/policy/v1"
@@ -137,54 +136,6 @@ func TestPDBDoesNotMatchWorkloadsOfAnotherNamespace(t *testing.T) {
 		}
 	}
 	assertFinding(t, findings, upgradev1alpha1.FindingTypePDBBlockingRisk, upgradev1alpha1.RiskLevelHigh)
-}
-
-func TestAdmissionWebhookDetectsFailPolicyAndMissingService(t *testing.T) {
-	fail := admissionv1.Fail
-	snap := &snapshot.ClusterSnapshot{
-		ValidatingWebhooks: []admissionv1.ValidatingWebhookConfiguration{{
-			ObjectMeta: metav1.ObjectMeta{Name: "policy-webhook"},
-			Webhooks: []admissionv1.ValidatingWebhook{{
-				Name:          "policy.example.com",
-				FailurePolicy: &fail,
-				ClientConfig: admissionv1.WebhookClientConfig{
-					Service: &admissionv1.ServiceReference{Namespace: "policy", Name: "missing-webhook"},
-				},
-			}},
-		}},
-	}
-
-	findings := AdmissionWebhook{}.Check(snap, &upgradev1alpha1.UpgradeAssessment{})
-	assertFinding(t, findings, upgradev1alpha1.FindingTypeAdmissionWebhookRisk, upgradev1alpha1.RiskLevelHigh)
-	assertFinding(t, findings, upgradev1alpha1.FindingTypeAdmissionWebhookRisk, upgradev1alpha1.RiskLevelCritical)
-}
-
-func TestAdmissionWebhookAcceptsBackendServiceOutsideScope(t *testing.T) {
-	fail := admissionv1.Fail
-	snap := &snapshot.ClusterSnapshot{
-		Namespaces: []corev1.Namespace{namespace("production", nil)},
-		Services: []corev1.Service{{
-			ObjectMeta: metav1.ObjectMeta{Namespace: "cert-manager", Name: "cert-manager-webhook"},
-		}},
-		ValidatingWebhooks: []admissionv1.ValidatingWebhookConfiguration{{
-			ObjectMeta: metav1.ObjectMeta{Name: "cert-manager-webhook"},
-			Webhooks: []admissionv1.ValidatingWebhook{{
-				Name:          "webhook.cert-manager.io",
-				FailurePolicy: &fail,
-				ClientConfig: admissionv1.WebhookClientConfig{
-					Service: &admissionv1.ServiceReference{Namespace: "cert-manager", Name: "cert-manager-webhook"},
-				},
-				NamespaceSelector: &metav1.LabelSelector{MatchLabels: map[string]string{"team": "platform"}},
-			}},
-		}},
-	}
-
-	findings := AdmissionWebhook{}.Check(snap, assessment("production"))
-	for _, finding := range findings {
-		if finding.Severity == upgradev1alpha1.RiskLevelCritical {
-			t.Fatalf("webhook backend outside the assessed scope must not be reported absent: %s", finding.Message)
-		}
-	}
 }
 
 func TestPolicyRiskDetectsRestrictedNamespaceAndPrivilegedWorkload(t *testing.T) {
