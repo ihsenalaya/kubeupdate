@@ -154,6 +154,40 @@ go test ./...
 
 More detail is in [docs/testing.md](docs/testing.md), including optional `envtest` and `e2e` commands.
 
+### Released artifacts
+
+The current release is **0.1.5**. Image and chart are published to GHCR and share
+the same version:
+
+| Artifact | Reference |
+| --- | --- |
+| Image | `ghcr.io/ihsenalaya/kubeupgrade-guardian-operator:0.1.5` (also tagged `latest`) |
+| Chart | `oci://ghcr.io/ihsenalaya/charts/kubeupgrade-guardian-operator` version `0.1.5` |
+
+Install straight from the registry:
+
+```sh
+helm install kubeupgrade-guardian \
+  oci://ghcr.io/ihsenalaya/charts/kubeupgrade-guardian-operator \
+  --version 0.1.5 \
+  --namespace kubeupgrade-guardian-system --create-namespace
+```
+
+The chart ships the CRDs under `crds/`, so Helm installs them on first release.
+Helm does not upgrade CRDs on `helm upgrade`: when moving from an earlier version,
+apply them first, otherwise the fields added in 0.1.5 (`spec.refreshInterval`,
+`status.lastAssessedTime`, `status.lastRerunToken`) are silently dropped.
+
+```sh
+kubectl apply -f charts/kubeupgrade-guardian-operator/crds/
+```
+
+The chart packaged for release lives in `../../helm/kubeupgrade-guardian-operator`
+(the copy carrying `service.yaml`, `servicemonitor.yaml` and `values.schema.json`).
+The in-source copy under `charts/` is what the `release` workflow packages for
+per-commit `0.1.0-<sha>` builds; both declare the same version and image tag, but
+their templates have not been merged yet.
+
 ### To Deploy on the cluster
 **Build and push your image to the location specified by `IMG`:**
 

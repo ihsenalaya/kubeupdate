@@ -14,7 +14,23 @@ spec:
     singular: upgradeassessment
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.targetVersion
+      name: Target
+      type: string
+    - jsonPath: .status.phase
+      name: Phase
+      type: string
+    - jsonPath: .status.riskLevel
+      name: Risk
+      type: string
+    - jsonPath: .status.score
+      name: Score
+      type: integer
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: UpgradeAssessment is the Schema for the upgradeassessments API
@@ -108,6 +124,14 @@ spec:
                 - lab
                 - staging
                 - production
+                type: string
+              refreshInterval:
+                description: |-
+                  RefreshInterval re-runs the assessment on a schedule once it has completed,
+                  so a long-lived UpgradeAssessment keeps tracking cluster drift instead of
+                  freezing on the state observed at creation time. Intervals shorter than one
+                  minute are raised to one minute. When omitted, the assessment runs once per
+                  spec change or explicit re-run.
                 type: string
               scope:
                 description: AssessmentScope defines the cluster slice to assess.
@@ -339,6 +363,17 @@ spec:
                 required:
                 - name
                 type: object
+              lastAssessedTime:
+                description: |-
+                  LastAssessedTime is when the cluster snapshot backing this status was taken.
+                  It is the observation time exposed as takenAt in the JSON artifact.
+                format: date-time
+                type: string
+              lastRerunToken:
+                description: |-
+                  LastRerunToken is the value of the re-run annotation the controller has
+                  already acted on. A different value in the annotation triggers a new audit.
+                type: string
               phase:
                 description: AssessmentPhase describes the observed lifecycle of an
                   assessment.
